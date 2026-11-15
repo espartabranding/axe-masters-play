@@ -98,6 +98,7 @@ const EDDIE_SPECIALS = [
   { move: 'teacher',    chord: ['lp', 'hp'], super: true },
   { move: 'spanish',    chord: ['lp', 'lk'], lock: 'hypno' },
   { move: 'panama',     chord: ['hp', 'lk'] },
+  { move: 'jumpcall',   chord: ['hp', 'hk'], lock: 'dlr' },
   { move: 'brownsound', btn: 'punch', motion: [2, 5, 2] },
   { move: 'bumblebee',  btn: 'kick',  motion: [2, 5, 2], lock: 'swarm' },
   { move: 'jumpcall',   btn: 'kick',  motion: [6, 2], lock: 'dlr' },
@@ -208,6 +209,7 @@ const SLASH_SPECIALS = [
   { move: 'appetite',   chord: ['lp', 'hp'], super: true },
   { move: 'sweet',      chord: ['lp', 'lk'], lock: 'hypno' },
   { move: 'jungle',     chord: ['hp', 'lk'] },
+  { move: 'axlcall',    chord: ['hp', 'hk'], lock: 'dlr' },
   { move: 'paradise',   btn: 'punch', motion: [2, 5, 2] },
   { move: 'snakepit',   btn: 'kick',  motion: [2, 5, 2], lock: 'swarm' },
   { move: 'axlcall',    btn: 'kick',  motion: [6, 2], lock: 'dlr' },
@@ -269,17 +271,17 @@ for (const [id, c] of Object.entries(CHARS)) c.id = id;
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=cb4223e' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=cb4223e' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=cb4223e' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=cb4223e' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=cb4223e' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=cb4223e' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=cb4223e' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=db77e52' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=db77e52' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=db77e52' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=db77e52' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=db77e52' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=db77e52' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=db77e52' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=cb4223e', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=db77e52', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -406,7 +408,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=cb4223e`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=db77e52`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
