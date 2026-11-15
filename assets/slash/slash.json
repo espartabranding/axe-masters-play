@@ -84,9 +84,13 @@
       "frames": 5,
       "file": "fx_snake.png"
     },
-    "crybaby": {
+    "smoke": {
       "frames": 10,
-      "file": "crybaby.png"
+      "file": "smoke.png"
+    },
+    "fx_cloud": {
+      "frames": 5,
+      "file": "fx_cloud.png"
     },
     "axlcall": {
       "frames": 5,

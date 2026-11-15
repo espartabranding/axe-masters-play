@@ -144,7 +144,7 @@ function eddieCpu(me, op, scene) {
 const SLASH_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
   tophat: 4, fx_hat: 4, block: 2, hit: 3, ko: 5, jump: 6, crouch: 3, jumpkick: 2,
-  paradise: 10, jungle: 10, snakepit: 10, fx_snake: 5, crybaby: 10, axlcall: 5, axl: 5, doubleneck: 10, sweet: 10, raincall: 5, piano: 5, appetite: 10,
+  paradise: 10, jungle: 10, snakepit: 10, fx_snake: 5, smoke: 10, fx_cloud: 5, axlcall: 5, axl: 5, doubleneck: 10, sweet: 10, raincall: 5, piano: 5, appetite: 10,
   sleep: 5, dance: 5, fx_sweet: 5,
 };
 const SLASH_POWERS = {
@@ -156,7 +156,7 @@ const SLASH_POWERS = {
   doubleneck: { name: 'DOUBLE NECK',    tag: 'Gibson EDS-1275',  neon: '#ff5a5a', edge: 0xff5a5a, deep: 0x2a0606 },
   sweet:      { name: 'SWEET CHILD',    tag: "O' Mine",          neon: '#ff8cf5', edge: 0xff8cf5, deep: 0x2a0a26 },
   snakepit:   { name: 'SNAKE PIT',      tag: 'Top Hat Snakes',   neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
-  crybaby:    { name: 'CRY BABY',       tag: 'Wah Pedal',        neon: '#c77dff', edge: 0xc77dff, deep: 0x1d0838 },
+  smoke:      { name: 'SMOKE SCREEN',   tag: 'Cough cough',      neon: '#b9a6d9', edge: 0xb9a6d9, deep: 0x1a1426 },
   appetite:   { name: 'APPETITE',       tag: 'Super!',           neon: '#ffb347', edge: 0xffb347, deep: 0x2a1408 },
 };
 // a cartola vai e volta como bumerangue
@@ -169,6 +169,8 @@ const AXL = { dmg: 100, hitstun: 28, blockstun: 16, push: 10, chip: 10, shake: 0
 const SWEET = { dmg: 20, hitstun: 10, blockstun: 8, push: 1, chip: 2, gag: 'dance', word: ['SWEET!', '#ff8cf5'] };
 // cobrinhas que saem da cartola e rastejam no chão: golpe baixo
 const SNAKE = { dmg: 18, hitstun: 12, blockstun: 6, push: 3, chip: 3, low: true, gag: 'chomp' };
+// nuvem de fumaça: lenta e grande; quem leva fica tossindo, tonto
+const CLOUD = { dmg: 60, hitstun: 20, blockstun: 12, push: 4, chip: 6, gag: 'dizzy', word: ['COUGH! COUGH!', '#b9a6d9'] };
 // raio do super caindo do céu
 const BOLT = { dmg: 30, hitstun: 16, blockstun: 8, push: 1, chip: 5, gag: 'zap' };
 const SLASH_MOVES = {
@@ -194,8 +196,8 @@ const SLASH_MOVES = {
   doubleneck: { dur: [3, 5, 4, 5, 5, 6, 6, 5, 4, 3], frames: [0, 1, 2, 3, 4, 5, 7, 7, 8, 9], active: [3, 4, 5], multi: 6, dmg: 40, hit: { x: 10, y: -270, w: 185, h: 210 }, hitstun: 14, blockstun: 8, push: 4, shake: 0.006, smoke: 1, step: [3, 5, 3], word: ['TWANG!', '#ff5a5a'], ghost: [0, 24] },
   // SNAKE PIT: vira a cartola e saem cobrinhas que rastejam atrás do oponente (rente ao chão)
   snakepit: { dur: [3, 5, 5, 6, 5, 6, 6, 5, 5, 3], frames: [0, 1, 2, 3, 3, 6, 6, 7, 8, 9], swarm: 4, tex: 'fx_snake', payload: SNAKE, count: 3, ground: true, swarmScale: 0.5 },
-  // CRY BABY: pisa no pedal wah e avança com ondas de som, vários acertos
-  crybaby: { dur: [3, 5, 4, 4, 6, 6, 4, 6, 5, 3], active: [3, 4, 5, 6], multi: 5, dmg: 14, hit: { x: 20, y: -220, w: 175, h: 130 }, hitstun: 10, blockstun: 6, push: 2, step: [3, 6, 4], sparks: [3, 6], sparksFx: 'fx_wave', gag: 'wah', ghost: [0, 24] },
+  // SMOKE SCREEN: traga, incha as bochechas e sopra uma nuvem de fumaça que rola devagar até o oponente
+  smoke: { dur: [4, 6, 6, 10, 8, 6, 8, 8, 6, 4], spawn: 5, tex: 'fx_cloud', payload: CLOUD, speed: [2.6, 3.6], projScale: 1.1, projY: 175, projBox: [110, 90] },
   // SWEET CHILD (A + D): o riff solta ondas de notas e corações; quem leva dança sem defesa
   sweet: { dur: [6, 8, 10, 10, 10, 10, 10, 8, 10, 8], waves: [3, 5, 7], tex: 'fx_sweet', payload: SWEET },
   // SUPER APPETITE (A + S com a barra cheia): tela escura, chuva, solo e raios do céu em cima do oponente
@@ -213,7 +215,7 @@ const SLASH_SPECIALS = [
   { move: 'doubleneck', btn: 'kick',  motion: [2, 4] },
   { move: 'tophat',     btn: 'punch', motion: [2, 6], lock: 'proj' },
   { move: 'raincall',   btn: 'punch', motion: [2, 4], lock: 'bombs' },
-  { move: 'crybaby',    btn: 'punch', motion: [6, 5, 6] },
+  { move: 'smoke',      btn: 'punch', motion: [6, 5, 6], lock: 'proj' },
 ];
 function slashCpu(me, op, scene) {
   const d = Math.abs(op.x - me.x), r = Math.random(), inp = {};
@@ -222,8 +224,9 @@ function slashCpu(me, op, scene) {
   if (me.meter >= 100 && d < 700 && r < 0.04) { inp.special = 'appetite'; inp.hp = true; me.cpuCD = 140; }
   else if (op.airborne && d < 230 && r < 0.25) { inp.special = 'paradise'; inp.hp = true; me.cpuCD = 40; }
   else if (d > 200 && d < 420 && r > 0.93) { inp.special = 'jungle'; inp.hk = true; me.cpuCD = 45; }
-  else if (d < 200 && r > 0.9) { inp.special = r > 0.95 ? 'doubleneck' : 'crybaby'; inp[inp.special === 'crybaby' ? 'hp' : 'hk'] = true; me.cpuCD = 45; }
+  else if (d < 200 && r > 0.9) { inp.special = 'doubleneck'; inp.hk = true; me.cpuCD = 45; }
   else if (d > 300 && !me.swarm && r < 0.05) { inp.special = 'snakepit'; inp.hk = true; me.cpuCD = 45; }
+  else if (d > 220 && !me.proj && r > 0.95) { inp.special = 'smoke'; inp.hp = true; me.cpuCD = 60; }
   else if (d > 200 && !me.hypno && r > 0.09 && r < 0.11) { inp.special = 'sweet'; inp.lp = true; me.cpuCD = 100; }
   else if (d > 160 && !me.dlr && r > 0.06 && r < 0.09) { inp.special = 'axlcall'; inp.lk = true; me.cpuCD = 70; }
   else if (projIncoming && r < 0.25) { inp.up = true; inp.fwd = true; me.cpuCD = 10; }
@@ -253,13 +256,28 @@ CHARS.eddie = {
   name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6,
   anims: EDDIE_ANIMS, moves: EDDIE_MOVES, powers: EDDIE_POWERS, specials: EDDIE_SPECIALS, cpu: eddieCpu,
   jumpkick: JUMPKICK, bigTitle: '5150', blurb: 'Brown Sound',
+  stage: 'eddie', // palco da casa (ver STAGES)
 };
 CHARS.slash = {
   name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5,
   anims: SLASH_ANIMS, moves: SLASH_MOVES, powers: SLASH_POWERS, specials: SLASH_SPECIALS, cpu: slashCpu,
   jumpkick: JUMPKICK, bigTitle: 'APPETITE', bigSize: 150, blurb: 'Top Hat',
+  stage: 'slash',
 };
 for (const [id, c] of Object.entries(CHARS)) c.id = id;
+
+// PALCOS (escolhidos depois dos lutadores). logo: região em 960x540 que fica acesa na vitória;
+// neon: camada só com os letreiros, acesa no lugar do logo. Palco sem imagem não aparece na escolha.
+const STAGES = [
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=8e79721', logo: [298, 90, 370, 150] },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=8e79721', neon: 'assets/stages/palco-slash-neon.png' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=8e79721' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=8e79721' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=8e79721' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=8e79721' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=8e79721' },
+];
+const stageById = id => STAGES.find(st => st.id === id);
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -376,13 +394,17 @@ class Boot extends Phaser.Scene {
     const t = this.add.text(W / 2, H / 2, 'LOADING...', { fontFamily: FONT_PIXEL, fontSize: '14px', color: '#3cf0ff' }).setOrigin(0.5);
     this.load.on('progress', v => t.setText(`LOADING ${Math.round(v * 100)}%`));
     this.load.on('loaderror', file => console.warn('Axe Masters: missing file', file.src)); // segue sem ela
-    this.load.image('stage', 'assets/stages/palco-eddie.jpg?v=d3000e7');
+    this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
+    for (const st of STAGES) {
+      this.load.image(`stage_${st.id}`, st.file);
+      if (st.neon) this.load.image(`stage_${st.id}_neon`, st.neon);
+    }
     for (const c of Object.values(CHARS)) {
       if (c.placeholder) continue; // sem arte própria ainda: texKey usa as folhas do placeholder
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=d3000e7`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=8e79721`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -496,7 +518,7 @@ class Select extends Phaser.Scene {
     const chars = [this.ids[this.cur[0]], this.ids[this.cur[1]]];
     this.registry.set('pick', { cur: [...this.cur], cpu: this.cpu });
     this.cameras.main.flash(150, 255, 80, 240);
-    this.scene.start('fight', { chars, cpu: this.cpu });
+    this.scene.start('stagesel', { chars, cpu: this.cpu });
   }
 
   refresh() {
@@ -544,6 +566,96 @@ class Select extends Phaser.Scene {
 }
 
 // ---------------------------------------------------------------------------------------------
+// ESCOLHA DE PALCO. < > escolhe, A/Enter confirma, Esc volta aos lutadores. Toque: toca na miniatura, toca de novo ou FIGHT.
+// ---------------------------------------------------------------------------------------------
+class StageSelect extends Phaser.Scene {
+  constructor() { super('stagesel'); }
+  init(data) { this.data0 = data || {}; }
+
+  create() {
+    // só os palcos com imagem carregada, mais o sorteio no fim
+    this.list = STAGES.filter(st => this.textures.exists(`stage_${st.id}`)).concat([{ id: 'random', name: 'RANDOM', tag: 'Surprise me' }]);
+    const prev = this.registry.get('stagePick');
+    const home = this.list.findIndex(st => st.id === (CHARS[(this.data0.chars || [])[1]] || {}).stage);
+    this.cur = prev !== undefined && prev < this.list.length ? prev : Math.max(0, home);
+    this.t = 0;
+
+    this.preview = this.add.image(0, 0, 'stage').setOrigin(0).setDisplaySize(W, H);
+    this.add.rectangle(0, 0, W, 128, 0x0b0710, 0.72).setOrigin(0);
+    this.add.rectangle(0, H - 132, W, 132, 0x0b0710, 0.8).setOrigin(0);
+    const cr = { fontFamily: FONT_CHROME, fontStyle: 'italic 900', padding: { x: 24, y: 6 } };
+    const title = this.add.text(W / 2, 6, 'SELECT STAGE', { ...cr, fontSize: '50px', color: '#fff', stroke: '#14061f', strokeThickness: 8 }).setOrigin(0.5, 0);
+    chrome(title); title.setShadow(0, 0, '#3cf0ff', 18, true, false);
+    this.tName = this.add.text(W / 2, 62, '', { ...cr, fontSize: '34px', color: '#fff', stroke: '#14061f', strokeThickness: 6 }).setOrigin(0.5, 0);
+    this.tTag = this.add.text(W / 2 + 170, 104, '', { fontFamily: FONT_NEON, fontSize: '26px', color: '#fff', padding: { x: 14, y: 8 } })
+      .setOrigin(0.5).setAngle(-5).setStroke('#ff3df0', 2).setShadow(0, 0, '#ff3df0', 10, true, true);
+
+    // miniaturas numa fileira
+    const n = this.list.length, tw = Math.min(104, Math.floor((W - 40) / n) - 10), th = Math.round(tw * 0.5625), gap = 10, y = H - 92;
+    this.tw = tw; this.th = th;
+    this.cards = this.list.map((st, i) => {
+      const x = W / 2 - ((n - 1) * (tw + gap)) / 2 + i * (tw + gap);
+      const bg = this.add.rectangle(x, y, tw, th, 0x150d1f, 1).setStrokeStyle(2, 0x2c1f3d);
+      if (st.id !== 'random') this.add.image(x, y, `stage_${st.id}`).setDisplaySize(tw - 4, th - 4);
+      else this.add.text(x, y, '?', { ...cr, fontSize: '34px', color: '#ffe14a' }).setOrigin(0.5);
+      bg.setInteractive({ useHandCursor: true }).on('pointerdown', () => this.tap(i));
+      return { x, y };
+    });
+    this.cursorG = this.add.graphics();
+    this.fightBtn = this.add.text(W - 90, H - 34, 'FIGHT!', { ...cr, fontSize: '28px', color: '#fff', stroke: '#14061f', strokeThickness: 5, backgroundColor: '#2a0630' })
+      .setOrigin(0.5).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.go());
+    chrome(this.fightBtn, 'gold');
+    this.add.text(W / 2, H - 16, isTouch() ? 'TAP A STAGE, THEN FIGHT!' : '< > CHOOSE   A / ENTER: FIGHT   ESC: BACK',
+      { fontFamily: FONT_PIXEL, fontSize: '10px', color: '#9a8bb3' }).setOrigin(0.5);
+
+    this.onKey = e => {
+      if (this.t < 10) return; // não herda a tecla que confirmou os lutadores
+      const c = e.code;
+      if (c === 'ArrowLeft' || c === 'KeyJ' || c === 'ArrowUp') this.move(-1);
+      else if (c === 'ArrowRight' || c === 'KeyL' || c === 'ArrowDown') this.move(1);
+      else if (c === 'KeyA' || c === 'Enter' || c === 'Space' || c === 'Digit7') this.go();
+      else if (c === 'Escape' || c === 'Backspace') this.scene.start('select');
+    };
+    this.input.keyboard.on('keydown', this.onKey);
+    this.events.once('shutdown', () => this.input.keyboard.off('keydown', this.onKey));
+    this.stickX = 0;
+    this.show();
+  }
+
+  move(d) { const n = this.list.length; this.cur = ((this.cur + d) % n + n) % n; this.show(); }
+  tap(i) { if (i === this.cur) this.go(); else { this.cur = i; this.show(); } }
+  show() {
+    const st = this.list[this.cur];
+    this.preview.setTexture(st.id === 'random' ? 'stage' : `stage_${st.id}`).setDisplaySize(W, H).setAlpha(st.id === 'random' ? 0.2 : 1);
+    this.tName.setText(st.name); chrome(this.tName);
+    this.tTag.setText(st.tag);
+  }
+  go() {
+    if (this.gone) return;
+    this.gone = true;
+    let st = this.list[this.cur];
+    this.registry.set('stagePick', this.cur);
+    if (st.id === 'random') { const real = this.list.filter(x => x.id !== 'random'); st = real[Math.floor(Math.random() * real.length)]; }
+    this.cameras.main.flash(150, 60, 240, 255);
+    this.scene.start('fight', { ...this.data0, stage: st.id });
+  }
+  update() {
+    this.t++;
+    const T = window.TOUCH;
+    if (T && T.on) {
+      const sx = T.l ? -1 : T.r ? 1 : 0;
+      if (sx && sx !== this.stickX) this.move(sx);
+      this.stickX = sx;
+      if (T.take('lp')) this.go();
+    }
+    const g = this.cursorG; g.clear();
+    const cd = this.cards[this.cur], a = this.t % 30 < 18 ? 1 : 0.4;
+    g.lineStyle(4, 0x3cf0ff, a); g.strokeRect(cd.x - this.tw / 2 - 3, cd.y - this.th / 2 - 3, this.tw + 6, this.th + 6);
+    this.fightBtn.setScale(1 + Math.sin(this.t / 6) * 0.04);
+  }
+}
+
+// ---------------------------------------------------------------------------------------------
 // LUTA
 // ---------------------------------------------------------------------------------------------
 class Fight extends Phaser.Scene {
@@ -553,6 +665,7 @@ class Fight extends Phaser.Scene {
     const ids = (data && data.chars) || ['eddie', 'eddie'];
     this.chars = ids.map(id => CHARS[id] || CHARS.eddie);
     this.startCpu = data && data.cpu !== undefined ? data.cpu : true;
+    this.stageId = data && data.stage;
   }
 
   // chave de textura de uma folha para um lutador (ou para o Eddie, nos efeitos comuns)
@@ -613,12 +726,19 @@ class Fight extends Phaser.Scene {
   }
 
   drawStage() {
-    this.add.image(0, 0, 'stage').setOrigin(0).setDisplaySize(W, H).setDepth(0);
-    // vitória: o palco escurece, só o logo VH continua aceso e os canhões de luz miram o vencedor
-    this.dark = this.add.rectangle(0, 0, W, H, 0x000000, 0).setOrigin(0).setDepth(7);
-    const crop = [298, 90, 370, 150]; // região do logo VH no palco (imagem de 960x540)
-    this.logo = this.add.image(0, 0, 'stage').setOrigin(0).setCrop(...crop).setDepth(8).setAlpha(0);
-    this.logoGlow = this.add.image(0, 0, 'stage').setOrigin(0).setCrop(...crop).setDepth(8)
+    // luta no palco de quem está à direita (o adversário do P1, como nos fliperamas); sem palco próprio, o do Eddie
+    // palco escolhido; sem escolha, o da casa de quem está à direita (como nos fliperamas)
+    const ok = id => stageById(id) && this.textures.exists(`stage_${id}`);
+    const id = [this.stageId, this.chars[1].stage, this.chars[0].stage, 'eddie'].find(ok);
+    const st = stageById(id) || STAGES[0], key = id ? `stage_${id}` : 'stage';
+    const neon = st.neon && this.textures.exists(`${key}_neon`) ? `${key}_neon` : null;
+    const crop = neon ? [0, 0, 960, 540] : st.logo || [0, 0, 0, 0]; // sem logo: na vitória só os canhões de luz
+    this.add.image(0, 0, key).setOrigin(0).setDisplaySize(W, H).setDepth(0);
+    // vitória: o palco escurece, só o logo continua aceso e os canhões de luz miram o vencedor
+    this.dark = this.add.rectangle(0, 0, W, H, 0x000000, 1).setOrigin(0).setDepth(7).setAlpha(0); // preenchimento opaco: quem escurece é o alpha
+    // o que fica aceso na vitória: o recorte do logo, ou uma camada só com os letreiros neon
+    this.logo = this.add.image(0, 0, neon || key).setOrigin(0).setDisplaySize(W, H).setCrop(...crop).setDepth(8).setAlpha(0);
+    this.logoGlow = this.add.image(0, 0, neon || key).setOrigin(0).setDisplaySize(W, H).setCrop(...crop).setDepth(8)
       .setBlendMode(Phaser.BlendModes.ADD).setAlpha(0);
     this.beams = this.add.graphics().setDepth(9).setBlendMode(Phaser.BlendModes.ADD);
   }
@@ -1007,11 +1127,11 @@ class Fight extends Phaser.Scene {
 
   // PROJÉTIL (Eruption): anda reto; dois projéteis se anulam
   spawnProjectile(f) {
-    const m = f.m, x = f.x + f.facing * px(125), y = FLOOR - px(145);
+    const m = f.m, x = f.x + f.facing * px(125), y = FLOOR - px(m.projY || 145);
     const spr = this.add.sprite(x, y, this.tk(f.char, m.tex || 'projectile'), 0).setDepth(20).setFlipX(f.facing < 0).setScale((m.projScale || 1.35) * SC);
     if (f.tint !== 0xffffff) spr.setTint(f.tint);
     const sp = m.speed || [5, 8];
-    const pr = { owner: f, x, y, dir: f.facing, v: f.projFast ? sp[1] : sp[0], spr, t: 0, payload: m.payload || PROJ, boomerang: !!m.boomerang };
+    const pr = { owner: f, x, y, dir: f.facing, v: f.projFast ? sp[1] : sp[0], spr, t: 0, payload: m.payload || PROJ, boomerang: !!m.boomerang, box: m.projBox || [72, 48] };
     if (pr.boomerang) { pr.v0 = pr.v; pr.acc = -pr.v / 150; } // vai longe, freia e volta para a mão
     f.proj = pr; this.projs.push(pr);
   }
@@ -1026,7 +1146,7 @@ class Fight extends Phaser.Scene {
         if (pr.v < -pr.v0 * 1.3) pr.v = -pr.v0 * 1.3;
       }
       pr.x += pr.dir * pr.v; pr.t++;
-      const box = { x: pr.x - 36, y: pr.y - 24, w: 72, h: 48 };
+      const box = { x: pr.x - pr.box[0] / 2, y: pr.y - pr.box[1] / 2, w: pr.box[0], h: pr.box[1] };
       const def = this.p[1 - pr.owner.side];
       if (def.state !== 'ko' && !(def.inv > 0) && overlap(box, def.hurtbox())) { pr.dead = true; this.applyHit(pr.owner, def, pr.payload, pr.x + pr.dir * 30, pr.y, true); }
       for (const o of this.projs) if (o !== pr && !o.dead && o.owner !== pr.owner && Math.abs(o.x - pr.x) < 60) { o.dead = pr.dead = true; this.boom((o.x + pr.x) / 2, pr.y + 40, 0.8, pr.owner.char); }
@@ -1475,7 +1595,7 @@ Promise.all(['16px "Press Start 2P"', 'italic 900 40px Kanit', '40px "Mr Dafoe"'
   const game = new Phaser.Game({
     type: Phaser.AUTO, parent: 'game', width: W, height: H, backgroundColor: '#0b0710',
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, fullscreenTarget: 'game' },
-    scene: [Boot, Select, Fight],
+    scene: [Boot, Select, StageSelect, Fight],
   });
   window.AXE = game; // para testes no console
   // tela cheia: botão da página ou tecla T
