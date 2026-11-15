@@ -266,18 +266,20 @@ CHARS.slash = {
 };
 for (const [id, c] of Object.entries(CHARS)) c.id = id;
 
-// PALCOS (escolhidos depois dos lutadores). logo: região em 960x540 que fica acesa na vitória;
-// neon: camada só com os letreiros, acesa no lugar do logo. Palco sem imagem não aparece na escolha.
+// PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
+// Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=8e79721', logo: [298, 90, 370, 150] },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=8e79721', neon: 'assets/stages/palco-slash-neon.png' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=8e79721' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=8e79721' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=8e79721' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=8e79721' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=8e79721' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=cb4223e' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=cb4223e' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=cb4223e' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=cb4223e' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=cb4223e' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=cb4223e' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=cb4223e' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
+// templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=cb4223e', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -395,16 +397,16 @@ class Boot extends Phaser.Scene {
     this.load.on('progress', v => t.setText(`LOADING ${Math.round(v * 100)}%`));
     this.load.on('loaderror', file => console.warn('Axe Masters: missing file', file.src)); // segue sem ela
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
+    this.load.image('temple', TEMPLE.file);
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
-      if (st.neon) this.load.image(`stage_${st.id}_neon`, st.neon);
     }
     for (const c of Object.values(CHARS)) {
       if (c.placeholder) continue; // sem arte própria ainda: texKey usa as folhas do placeholder
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=8e79721`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=cb4223e`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -731,14 +733,12 @@ class Fight extends Phaser.Scene {
     const ok = id => stageById(id) && this.textures.exists(`stage_${id}`);
     const id = [this.stageId, this.chars[1].stage, this.chars[0].stage, 'eddie'].find(ok);
     const st = stageById(id) || STAGES[0], key = id ? `stage_${id}` : 'stage';
-    const neon = st.neon && this.textures.exists(`${key}_neon`) ? `${key}_neon` : null;
-    const crop = neon ? [0, 0, 960, 540] : st.logo || [0, 0, 0, 0]; // sem logo: na vitória só os canhões de luz
     this.add.image(0, 0, key).setOrigin(0).setDisplaySize(W, H).setDepth(0);
     // vitória: o palco escurece, só o logo continua aceso e os canhões de luz miram o vencedor
-    this.dark = this.add.rectangle(0, 0, W, H, 0x000000, 1).setOrigin(0).setDepth(7).setAlpha(0); // preenchimento opaco: quem escurece é o alpha
-    // o que fica aceso na vitória: o recorte do logo, ou uma camada só com os letreiros neon
-    this.logo = this.add.image(0, 0, neon || key).setOrigin(0).setDisplaySize(W, H).setCrop(...crop).setDepth(8).setAlpha(0);
-    this.logoGlow = this.add.image(0, 0, neon || key).setOrigin(0).setDisplaySize(W, H).setCrop(...crop).setDepth(8)
+    // vitória: o palco some num fundo escuro e o Templo dos Deuses da Guitarra aparece
+    this.dark = this.add.rectangle(0, 0, W, H, 0x000000, 1).setOrigin(0).setDepth(7).setAlpha(0);
+    this.temple = this.add.image(0, 0, this.textures.exists('temple') ? 'temple' : key).setOrigin(0).setDisplaySize(W, H).setDepth(8).setAlpha(0);
+    this.templeGlow = this.add.image(0, 0, this.textures.exists('temple') ? 'temple' : key).setOrigin(0).setDisplaySize(W, H).setDepth(8)
       .setBlendMode(Phaser.BlendModes.ADD).setAlpha(0);
     this.beams = this.add.graphics().setDepth(9).setBlendMode(Phaser.BlendModes.ADD);
   }
@@ -754,7 +754,7 @@ class Fight extends Phaser.Scene {
     (this.sliders || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.sliders = [];
     this.bolts = []; this.rainT = 0; if (this.rainG) this.rainG.clear();
     (this.hypnos || []).forEach(h => h.spr.destroy()); this.hypnos = [];
-    if (this.dark) { this.dark.setAlpha(0); this.logo.setAlpha(0); this.logoGlow.setAlpha(0); this.beams.clear(); }
+    if (this.dark) { this.dark.setAlpha(0); this.temple.setAlpha(0); this.templeGlow.setAlpha(0); this.beams.clear(); }
     this.p.forEach(f => f.spr.setTint(f.tint));
     this.timer = ROUND_TIME; this.tick = 0; this.phase = 'intro'; this.phaseT = 0; this.hitstop = 0; this.slow = 0;
   }
@@ -1389,14 +1389,14 @@ class Fight extends Phaser.Scene {
     const w = this.winner >= 0 ? this.p[this.winner] : null;
     if (!w || w.state !== 'victory') return;
     const k = Math.min(1, w.t / 30); // escurece em meio segundo
-    this.dark.setAlpha(0.97 * k);
-    this.logo.setAlpha(k);
-    this.logoGlow.setAlpha(k * (0.35 + 0.35 * Math.sin(w.t / 6)));
+    this.dark.setAlpha(k);
+    this.temple.setAlpha(k);
+    this.templeGlow.setAlpha(k * (0.06 + 0.06 * Math.sin(w.t / 10))); // o templo respira de leve
     this.p[1 - this.winner].spr.setTint(0x333344);
     // canhões de luz saindo das treliças e mirando o vencedor
     const g = this.beams; g.clear();
     const tx = w.x, ty = FLOOR - 120;
-    [[90, 40, 0xffd27a], [300, 30, 0x7ab8ff], [660, 30, 0x7ab8ff], [870, 40, 0xffd27a]].forEach(([lx, ly, c], i) => {
+    TEMPLE.lamps.forEach(([lx, ly, c], i) => {
       const sway = Math.sin(w.t / 20 + i) * 12;
       g.fillStyle(c, 0.16 * k);
       g.fillTriangle(lx, ly, tx - 70 + sway, FLOOR + 10, tx + 70 + sway, FLOOR + 10);
