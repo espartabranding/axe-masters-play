@@ -535,10 +535,10 @@ class Fight extends Phaser.Scene {
   }
 
   makeBanner() {
-    const c = this.add.container(W / 2, 104).setDepth(58).setVisible(false);
+    const c = this.add.container(W / 2, 488).setDepth(58).setVisible(false);
     this.bnBand = this.add.graphics();
     this.bnName = this.add.text(0, 3, 'X', { fontFamily: FONT_CHROME, fontStyle: 'italic 900', fontSize: '38px', color: '#fff', stroke: '#0a0612', strokeThickness: 5, padding: { x: 16, y: 4 } }).setOrigin(0.5);
-    this.bnTag = this.add.text(0, 40, 'x', { fontFamily: FONT_NEON, fontSize: '28px', color: '#fff', padding: { x: 16, y: 8 } }).setOrigin(0.5).setAngle(-4);
+    this.bnTag = this.add.text(0, 34, 'x', { fontFamily: FONT_NEON, fontSize: '28px', color: '#fff', padding: { x: 16, y: 8 } }).setOrigin(0.5).setAngle(-4);
     c.add([this.bnBand, this.bnName, this.bnTag]);
     this.banner = c; this.bannerT = 0; this.bannerPow = null;
   }
@@ -555,7 +555,7 @@ class Fight extends Phaser.Scene {
   // faixa inclinada com linhas de velocidade e bordas neon, redesenhada a cada quadro
   drawBanner() {
     const bt = this.bannerT, pw = this.bannerPow, c = this.banner;
-    c.setVisible(bt > 0); if (bt <= 0 || !pw) return;
+    c.setVisible(bt > 0); this.tMode.setVisible(bt <= 0); if (bt <= 0 || !pw) return;
     const age = 70 - bt, open = Math.min(1, age / 7), close = Math.min(1, bt / 10);
     const g = this.bnBand; g.clear();
     const hw = (this.bnName.width / 2 + 14) * open, top = -16, bot = 22, sk = 12;
