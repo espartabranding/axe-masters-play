@@ -13,6 +13,19 @@ const ANIMS = {
 const MAX_HP = 950, WALK_F = 3.2, WALK_B = 2.6, MIN_GAP = 95, ROUND_TIME = 99;
 const JUMP_V = -17, GRAV = 0.85, JUMP_VX = 3.6;
 
+// tipografia anos 80: cromado pesado (Kanit Black Italic), neon em script (Mr Dafoe) e arcade (Press Start 2P)
+const FONT_CHROME = 'Kanit', FONT_NEON = '"Mr Dafoe"', FONT_PIXEL = '"Press Start 2P"';
+// letreiro de cada especial: nome cromado + assinatura neon na cor do poder
+const POWERS = {
+  eruption:   { name: 'ERUPTION',    tag: 'Bola de fogo',     neon: '#ff7a1a', edge: 0xff7a1a, deep: 0x3a0d00 },
+  brownsound: { name: 'BROWN SOUND', tag: 'Distorção',        neon: '#ffb347', edge: 0xc8742a, deep: 0x2a1408 },
+  sharkbite:  { name: 'SHARK BITE',  tag: 'Ibanez Shark',     neon: '#3cf0ff', edge: 0x3cf0ff, deep: 0x04243a },
+  bumblebee:  { name: 'BUMBLEBEE',   tag: 'Enxame',           neon: '#ffe14a', edge: 0xffe14a, deep: 0x1a1600 },
+  drill:      { name: 'POUNDCAKE',   tag: 'Furadeira Makita', neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
+  panama:     { name: 'PANAMA',      tag: 'Lamborghini',      neon: '#ff3d6e', edge: 0xff3d6e, deep: 0x33040f },
+  divebomb:   { name: 'DIVE BOMB',   tag: 'Alavanca',         neon: '#c77dff', edge: 0xc77dff, deep: 0x1d0838 },
+};
+
 // hit: retângulo relativo aos pés, x para frente. frames: quadros da folha usados em cada etapa.
 const MOVES = {
   // Pick Slash: palhetada em leque com onda sonora
@@ -110,14 +123,18 @@ class Fight extends Phaser.Scene {
     this.debug = this.add.graphics().setDepth(40);
     this.showBoxes = false;
     this.hud = this.add.graphics().setDepth(50);
-    const f = { fontFamily: '"Press Start 2P", monospace' };
-    this.tTimer = this.add.text(W / 2, 30, '99', { ...f, fontSize: '28px', color: '#ffe14a' }).setOrigin(0.5, 0).setDepth(51);
-    this.tN1 = this.add.text(36, 58, 'EDDIE', { ...f, fontSize: '14px', color: '#ffffff' }).setDepth(51);
-    this.tN2 = this.add.text(W - 36, 58, 'EDDIE 2P', { ...f, fontSize: '14px', color: '#9fc8ff' }).setOrigin(1, 0).setDepth(51);
-    this.tMsg = this.add.text(W / 2, 220, '', { ...f, fontSize: '48px', color: '#ffe14a', stroke: '#ff3d6e', strokeThickness: 8 }).setOrigin(0.5).setDepth(60);
-    this.tSub = this.add.text(W / 2, 290, '', { ...f, fontSize: '14px', color: '#ffffff' }).setOrigin(0.5).setDepth(60);
-    this.tBanner = this.add.text(W / 2, 140, '', { ...f, fontSize: '40px', color: '#ffe14a', stroke: '#c0162f', strokeThickness: 10 }).setOrigin(0.5).setDepth(58); this.bannerT = 0;
-    this.tMode = this.add.text(W / 2, H - 22, '', { ...f, fontSize: '10px', color: '#9a8bb3' }).setOrigin(0.5).setDepth(51);
+    const px = { fontFamily: FONT_PIXEL };
+    const cr = { fontFamily: FONT_CHROME, fontStyle: 'italic 900', padding: { x: 24, y: 6 } };
+    this.tTimer = this.add.text(W / 2, 22, '99', { ...cr, fontSize: '44px', color: '#ffe14a', stroke: '#1a0b24', strokeThickness: 6 }).setOrigin(0.5, 0).setDepth(51);
+    this.chrome(this.tTimer, 'gold');
+    this.tN1 = this.add.text(12, 52, 'EDDIE', { ...cr, fontSize: '24px', color: '#ffffff', stroke: '#1a0b24', strokeThickness: 5 }).setDepth(51);
+    this.tN2 = this.add.text(W - 12, 52, 'EDDIE 2P', { ...cr, fontSize: '24px', color: '#9fc8ff', stroke: '#1a0b24', strokeThickness: 5 }).setOrigin(1, 0).setDepth(51);
+    this.tMsg = this.add.text(W / 2, 220, '', { ...cr, fontSize: '96px', color: '#ffffff', stroke: '#14061f', strokeThickness: 10 }).setOrigin(0.5).setDepth(60);
+    this.tMsg.setShadow(0, 0, '#ff3d6e', 24, true, false);
+    this.tSub = this.add.text(W / 2, 300, '', { ...px, fontSize: '14px', color: '#3cf0ff' }).setOrigin(0.5).setDepth(60);
+    this.tSub.setShadow(0, 0, '#3cf0ff', 10, false, true);
+    this.tMode = this.add.text(W / 2, H - 22, '', { ...px, fontSize: '10px', color: '#9a8bb3' }).setOrigin(0.5).setDepth(51);
+    this.makeBanner();
 
     const K = Phaser.Input.Keyboard.KeyCodes;
     this.keys = this.input.keyboard.addKeys({
@@ -270,13 +287,13 @@ class Fight extends Phaser.Scene {
     if (f.free) {
       f.facing = op.x >= f.x ? 1 : -1;
       const punch = inp.lp || inp.hp, kick = inp.lk || inp.hk;
-      if (punch && (inp.special === 'brownsound' || hasMotion(f.buf, [2, 5, 2]))) { f.startMove('brownsound'); f.inv = MOVES.brownsound.inv; this.announce('BROWN SOUND!'); }
-      else if (kick && (inp.special === 'sharkbite' || hasMotion(f.buf, [2, 1, 4]))) { f.startMove('sharkbite'); this.announce('SHARK BITE!'); }
-      else if (kick && !f.swarm && (inp.special === 'bumblebee' || hasMotion(f.buf, [2, 5, 2]))) { f.startMove('bumblebee'); this.announce('BUMBLEBEE!'); }
-      else if (punch && (inp.special === 'drill' || hasMotion(f.buf, [6, 5, 6]))) { f.startMove('drill'); this.announce('POUNDCAKE!'); }
-      else if (kick && (inp.special === 'panama' || hasMotion(f.buf, [2, 3, 6]))) { f.startMove('panama'); this.announce('PANAMA!'); }
-      else if (punch && !f.proj && (inp.special === 'eruption' || hasMotion(f.buf, [2, 3, 6]))) { f.startMove('eruption'); f.projFast = !!inp.hp; this.announce('ERUPTION!'); }
-      else if (punch && !f.bombs && (inp.special === 'divebomb' || hasMotion(f.buf, [2, 1, 4]))) { f.startMove('divebomb'); f.bombTarget = op.x; this.announce('DIVE BOMB!'); }
+      if (punch && (inp.special === 'brownsound' || hasMotion(f.buf, [2, 5, 2]))) { f.startMove('brownsound'); f.inv = MOVES.brownsound.inv; this.announce('brownsound'); }
+      else if (kick && (inp.special === 'sharkbite' || hasMotion(f.buf, [2, 1, 4]))) { f.startMove('sharkbite'); this.announce('sharkbite'); }
+      else if (kick && !f.swarm && (inp.special === 'bumblebee' || hasMotion(f.buf, [2, 5, 2]))) { f.startMove('bumblebee'); this.announce('bumblebee'); }
+      else if (punch && (inp.special === 'drill' || hasMotion(f.buf, [6, 5, 6]))) { f.startMove('drill'); this.announce('drill'); }
+      else if (kick && (inp.special === 'panama' || hasMotion(f.buf, [2, 3, 6]))) { f.startMove('panama'); this.announce('panama'); }
+      else if (punch && !f.proj && (inp.special === 'eruption' || hasMotion(f.buf, [2, 3, 6]))) { f.startMove('eruption'); f.projFast = !!inp.hp; this.announce('eruption'); }
+      else if (punch && !f.bombs && (inp.special === 'divebomb' || hasMotion(f.buf, [2, 1, 4]))) { f.startMove('divebomb'); f.bombTarget = op.x; this.announce('divebomb'); }
       else if (inp.lp) f.startMove('lp');
       else if (inp.hp) f.startMove('hp');
       else if (inp.lk) f.startMove('lk');
@@ -507,7 +524,59 @@ class Fight extends Phaser.Scene {
     g.fillStyle(0xfff2c0, 0.18 * k); g.fillEllipse(tx, FLOOR + 4, 260, 40);
   }
 
-  announce(text) { this.tBanner.setText(text); this.bannerT = 60; this.flashT = 8; }
+  // gradiente cromado anos 80: céu claro em cima, horizonte escuro no meio, reflexo quente embaixo
+  chrome(t, kind = 'steel') {
+    const g = t.context.createLinearGradient(0, t.padding.top, 0, (t.height || 100) - t.padding.bottom);
+    const stops = kind === 'gold'
+      ? [[0, '#fffbe6'], [0.45, '#ffd23c'], [0.5, '#7a3b00'], [0.56, '#c96a00'], [1, '#ffe9a8']]
+      : [[0, '#ffffff'], [0.2, '#cfeaff'], [0.48, '#5aa8e6'], [0.5, '#1b1033'], [0.55, '#5a2a6a'], [0.78, '#ff9a5a'], [1, '#fff1c4']];
+    for (const [o, c] of stops) g.addColorStop(o, c);
+    t.setFill(g);
+  }
+
+  makeBanner() {
+    const c = this.add.container(W / 2, 178).setDepth(58).setVisible(false);
+    this.bnBand = this.add.graphics();
+    this.bnName = this.add.text(0, 6, 'X', { fontFamily: FONT_CHROME, fontStyle: 'italic 900', fontSize: '72px', color: '#fff', stroke: '#0a0612', strokeThickness: 9, padding: { x: 30, y: 8 } }).setOrigin(0.5);
+    this.bnTag = this.add.text(0, -46, 'x', { fontFamily: FONT_NEON, fontSize: '54px', color: '#fff', padding: { x: 30, y: 14 } }).setOrigin(0.5).setAngle(-7);
+    c.add([this.bnBand, this.bnName, this.bnTag]);
+    this.banner = c; this.bannerT = 0; this.bannerPow = null;
+  }
+
+  announce(key) {
+    const pw = POWERS[key]; if (!pw) return;
+    this.bannerPow = pw; this.bannerT = 70; this.flashT = 8;
+    this.bnName.setText(pw.name); this.chrome(this.bnName);
+    this.bnName.setShadow(0, 0, pw.neon, 26, true, false);
+    this.bnTag.setText(pw.tag).setStroke(pw.neon, 3).setShadow(0, 0, pw.neon, 18, true, true);
+    this.bnTag.x = -this.bnName.width * 0.2;
+  }
+
+  // faixa inclinada com linhas de velocidade e bordas neon, redesenhada a cada quadro
+  drawBanner() {
+    const bt = this.bannerT, pw = this.bannerPow, c = this.banner;
+    c.setVisible(bt > 0); if (bt <= 0 || !pw) return;
+    const age = 70 - bt, open = Math.min(1, age / 7), close = Math.min(1, bt / 10);
+    const g = this.bnBand; g.clear();
+    const hw = (this.bnName.width / 2 + 30) * open, top = -26, bot = 44, sk = 22;
+    g.fillStyle(pw.deep, 0.88 * close);
+    g.fillPoints([{ x: -hw + sk, y: top }, { x: hw + sk, y: top }, { x: hw - sk, y: bot }, { x: -hw - sk, y: bot }], true);
+    g.lineStyle(2, pw.edge, 0.35 * close);
+    for (let i = 0; i < 6; i++) {
+      const yy = top + 8 + i * 11, span = hw * 2 + 200, off = ((age * 14 + i * 97) % span) - hw - 100;
+      const x0 = Math.max(-hw, off), x1 = Math.min(hw, off + 90);
+      if (x1 > x0) g.lineBetween(x0, yy, x1, yy);
+    }
+    for (const [wd, a] of [[10, 0.18], [4, 0.5], [2, 1]]) {
+      g.lineStyle(wd, pw.edge, a * close);
+      g.lineBetween(-hw + sk, top, hw + sk, top); g.lineBetween(-hw - sk, bot, hw - sk, bot);
+    }
+    // o nome bate com tranco; a assinatura neon acende logo depois e tremula
+    const pop = age < 6 ? 1.6 - age * 0.1 : 1;
+    this.bnName.setScale(pop).setAlpha(close);
+    this.bnTag.setAlpha(close * Math.min(1, Math.max(0, (age - 5) / 6)) * (0.85 + 0.15 * Math.sin(age * 1.7)));
+    c.x = W / 2 + (bt < 10 ? (10 - bt) * 18 : 0);
+  }
 
   updateFx() {
     for (const e of this.fx) { e.t++; e.x += e.vx; e.y += e.vy; e.spr.setPosition(e.x, e.y); }
@@ -555,8 +624,7 @@ class Fight extends Phaser.Scene {
 
     this.renderVictoryLights();
     for (const e of this.fx) e.spr.setFrame(Math.min(e.n - 1, Math.floor(e.t / e.rate)));
-    const bt = this.bannerT;
-    this.tBanner.setVisible(bt > 0).setScale(bt > 52 ? 1 + (bt - 52) * 0.12 : 1).setAlpha(bt < 10 ? bt / 10 : 1);
+    this.drawBanner();
     this.flash.setAlpha(this.flashT > 0 ? this.flashT / 8 * 0.6 : 0);
 
     // caixas de colisão (tecla H)
@@ -593,11 +661,12 @@ class Fight extends Phaser.Scene {
     if (this.phase === 'over') {
       msg = this.wins[0] > this.wins[1] ? 'P1 VENCEU!' : 'P2 VENCEU!'; sub = 'APERTE ENTER PARA JOGAR DE NOVO';
     }
-    this.tMsg.setText(msg); this.tSub.setText(sub);
+    if (this.tMsg.text !== msg) { this.tMsg.setText(msg); if (msg) this.chrome(this.tMsg); }
+    this.tSub.setText(sub);
   }
 }
 
-document.fonts.load('16px "Press Start 2P"').catch(() => {}).finally(() => {
+Promise.all(['16px "Press Start 2P"', 'italic 900 40px Kanit', '40px "Mr Dafoe"'].map(f => document.fonts.load(f))).catch(() => {}).finally(() => {
   const game = new Phaser.Game({
     type: Phaser.AUTO, parent: 'game', width: W, height: H, backgroundColor: '#0b0710',
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, fullscreenTarget: 'game' },

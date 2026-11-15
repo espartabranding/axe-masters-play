@@ -4,15 +4,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Axe Masters Protótipo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,600;1,800;1,900&family=Mr+Dafoe&family=Press+Start+2P&display=swap">
 <style>
 :root{--bg:#0b0710;--panel:#150d1f;--ink:#f3ecff;--muted:#9a8bb3;--hot:#ff3d6e;--amp:#ffc93c;--volt:#3cf0ff;--line:#2c1f3d;
-  --px:'Press Start 2P',monospace;--body:'Inter',system-ui,sans-serif;color-scheme:dark}
+  --px:'Press Start 2P',monospace;--chrome:'Kanit',system-ui,sans-serif;--neon:'Mr Dafoe',cursive;--body:'Kanit',system-ui,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);padding-block:20px 40px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 main{max-width:980px;margin:0 auto;display:grid;gap:16px}
-h1{font-family:var(--px);font-size:clamp(14px,3vw,20px);color:var(--amp);margin:0}
+h1{margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;line-height:1}
+.logo{font-family:var(--chrome);font-style:italic;font-weight:900;font-size:clamp(30px,6vw,48px);letter-spacing:.01em;padding-right:.15em;
+  background:linear-gradient(180deg,#fff 0%,#cfeaff 20%,#5aa8e6 48%,#1b1033 50%,#5a2a6a 55%,#ff9a5a 78%,#fff1c4 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1px #0b0710;filter:drop-shadow(0 0 10px rgba(255,61,110,.55))}
+.sig{font-family:var(--neon);font-weight:400;font-size:clamp(26px,4.5vw,36px);color:#fff;transform:rotate(-6deg);
+  text-shadow:0 0 4px var(--hot),0 0 12px var(--hot),0 0 24px var(--hot)}
 #game{width:100%;outline:4px solid var(--line);background:#000;line-height:0;overflow:hidden}
 #game canvas{max-width:100%}
 #game:fullscreen{border:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}
@@ -22,13 +27,14 @@ h1{font-family:var(--px);font-size:clamp(14px,3vw,20px);color:var(--amp);margin:
 #fs:focus-visible{outline:3px solid var(--volt);outline-offset:2px}
 .ctrl{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .box{background:var(--panel);border:2px solid var(--line);padding:14px;display:grid;gap:8px;min-width:0;align-content:start}
-.box h2{font-family:var(--px);font-size:11px;color:var(--hot);margin:0}
+.box h2{font-family:var(--chrome);font-style:italic;font-weight:900;font-size:22px;letter-spacing:.02em;color:var(--hot);margin:0;text-shadow:0 0 12px rgba(255,61,110,.5)}
+.box b{font-family:var(--chrome);font-style:italic;font-weight:800;color:var(--amp);letter-spacing:.02em;text-transform:uppercase}
 .box p{margin:0;font-size:14px;color:var(--muted);line-height:1.6}
 kbd{font-family:var(--px);font-size:10px;background:#2a1a3a;border:1px solid #4a2a60;border-bottom-width:3px;padding:3px 6px;color:var(--ink)}
 .tip{font-size:13px;color:var(--muted)}
 </style>
 <main>
-  <div class="bar"><h1>AXE MASTERS · Protótipo 1</h1><button id="fs" type="button">⛶ TELA CHEIA (T)</button></div>
+  <div class="bar"><h1><span class="logo">AXE MASTERS</span><span class="sig">Protótipo 1</span></h1><button id="fs" type="button">⛶ TELA CHEIA (T)</button></div>
   <div id="game"></div>
   <p class="tip">Clique no jogo antes de jogar, para o teclado responder. <span id="dbg"></span></p>
 <script>window.addEventListener('error',e=>{document.getElementById('dbg').textContent='ERRO: '+e.message+' @'+(e.lineno||'')});</script>
