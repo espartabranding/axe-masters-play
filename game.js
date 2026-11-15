@@ -535,10 +535,10 @@ class Fight extends Phaser.Scene {
   }
 
   makeBanner() {
-    const c = this.add.container(W / 2, 178).setDepth(58).setVisible(false);
+    const c = this.add.container(W / 2, 104).setDepth(58).setVisible(false);
     this.bnBand = this.add.graphics();
-    this.bnName = this.add.text(0, 6, 'X', { fontFamily: FONT_CHROME, fontStyle: 'italic 900', fontSize: '72px', color: '#fff', stroke: '#0a0612', strokeThickness: 9, padding: { x: 30, y: 8 } }).setOrigin(0.5);
-    this.bnTag = this.add.text(0, -46, 'x', { fontFamily: FONT_NEON, fontSize: '54px', color: '#fff', padding: { x: 30, y: 14 } }).setOrigin(0.5).setAngle(-7);
+    this.bnName = this.add.text(0, 3, 'X', { fontFamily: FONT_CHROME, fontStyle: 'italic 900', fontSize: '38px', color: '#fff', stroke: '#0a0612', strokeThickness: 5, padding: { x: 16, y: 4 } }).setOrigin(0.5);
+    this.bnTag = this.add.text(0, 40, 'x', { fontFamily: FONT_NEON, fontSize: '28px', color: '#fff', padding: { x: 16, y: 8 } }).setOrigin(0.5).setAngle(-4);
     c.add([this.bnBand, this.bnName, this.bnTag]);
     this.banner = c; this.bannerT = 0; this.bannerPow = null;
   }
@@ -547,9 +547,9 @@ class Fight extends Phaser.Scene {
     const pw = POWERS[key]; if (!pw) return;
     this.bannerPow = pw; this.bannerT = 70; this.flashT = 8;
     this.bnName.setText(pw.name); this.chrome(this.bnName);
-    this.bnName.setShadow(0, 0, pw.neon, 26, true, false);
-    this.bnTag.setText(pw.tag).setStroke(pw.neon, 3).setShadow(0, 0, pw.neon, 18, true, true);
-    this.bnTag.x = -this.bnName.width * 0.2;
+    this.bnName.setShadow(0, 0, pw.neon, 14, true, false);
+    this.bnTag.setText(pw.tag).setStroke(pw.neon, 2).setShadow(0, 0, pw.neon, 10, true, true);
+    this.bnTag.x = this.bnName.width * 0.18;
   }
 
   // faixa inclinada com linhas de velocidade e bordas neon, redesenhada a cada quadro
@@ -558,12 +558,12 @@ class Fight extends Phaser.Scene {
     c.setVisible(bt > 0); if (bt <= 0 || !pw) return;
     const age = 70 - bt, open = Math.min(1, age / 7), close = Math.min(1, bt / 10);
     const g = this.bnBand; g.clear();
-    const hw = (this.bnName.width / 2 + 30) * open, top = -26, bot = 44, sk = 22;
+    const hw = (this.bnName.width / 2 + 14) * open, top = -16, bot = 22, sk = 12;
     g.fillStyle(pw.deep, 0.88 * close);
     g.fillPoints([{ x: -hw + sk, y: top }, { x: hw + sk, y: top }, { x: hw - sk, y: bot }, { x: -hw - sk, y: bot }], true);
     g.lineStyle(2, pw.edge, 0.35 * close);
-    for (let i = 0; i < 6; i++) {
-      const yy = top + 8 + i * 11, span = hw * 2 + 200, off = ((age * 14 + i * 97) % span) - hw - 100;
+    for (let i = 0; i < 4; i++) {
+      const yy = top + 7 + i * 8, span = hw * 2 + 200, off = ((age * 14 + i * 97) % span) - hw - 100;
       const x0 = Math.max(-hw, off), x1 = Math.min(hw, off + 90);
       if (x1 > x0) g.lineBetween(x0, yy, x1, yy);
     }
@@ -572,10 +572,10 @@ class Fight extends Phaser.Scene {
       g.lineBetween(-hw + sk, top, hw + sk, top); g.lineBetween(-hw - sk, bot, hw - sk, bot);
     }
     // o nome bate com tranco; a assinatura neon acende logo depois e tremula
-    const pop = age < 6 ? 1.6 - age * 0.1 : 1;
+    const pop = age < 6 ? 1.3 - age * 0.05 : 1;
     this.bnName.setScale(pop).setAlpha(close);
     this.bnTag.setAlpha(close * Math.min(1, Math.max(0, (age - 5) / 6)) * (0.85 + 0.15 * Math.sin(age * 1.7)));
-    c.x = W / 2 + (bt < 10 ? (10 - bt) * 18 : 0);
+    c.x = W / 2 + (bt < 10 ? (10 - bt) * 12 : 0);
   }
 
   updateFx() {
