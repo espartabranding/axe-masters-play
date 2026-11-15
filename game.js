@@ -277,17 +277,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=6046b4c' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=6046b4c' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=6046b4c' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=6046b4c' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=6046b4c' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=6046b4c' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=6046b4c' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=0fbcf46' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=0fbcf46' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=0fbcf46' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=0fbcf46' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=0fbcf46' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=0fbcf46' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=0fbcf46' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=6046b4c', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=0fbcf46', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -407,10 +407,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=6046b4c`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=0fbcf46`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=6046b4c`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=6046b4c`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=0fbcf46`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=0fbcf46`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -419,7 +419,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=6046b4c`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=0fbcf46`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -430,6 +430,8 @@ class Boot extends Phaser.Scene {
 // CAPA ANIMADA: o logo do Rock n' Bira despenca, "BATTLE" entra rasgando, os holofotes varrem o palco,
 // os lutadores acendem dos lados e o Ricardinho passa correndo com a bandeira. Qualquer botão começa.
 // ---------------------------------------------------------------------------------------------
+// metade da largura do copo (sem a alça) na folha da caneca: com esse afastamento os copos se encostam no brinde
+const MUG_HALF = 0.3;
 const TOAST_SPOTS = [[170, 92], [790, 92], [815, 240], [840, 385]];
 const BIRA_X = 170; // onde o Ricardinho para na capa // onde as canecas se encontram na capa
 class Title extends Phaser.Scene {
@@ -527,22 +529,24 @@ class Title extends Phaser.Scene {
   // abertura: duas canecas gigantes entram pelos lados e se batem no meio da tela; depois o logo cai (then)
   bigToast(then) {
     if (!this.textures.exists('mug')) { then(); return; }
-    const sc = 1.0, gap = 300 * sc * 0.42, y = 270;
+    const sc = 1.0, gap = 300 * sc * MUG_HALF, y = 270;
     const mugs = [-1, 1].map(side => {
       const m = this.add.sprite(W / 2 + side * (W / 2 + 200), y + 40, 'mug', 0).setScale(sc).setFlipX(side > 0)
         .setAngle(side * 32).setDepth(20);
       this.intro.push(m);
-      this.tweens.add({ targets: m, x: W / 2 + side * gap, y, angle: side * -12, duration: 520, delay: 200, ease: 'Cubic.easeIn' });
+      // o choque só acontece quando a caneca da direita chega de fato ao meio (as duas andam juntas)
+      this.tweens.add({ targets: m, x: W / 2 + side * gap, y, angle: side * -12, duration: 520, delay: 200, ease: 'Cubic.easeIn',
+        onComplete: side > 0 ? () => clink() : undefined });
       return m;
     });
-    this.time.delayedCall(720, () => {
-      // CLINK! clarão, tela treme, espirro enorme de chopp e estrelinhas
+    const clink = () => {
+      // CLINK! os copos ficam encostados um instante, clarão, tela treme, espirro enorme de chopp e estrelinhas
       this.cameras.main.shake(260, 0.016);
       this.flash.setAlpha(0.7); this.tweens.add({ targets: this.flash, alpha: 0, duration: 380 });
       mugs.forEach((m, i) => {
         const side = i ? 1 : -1;
         m.setFrame(4); // espuma escorrendo
-        this.tweens.add({ targets: m, x: W / 2 + side * (gap + 60), angle: side * 22, duration: 170, yoyo: true, ease: 'Quad.easeOut' });
+        this.tweens.add({ targets: m, x: W / 2 + side * (gap + 30), angle: side * 6, duration: 160, delay: 140, yoyo: true, ease: 'Quad.easeOut' });
       });
       if (this.textures.exists('splash')) {
         const sp = this.add.sprite(W / 2, y - 60, 'splash', 0).setScale(1.5).setOrigin(0.5, 1).setDepth(21);
@@ -553,19 +557,19 @@ class Title extends Phaser.Scene {
         } });
       }
       for (let i = 0; i < 14; i++) this.spawnTwinkle(W / 2 + Phaser.Math.Between(-220, 220), y - Phaser.Math.Between(40, 260), 0.8 + Math.random() * 0.8);
-    });
-    // as canecas saem de cena (sobem e somem) e o logo despenca no lugar delas
-    this.time.delayedCall(1550, () => {
-      mugs.forEach((m, i) => this.tweens.add({ targets: m, x: W / 2 + (i ? 1 : -1) * (W / 2 + 220), y: y - 120, angle: (i ? 1 : -1) * 40,
-        duration: 420, ease: 'Cubic.easeIn', onComplete: () => m.destroy() }));
-      this.time.delayedCall(140, then);
-    });
+      // as canecas saem de cena (sobem e somem) e o logo despenca no lugar delas
+      this.time.delayedCall(830, () => {
+        mugs.forEach((m, i) => this.tweens.add({ targets: m, x: W / 2 + (i ? 1 : -1) * (W / 2 + 220), y: y - 120, angle: (i ? 1 : -1) * 40,
+          duration: 420, ease: 'Cubic.easeIn', onComplete: () => m.destroy() }));
+        this.time.delayedCall(140, then);
+      });
+    };
   }
 
   // um par de canecas entra pelos lados, bate no ponto (x, y), espirra chopp e volta
   toast(x, y) {
     if (!this.textures.exists('mug')) return;
-    const sc = 0.3 + Math.random() * 0.06, gap = 300 * sc * 0.42;
+    const sc = 0.3 + Math.random() * 0.06, gap = 300 * sc * MUG_HALF;
     [-1, 1].forEach(side => {
       const m = this.add.sprite(x + side * (gap + 70), y + 40, 'mug', (Math.random() * 5) | 0).setScale(sc * 0.6).setFlipX(side > 0)
         .setAngle(side * 25).setDepth(4).setAlpha(0);
@@ -573,7 +577,7 @@ class Title extends Phaser.Scene {
       this.tweens.add({ targets: m, x: x + side * gap, y, angle: side * -14, duration: 380, ease: 'Cubic.easeIn',
         onComplete: () => {
           // CLINK: as canecas quicam para trás e depois saem de cena
-          this.tweens.add({ targets: m, x: x + side * (gap + 26), angle: side * 18, duration: 140, yoyo: true, ease: 'Quad.easeOut' });
+          this.tweens.add({ targets: m, x: x + side * (gap + 20), angle: side * 10, duration: 140, delay: 110, yoyo: true, ease: 'Quad.easeOut' });
           this.tweens.add({ targets: m, x: x + side * (gap + 70), y: y + 40, angle: side * 30, alpha: 0, scale: sc * 0.7, duration: 420, delay: 900, ease: 'Cubic.easeIn',
             onComplete: () => m.destroy() });
         } });
