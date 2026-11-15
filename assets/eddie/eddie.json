@@ -84,6 +84,10 @@
       "frames": 5,
       "file": "fx_hypno.png"
     },
+    "dance": {
+      "frames": 5,
+      "file": "dance.png"
+    },
     "fx_bee": {
       "frames": 4,
       "file": "fx_bee.png"

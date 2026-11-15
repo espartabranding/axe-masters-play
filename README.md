@@ -1,6 +1,6 @@
 # Axe Masters (playable)
 
-A 16-bit fighting game starring legendary guitarists. Prototype with Eddie Van Halen.
+A 16-bit fighting game starring legendary guitarists. Prototype with Eddie Van Halen and Slash.
 
 **Play:** https://espartabranding.github.io/axe-masters-play/
 

@@ -1,0 +1,136 @@
+{
+  "frameWidth": 460,
+  "frameHeight": 300,
+  "anchorX": 220,
+  "anchorY": 290,
+  "anims": {
+    "idle": {
+      "frames": 10,
+      "file": "idle.png"
+    },
+    "walk_fwd": {
+      "frames": 10,
+      "file": "walk_fwd.png"
+    },
+    "walk_back": {
+      "frames": 10,
+      "file": "walk_back.png"
+    },
+    "lp": {
+      "frames": 10,
+      "file": "lp.png"
+    },
+    "hp": {
+      "frames": 10,
+      "file": "hp.png"
+    },
+    "lk": {
+      "frames": 10,
+      "file": "lk.png"
+    },
+    "hk": {
+      "frames": 10,
+      "file": "hk.png"
+    },
+    "react": {
+      "frames": 10,
+      "file": "react.png"
+    },
+    "tophat": {
+      "frames": 4,
+      "file": "tophat.png"
+    },
+    "fx_hat": {
+      "frames": 4,
+      "file": "fx_hat.png"
+    },
+    "block": {
+      "frames": 2,
+      "file": "block.png"
+    },
+    "ko": {
+      "frames": 5,
+      "file": "ko.png"
+    },
+    "hit": {
+      "frames": 3,
+      "file": "hit.png"
+    },
+    "jump": {
+      "frames": 6,
+      "file": "jump.png"
+    },
+    "crouch": {
+      "frames": 3,
+      "file": "crouch.png"
+    },
+    "jumpkick": {
+      "frames": 2,
+      "file": "jumpkick.png"
+    },
+    "paradise": {
+      "frames": 10,
+      "file": "paradise.png"
+    },
+    "jungle": {
+      "frames": 10,
+      "file": "jungle.png"
+    },
+    "snakepit": {
+      "frames": 10,
+      "file": "snakepit.png"
+    },
+    "fx_snake": {
+      "frames": 5,
+      "file": "fx_snake.png"
+    },
+    "crybaby": {
+      "frames": 10,
+      "file": "crybaby.png"
+    },
+    "axlcall": {
+      "frames": 5,
+      "file": "axlcall.png"
+    },
+    "axl": {
+      "frames": 5,
+      "file": "axl.png"
+    },
+    "doubleneck": {
+      "frames": 10,
+      "file": "doubleneck.png"
+    },
+    "sweet": {
+      "frames": 10,
+      "file": "sweet.png"
+    },
+    "raincall": {
+      "frames": 5,
+      "file": "raincall.png"
+    },
+    "piano": {
+      "frames": 5,
+      "file": "piano.png"
+    },
+    "appetite": {
+      "frames": 10,
+      "file": "appetite.png"
+    },
+    "victory": {
+      "frames": 10,
+      "file": "victory.png"
+    },
+    "sleep": {
+      "frames": 5,
+      "file": "sleep.png"
+    },
+    "dance": {
+      "frames": 5,
+      "file": "dance.png"
+    },
+    "fx_sweet": {
+      "frames": 5,
+      "file": "fx_sweet.png"
+    }
+  }
+}
