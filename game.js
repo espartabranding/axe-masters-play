@@ -277,17 +277,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=e05fc48' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=e05fc48' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=e05fc48' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=e05fc48' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=e05fc48' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=e05fc48' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=e05fc48' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=6046b4c' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=6046b4c' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=6046b4c' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=6046b4c' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=6046b4c' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=6046b4c' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=6046b4c' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=e05fc48', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=6046b4c', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -407,10 +407,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=e05fc48`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=6046b4c`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=e05fc48`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=e05fc48`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=6046b4c`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=6046b4c`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -419,7 +419,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=e05fc48`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=6046b4c`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -430,7 +430,7 @@ class Boot extends Phaser.Scene {
 // CAPA ANIMADA: o logo do Rock n' Bira despenca, "BATTLE" entra rasgando, os holofotes varrem o palco,
 // os lutadores acendem dos lados e o Ricardinho passa correndo com a bandeira. Qualquer botão começa.
 // ---------------------------------------------------------------------------------------------
-const TOAST_SPOTS = [[170, 92], [790, 92], [795, 240], [805, 385]];
+const TOAST_SPOTS = [[170, 92], [790, 92], [815, 240], [840, 385]];
 const BIRA_X = 170; // onde o Ricardinho para na capa // onde as canecas se encontram na capa
 class Title extends Phaser.Scene {
   constructor() { super('title'); }
@@ -482,8 +482,9 @@ class Title extends Phaser.Scene {
       g.fillCircle(16, 16, 3); g.generateTexture('twinkle', 32, 32); g.destroy();
     }
     this.mugs = []; this.cheerT = 0;
-    this.tweens.add({ targets: this.logo, scale: LS, alpha: 1, angle: 0, duration: 650, delay: 250, ease: 'Back.easeOut',
-      onComplete: () => this.land() });
+    this.intro = [];
+    this.bigToast(() => this.tweens.add({ targets: this.logo, scale: LS, alpha: 1, angle: 0, duration: 650, ease: 'Back.easeOut',
+      onComplete: () => this.land() }));
 
     // BATTLE: cromado, entra pela direita depois do logo
     this.battle = this.add.text(W + 400, 404, 'BATTLE', { fontFamily: FONT_CHROME, fontStyle: 'italic 900', fontSize: '104px', color: '#fff',
@@ -523,19 +524,57 @@ class Title extends Phaser.Scene {
     this.cheerT = 260;
   }
 
+  // abertura: duas canecas gigantes entram pelos lados e se batem no meio da tela; depois o logo cai (then)
+  bigToast(then) {
+    if (!this.textures.exists('mug')) { then(); return; }
+    const sc = 1.0, gap = 300 * sc * 0.42, y = 270;
+    const mugs = [-1, 1].map(side => {
+      const m = this.add.sprite(W / 2 + side * (W / 2 + 200), y + 40, 'mug', 0).setScale(sc).setFlipX(side > 0)
+        .setAngle(side * 32).setDepth(20);
+      this.intro.push(m);
+      this.tweens.add({ targets: m, x: W / 2 + side * gap, y, angle: side * -12, duration: 520, delay: 200, ease: 'Cubic.easeIn' });
+      return m;
+    });
+    this.time.delayedCall(720, () => {
+      // CLINK! clarão, tela treme, espirro enorme de chopp e estrelinhas
+      this.cameras.main.shake(260, 0.016);
+      this.flash.setAlpha(0.7); this.tweens.add({ targets: this.flash, alpha: 0, duration: 380 });
+      mugs.forEach((m, i) => {
+        const side = i ? 1 : -1;
+        m.setFrame(4); // espuma escorrendo
+        this.tweens.add({ targets: m, x: W / 2 + side * (gap + 60), angle: side * 22, duration: 170, yoyo: true, ease: 'Quad.easeOut' });
+      });
+      if (this.textures.exists('splash')) {
+        const sp = this.add.sprite(W / 2, y - 60, 'splash', 0).setScale(1.5).setOrigin(0.5, 1).setDepth(21);
+        this.intro.push(sp);
+        let f = 0;
+        this.time.addEvent({ delay: 70, repeat: 7, callback: () => {
+          f++; if (f < 5) sp.setFrame(f); else sp.setAlpha(Math.max(0, sp.alpha - 0.34));
+        } });
+      }
+      for (let i = 0; i < 14; i++) this.spawnTwinkle(W / 2 + Phaser.Math.Between(-220, 220), y - Phaser.Math.Between(40, 260), 0.8 + Math.random() * 0.8);
+    });
+    // as canecas saem de cena (sobem e somem) e o logo despenca no lugar delas
+    this.time.delayedCall(1550, () => {
+      mugs.forEach((m, i) => this.tweens.add({ targets: m, x: W / 2 + (i ? 1 : -1) * (W / 2 + 220), y: y - 120, angle: (i ? 1 : -1) * 40,
+        duration: 420, ease: 'Cubic.easeIn', onComplete: () => m.destroy() }));
+      this.time.delayedCall(140, then);
+    });
+  }
+
   // um par de canecas entra pelos lados, bate no ponto (x, y), espirra chopp e volta
   toast(x, y) {
     if (!this.textures.exists('mug')) return;
     const sc = 0.3 + Math.random() * 0.06, gap = 300 * sc * 0.42;
     [-1, 1].forEach(side => {
-      const m = this.add.sprite(x + side * (gap + 120), y + 40, 'mug', (Math.random() * 5) | 0).setScale(sc * 0.6).setFlipX(side > 0)
+      const m = this.add.sprite(x + side * (gap + 70), y + 40, 'mug', (Math.random() * 5) | 0).setScale(sc * 0.6).setFlipX(side > 0)
         .setAngle(side * 25).setDepth(4).setAlpha(0);
       this.tweens.add({ targets: m, alpha: 1, scale: sc, duration: 200 });
       this.tweens.add({ targets: m, x: x + side * gap, y, angle: side * -14, duration: 380, ease: 'Cubic.easeIn',
         onComplete: () => {
           // CLINK: as canecas quicam para trás e depois saem de cena
           this.tweens.add({ targets: m, x: x + side * (gap + 26), angle: side * 18, duration: 140, yoyo: true, ease: 'Quad.easeOut' });
-          this.tweens.add({ targets: m, x: x + side * (gap + 110), y: y + 40, angle: side * 30, alpha: 0, scale: sc * 0.7, duration: 420, delay: 900, ease: 'Cubic.easeIn',
+          this.tweens.add({ targets: m, x: x + side * (gap + 70), y: y + 40, angle: side * 30, alpha: 0, scale: sc * 0.7, duration: 420, delay: 900, ease: 'Cubic.easeIn',
             onComplete: () => m.destroy() });
         } });
     });
@@ -561,7 +600,8 @@ class Title extends Phaser.Scene {
   go() {
     if (this.going) return;
     if (!this.ready) { // apertou durante a abertura: pula direto para o fim
-      this.tweens.killAll(); this.logo.setScale(this.LS).setAlpha(1).setAngle(0); this.battle.x = W / 2; this.slashBar.setScale(1, 1);
+      this.tweens.killAll(); this.time.removeAllEvents();
+      this.intro.forEach(o => o.destroy()); this.intro = []; this.flash.setAlpha(0); this.logo.setScale(this.LS).setAlpha(1).setAngle(0); this.battle.x = W / 2; this.slashBar.setScale(1, 1);
       this.enterBira(true); this.press.setAlpha(1); this.foot.setAlpha(1);
       this.landed = true; this.ready = true; return;
     }
@@ -573,9 +613,11 @@ class Title extends Phaser.Scene {
   }
 
   update(time, delta) {
-    this.t += delta / 16.67;
+    // k = quantos quadros de 60 fps se passaram: a capa anda na mesma velocidade em telas de 60, 120 ou 144 Hz
+    const k = Math.min(delta, 100) / 16.67;
+    this.t += k;
     const t = this.t;
-    this.bg.setScale(this.bg.scaleX + 0.00004);
+    this.bg.setScale(this.bg.scaleX + 0.00004 * k);
 
     // holofotes varrendo de cima
     this.beams.clear();
@@ -595,9 +637,9 @@ class Title extends Phaser.Scene {
       this.glow.setAlpha(0.22 + Math.sin(t / 12) * 0.1);
       const ly = this.LY + Math.sin(t / 40) * 3;
       this.logo.y = ly; this.glow.y = ly; this.maskSrc.y = ly; this.shine.y = ly;
-      if (--this.shineT <= 0) { this.shine.x = W / 2 - 260; this.shineT = 170; }
-      if (this.shine.x < W / 2 + 260) this.shine.x += 9;
-      if (Math.random() < 0.18) {
+      if ((this.shineT -= k) <= 0) { this.shine.x = W / 2 - 260; this.shineT = 170; }
+      if (this.shine.x < W / 2 + 260) this.shine.x += 9 * k;
+      if (Math.random() < 0.18 * k) {
         const tex = this.textures.get('logo_bira').getSourceImage(), lw = tex.width * this.LS, lh = tex.height * this.LS;
         for (let k = 0; k < 6; k++) { // procura um pixel do logo para a estrelinha nascer em cima das letras
           const u = Math.random(), v = Math.random();
@@ -606,7 +648,7 @@ class Title extends Phaser.Scene {
         }
       }
       // brindes de vez em quando, em pontos diferentes ao redor do logo
-      if (--this.cheerT <= 0) {
+      if ((this.cheerT -= k) <= 0) {
         const spots = TOAST_SPOTS.slice();
         const n = 1 + (Math.random() * 2 | 0);
         Phaser.Utils.Array.Shuffle(spots).slice(0, n).forEach(([x, y], i) => this.time.delayedCall(i * 180, () => this.toast(x, y)));
@@ -619,15 +661,15 @@ class Title extends Phaser.Scene {
     // Ricardinho: corre (0-1), freia (2) e comemora (6-8, vai e volta)
     const b = this.bira;
     if (b) {
-      b.t++;
+      b.t += k;
       if (b.phase === 'run') {
-        b.x += 9; setFr(b.spr, Math.floor(b.t / 4) % 2);
+        b.x += 7 * k; setFr(b.spr, Math.floor(b.t / 6) % 2);
         if (b.x >= BIRA_X) { b.x = BIRA_X; b.phase = 'brake'; b.t = 0; setFr(b.spr, 2); this.cameras.main.shake(90, 0.004); }
       } else if (b.phase === 'brake') {
         if (b.t > 14) { b.phase = 'cheer'; b.t = 0; }
       } else {
-        setFr(b.spr, [6, 7, 8, 7][Math.floor(b.t / 10) % 4]);
-        b.spr.y = FLOOR + 44 - (Math.floor(b.t / 10) % 4 === 2 ? 6 : 0); // pulinho na comemoração
+        setFr(b.spr, [6, 7, 8, 7][Math.floor(b.t / 24) % 4]);
+        b.spr.y = FLOOR + 44 - (Math.floor(b.t / 24) % 4 === 2 ? 5 : 0); // pulinho na comemoração
       }
       b.spr.x = Math.round(b.x);
       b.shadow.x = b.x;
