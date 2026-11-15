@@ -21,7 +21,7 @@ const EDDIE_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, eruption: 4, block: 2, hit: 3, ko: 5,
   jump: 6, crouch: 3, jumpkick: 2, projectile: 4, divebomb: 5, bomb: 2, explosion: 4,
   brownsound: 10, panama: 10, victory: 10, sharkbite: 10, bumblebee: 10, drill: 10,
-  fx_bee: 4, fx_drill: 4, fx_smoke: 4, react: 10, jumpcall: 5, dlr: 5, teacher: 10, fx_beam: 4, fx_zap: 4, spanish: 10, sleep: 5, fx_hypno: 5, dance: 5,
+  fx_bee: 4, fx_drill: 4, fx_smoke: 4, react: 10, jumpcall: 5, dlr: 5, teacher: 10, fx_beam: 4, fx_zap: 4, spanish: 10, sleep: 5, fx_hypno: 5, dance: 5, bira: 10,
   fx_spark: 5, fx_block: 5, fx_wave: 5, fx_notes: 5, fx_dust: 5,
 };
 // letreiro de cada especial: nome cromado + assinatura neon na cor do poder
@@ -268,20 +268,26 @@ CHARS.slash = {
 };
 for (const [id, c] of Object.entries(CHARS)) c.id = id;
 
+// EASTER EGG (A + S + D, qualquer lutador): o Ricardinho entra correndo com a bandeira do Rock n' Bira nas costas
+// e empurra o adversário para o outro lado do palco. Folha bira (pasta do Eddie): 0-1 correndo, 2 freando,
+// 3-5 empurrando, 6-8 comemorando, 9 indo embora.
+const BIRA = { name: 'RICARDINHO', tag: "Rock n' Bira", neon: '#4aa8ff', edge: 0x4aa8ff, deep: 0x04182e };
+const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word: ['MOSH!', '#4aa8ff'] };
+
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=db77e52' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=db77e52' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=db77e52' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=db77e52' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=db77e52' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=db77e52' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=db77e52' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=22667ea' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=22667ea' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=22667ea' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=22667ea' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=22667ea' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=22667ea' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=22667ea' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=db77e52', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=22667ea', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -408,7 +414,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=db77e52`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=22667ea`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -682,7 +688,7 @@ class Fight extends Phaser.Scene {
     // mesma cara dos dois lados (Eddie x Eddie, ou um placeholder): o P2 fica azul
     this.mirror = this.chars[0] === this.chars[1];
     if (this.tk(this.chars[0], 'idle') === this.tk(this.chars[1], 'idle')) this.p[1].tint = P2_TINT;
-    this.projs = []; this.bombList = []; this.booms = []; this.fx = []; this.ghosts = []; this.bees = []; this.words = []; this.dlrs = []; this.hypnos = []; this.sliders = []; this.bolts = []; this.rainT = 0;
+    this.projs = []; this.bombList = []; this.booms = []; this.fx = []; this.ghosts = []; this.bees = []; this.words = []; this.dlrs = []; this.hypnos = []; this.sliders = []; this.biras = []; this.bolts = []; this.rainT = 0;
     this.flash = this.add.rectangle(0, 0, W, H, 0xffffff, 0).setOrigin(0).setDepth(55); this.flashT = 0;
     this.sparks = this.add.graphics().setDepth(30);
     this.beamG = this.add.graphics().setDepth(24).setBlendMode(Phaser.BlendModes.ADD);
@@ -754,6 +760,7 @@ class Fight extends Phaser.Scene {
     (this.words || []).forEach(w => w.t.destroy()); this.words = [];
     (this.dlrs || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.dlrs = [];
     (this.sliders || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.sliders = [];
+    (this.biras || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.biras = [];
     this.bolts = []; this.rainT = 0; if (this.rainG) this.rainG.clear();
     (this.hypnos || []).forEach(h => h.spr.destroy()); this.hypnos = [];
     if (this.dark) { this.dark.setAlpha(0); this.temple.setAlpha(0); this.templeGlow.setAlpha(0); this.beams.clear(); }
@@ -835,11 +842,17 @@ class Fight extends Phaser.Scene {
     this.updateBees();
     this.updateDLR();
     this.updateSliders();
+    this.updateBira();
     this.updateHypno();
     if (this.rainT > 0) this.rainT--;
     this.updateFx();
   }
 
+  // A + S + D juntos (até 8 quadros entre o primeiro e o último): o easter egg
+  triple(f, inp) {
+    const t = ['lp', 'hp', 'lk'].map(b => f.last[b]);
+    return (inp.lp || inp.hp || inp.lk || inp.special === 'bira') && (inp.special === 'bira' || Math.max(...t) - Math.min(...t) <= 8);
+  }
   // dois botões juntos (com até 5 quadros de diferença)
   chordOn(f, inp, s) {
     const [b1, b2] = s.chord;
@@ -858,7 +871,7 @@ class Fight extends Phaser.Scene {
   }
   startSpecial(f, op, s, inp) {
     const m = f.char.moves[s.move];
-    if (s.super) f.meter = 0;
+    if (s.super) { f.meterBack = f.meter; f.meter = 0; }
     f.startMove(s.move);
     if (m.inv) f.inv = m.inv;
     if (m.spawn !== undefined) f.projFast = !!inp.hp; // projétil mais rápido com o soco forte
@@ -880,7 +893,14 @@ class Fight extends Phaser.Scene {
       const on = this.chordOn(f, inp, s) || (s.super && inp.special === s.move);
       if (on && f.state === 'attack' && s.chord.includes(f.move) && f.t <= 6) { f.state = 'idle'; f.move = null; }
     }
-    if (f.free) {
+    // easter egg: o terceiro botão chegou logo depois de um par; desfaz o que o par começou (e devolve a barra do super)
+    const egg = !f.bira && this.triple(f, inp);
+    if (egg && f.state === 'attack' && f.t <= 10) {
+      if (f.m && f.m.super && f.meterBack !== undefined) f.meter = f.meterBack;
+      f.state = 'idle'; f.move = null; f.inv = 0; this.bannerT = 0; this.bigT = 0;
+    }
+    if (f.free && egg) { f.facing = op.x >= f.x ? 1 : -1; this.spawnBira(f); }
+    else if (f.free) {
       f.facing = op.x >= f.x ? 1 : -1;
       const sp = this.pickSpecial(f, inp);
       if (sp) this.startSpecial(f, op, sp, inp);
@@ -1287,6 +1307,54 @@ class Fight extends Phaser.Scene {
       d.spr.setPosition(Math.round(d.x), FLOOR); d.shadow.x = d.x;
     }
     this.sliders = this.sliders.filter(d => { if (d.dead) { d.spr.destroy(); d.shadow.destroy(); d.owner.dlr = false; } return !d.dead; });
+  }
+
+  // EASTER EGG: entra correndo pela borda de trás de quem chamou, empurra o adversário até a parede e comemora
+  spawnBira(f) {
+    const dir = f.facing, x = dir > 0 ? -80 : W + 80, key = this.tk(f.char, 'bira');
+    const spr = this.add.sprite(x, FLOOR, key, 0).setDepth(22).setFlipX(dir < 0).setScale(SC)
+      .setOrigin((dir > 0 ? AX : FW - AX) / FW, AY / FH);
+    const shadow = this.add.ellipse(x, FLOOR + 2, px(110), px(14), 0x000000, 0.35).setDepth(6);
+    this.biras.push({ owner: f, x, dir, t: 0, phase: 'run', spr, shadow });
+    f.bira = true;
+    this.bannerPow = BIRA; this.bannerT = 70; this.flashT = 8;
+    this.bnName.setText(BIRA.name); chrome(this.bnName); this.bnName.setShadow(0, 0, BIRA.neon, 14, true, false);
+    this.bnTag.setText(BIRA.tag).setStroke(BIRA.neon, 2).setShadow(0, 0, BIRA.neon, 10, true, true);
+    this.bnTag.x = this.bnName.width * 0.18;
+    this.say('OPEN BAR!', x + dir * 200, FLOOR - px(300), '#4aa8ff', 34);
+  }
+
+  updateBira() {
+    for (const d of this.biras) {
+      d.t++;
+      const def = this.p[1 - d.owner.side], fr = n => setFr(d.spr, n);
+      if (d.phase === 'run') {
+        d.x += d.dir * 10; fr(Math.floor(d.t / 4) % 2);
+        if (d.t % 6 === 0) this.addFx('fx_dust', d.x - d.dir * px(40), FLOOR, { rate: 3, oy: 0.75, scale: 0.5, flip: d.dir < 0 }, d.owner.char);
+        // encosta no adversário (ou chega na parede do outro lado)
+        const reach = d.dir > 0 ? d.x >= def.x - px(110) : d.x <= def.x + px(110);
+        if (reach && def.state !== 'ko') { d.phase = 'push'; d.t = 0; if (!(def.inv > 0)) this.applyHit(d.owner, def, BIRA_HIT, def.x, FLOOR - px(130), true); }
+        else if (d.x < -120 || d.x > W + 120) { d.phase = 'cheer'; d.t = 0; }
+      } else if (d.phase === 'push') {
+        // empurra até a parede; o adversário vai junto, sem poder fazer nada
+        fr(3 + Math.floor(d.t / 8) % 3);
+        const atWall = def.x <= WALL + 1 || def.x >= W - WALL - 1;
+        if (def.state === 'hit' || def.state === 'block') { def.stun = Math.max(def.stun, 4); def.vx = 0; def.x = Phaser.Math.Clamp(def.x + d.dir * 7, WALL, W - WALL); }
+        d.x = def.x - d.dir * px(110);
+        if (d.t % 10 === 0) this.say(['HEAVE!', 'PUSH!', 'GO GO GO!'][(d.t / 10 | 0) % 3], d.x, FLOOR - px(270), '#4aa8ff', 28);
+        if (atWall || d.t > 90 || def.state === 'ko') { d.phase = 'cheer'; d.t = 0; this.cameras.main.shake(140, 0.01); }
+      } else if (d.phase === 'cheer') {
+        fr(6 + Math.min(2, Math.floor(d.t / 18)));
+        if (d.t === 1) this.say("ROCK N' ROLL!", Phaser.Math.Clamp(d.x, px(260), W - px(260)), FLOOR - px(300), '#4aa8ff', 40);
+        if (d.t > 60) { d.phase = 'leave'; d.t = 0; }
+      } else if (d.phase === 'leave') {
+        // corre de volta para a borda de onde veio, já virado para lá
+        fr(9); d.spr.setFlipX(d.dir > 0 ? false : true); d.x -= d.dir * 11;
+        if (d.x < -150 || d.x > W + 150) d.dead = true;
+      }
+      d.spr.setPosition(Math.round(d.x), FLOOR); d.shadow.x = d.x;
+    }
+    this.biras = this.biras.filter(d => { if (d.dead) { d.spr.destroy(); d.shadow.destroy(); d.owner.bira = false; } return !d.dead; });
   }
 
   // RAIO DO CÉU (Appetite): cai em zigue-zague onde o oponente está

@@ -88,6 +88,10 @@
       "frames": 5,
       "file": "dance.png"
     },
+    "bira": {
+      "frames": 10,
+      "file": "bira.png"
+    },
     "fx_bee": {
       "frames": 4,
       "file": "fx_bee.png"
