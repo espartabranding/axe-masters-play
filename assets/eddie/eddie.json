@@ -72,6 +72,18 @@
       "frames": 10,
       "file": "teacher.png"
     },
+    "spanish": {
+      "frames": 10,
+      "file": "spanish.png"
+    },
+    "sleep": {
+      "frames": 5,
+      "file": "sleep.png"
+    },
+    "fx_hypno": {
+      "frames": 5,
+      "file": "fx_hypno.png"
+    },
     "fx_bee": {
       "frames": 4,
       "file": "fx_bee.png"
