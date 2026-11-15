@@ -12,6 +12,7 @@ const ANIMS = {
 };
 // SC: tamanho dos lutadores em relação ao cenário; caixas de acerto, efeitos e pulo acompanham
 const SC = 0.8, px = v => Math.round(v * SC);
+const BIG_T = 64; // quadros do título gigante do super (some antes do raio)
 const MAX_HP = 950, WALK_F = 3.2, WALK_B = 2.6, MIN_GAP = px(95), ROUND_TIME = 99, WALL = px(60);
 const JUMP_V = -15.2, GRAV = 0.85, JUMP_VX = 3.6;
 
@@ -19,15 +20,15 @@ const JUMP_V = -15.2, GRAV = 0.85, JUMP_VX = 3.6;
 const FONT_CHROME = 'Kanit', FONT_NEON = '"Mr Dafoe"', FONT_PIXEL = '"Press Start 2P"';
 // letreiro de cada especial: nome cromado + assinatura neon na cor do poder
 const POWERS = {
-  eruption:   { name: 'ERUPTION',    tag: 'Bola de fogo',     neon: '#ff7a1a', edge: 0xff7a1a, deep: 0x3a0d00 },
-  brownsound: { name: 'BROWN SOUND', tag: 'Distorção',        neon: '#ffb347', edge: 0xc8742a, deep: 0x2a1408 },
+  eruption:   { name: 'ERUPTION',    tag: 'Fireball',     neon: '#ff7a1a', edge: 0xff7a1a, deep: 0x3a0d00 },
+  brownsound: { name: 'BROWN SOUND', tag: 'Distortion',        neon: '#ffb347', edge: 0xc8742a, deep: 0x2a1408 },
   sharkbite:  { name: 'SHARK BITE',  tag: 'Ibanez Shark',     neon: '#3cf0ff', edge: 0x3cf0ff, deep: 0x04243a },
-  bumblebee:  { name: 'BUMBLEBEE',   tag: 'Enxame',           neon: '#ffe14a', edge: 0xffe14a, deep: 0x1a1600 },
-  drill:      { name: 'POUNDCAKE',   tag: 'Furadeira Makita', neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
+  bumblebee:  { name: 'BUMBLEBEE',   tag: 'Killer Bees',           neon: '#ffe14a', edge: 0xffe14a, deep: 0x1a1600 },
+  drill:      { name: 'POUNDCAKE',   tag: 'Makita Drill', neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
   panama:     { name: 'PANAMA',      tag: 'Lamborghini',      neon: '#ff3d6e', edge: 0xff3d6e, deep: 0x33040f },
-  teacher:    { name: 'HOT FOR TEACHER', tag: 'Super!',    neon: '#ff3df0', edge: 0xff3df0, deep: 0x2a0630 },
+  teacher:    { name: '5150',        tag: 'Super!',    neon: '#ff3df0', edge: 0xff3df0, deep: 0x2a0630 },
   jumpcall:   { name: 'JUMP!',       tag: 'David Lee Roth',   neon: '#ff4fd8', edge: 0xff4fd8, deep: 0x2a0626 },
-  divebomb:   { name: 'DIVE BOMB',   tag: 'Alavanca',         neon: '#c77dff', edge: 0xc77dff, deep: 0x1d0838 },
+  divebomb:   { name: 'DIVE BOMB',   tag: 'Whammy Bar',         neon: '#c77dff', edge: 0xc77dff, deep: 0x1d0838 },
 };
 
 // hit: retângulo relativo aos pés, x para frente. frames: quadros da folha usados em cada etapa.
@@ -51,19 +52,19 @@ const MOVES = {
   drill: { dur: [3, 5, 4, 4, 6, 6, 3, 6, 6, 3], active: [4, 5, 6, 7], multi: 4, dmg: 14, hit: { x: 20, y: -205, w: 150, h: 115 }, hitstun: 10, blockstun: 6, push: 2, smoke: 1, step: [5, 7, 6], sparks: [4, 7], gag: 'buzz' },
   // PANAMA: arrancada de Lamborghini com joelhada
   // estala os dedos, o Lamborghini aparece, acelera, arranca, atropela, ele acena e salta fora
-  panama: { dur: [6, 8, 8, 5, 3, 4, 3, 8, 8, 6], active: [4, 5, 6], dmg: 110, hit: { x: -40, y: -150, w: 210, h: 150 }, hitstun: 24, blockstun: 14, push: 12, shake: 0.008, dash: [3, 6], dust: 3, rev: 2, gag: 'flat', word: ['ATROPELADO!', '#ff3d6e'] },
+  panama: { dur: [6, 8, 8, 5, 3, 4, 3, 8, 8, 6], active: [4, 5, 6], dmg: 110, hit: { x: -40, y: -150, w: 210, h: 150 }, hitstun: 24, blockstun: 14, push: 12, shake: 0.008, dash: [3, 6], dust: 3, rev: 2, gag: 'flat', word: ['ROADKILL!', '#ff3d6e'] },
   divebomb: { dur: [8, 6, 10, 26, 10], bombs: 2 },
   // JUMP!: o Eddie assobia, aponta para o céu e o David Lee Roth despenca em espacate em cima do oponente
   jumpcall: { dur: [6, 14, 14, 26, 14], summon: 2 },
-  // SUPER HOT FOR TEACHER (A + S com a barra Feedback cheia): óculos de professor, tapping, joelhada deslizando
+  // SUPER 5150 (A + S com a barra Feedback cheia): óculos de professor, tapping, joelhada deslizando
   // e um raio que atravessa a tela; quem leva todos os acertos termina tostado
   teacher: { dur: [6, 20, 5, 5, 5, 5, 12, 12, 16, 16, 16, 16], frames: [0, 1, 2, 3, 2, 3, 4, 5, 6, 7, 8, 9], active: [8, 9], multi: 3, dmg: 22,
     hit: { x: 60, y: -235, w: 1100, h: 150 }, hitstun: 12, blockstun: 8, push: 1, chip: 4, gag: 'zap', beam: [8, 9], slide: 6, inv: 30, dark: true },
 };
 const JUMPKICK = { dmg: 75, hit: { x: 10, y: -150, w: 120, h: 120 }, hitstun: 18, blockstun: 12, push: 7, overhead: true };
-const PROJ = { dmg: 80, hitstun: 18, blockstun: 12, push: 8, chip: 10, gag: 'burnt', word: ['TOSTADO!', '#ff7a1a'] };
+const PROJ = { dmg: 80, hitstun: 18, blockstun: 12, push: 8, chip: 10, gag: 'burnt', word: ['TOASTED!', '#ff7a1a'] };
 const BEE = { dmg: 15, hitstun: 12, blockstun: 6, push: 3, chip: 3, gag: 'swell' };
-const BOMB = { dmg: 45, hitstun: 20, blockstun: 12, push: 6, chip: 6, shake: 0.008, gag: 'dizzy', word: ['KABUM!', '#ffb347'] };
+const BOMB = { dmg: 45, hitstun: 20, blockstun: 12, push: 6, chip: 6, shake: 0.008, gag: 'dizzy', word: ['KABOOM!', '#ffb347'] };
 // reações cômicas (folha react): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
   burnt: { dur: 80, frame: t => t < 62 ? (Math.floor(t / 8) % 2) : 2 },
@@ -119,24 +120,26 @@ class Fighter {
 
 const overlap = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 
-// procura a sequência de direções (notação de teclado numérico) nos últimos 12 quadros.
-// A direção final tem que estar apertada junto com o botão: assim defender agachado e depois atacar
-// não solta especial sem querer.
+// Comandos só com as 4 setas, uma depois da outra (teclado não tem diagonal): ↓ → , → ↓ , ↓ ← , ↓ ↓ , → →.
+// Olha as trocas de direção dos últimos 14 quadros. A última direção tem que estar apertada junto com o botão;
+// para frente e para baixo ela aceita a diagonal (quem ainda segura ↓ ao apertar →), mas para trás não,
+// para que defender agachado e depois atacar não solte especial sem querer.
+const FINAL_OK = { 6: [6, 3], 2: [2, 1, 3], 4: [4] };
 function hasMotion(buf, seq) {
-  if (buf[buf.length - 1] !== seq[seq.length - 1]) return false;
-  let k = seq.length - 1;
-  for (let i = buf.length - 1; i >= Math.max(0, buf.length - 12); i--) {
-    if (buf[i] === seq[k] && --k < 0) return true;
-  }
-  return false;
+  const runs = [];
+  for (const d of buf.slice(-14)) if (runs[runs.length - 1] !== d) runs.push(d);
+  if (!FINAL_OK[seq[seq.length - 1]].includes(runs[runs.length - 1])) return false;
+  let k = seq.length - 2;
+  for (let i = runs.length - 2; i >= 0 && k >= 0; i--) if (runs[i] === seq[k]) k--;
+  return k < 0;
 }
 
 class Fight extends Phaser.Scene {
   constructor() { super('fight'); }
 
   preload() {
-    this.load.image('stage', 'assets/stages/palco-eddie.jpg?v=8876c20');
-    for (const n of Object.keys(ANIMS)) this.load.spritesheet(n, `assets/eddie/${n}.png?v=8876c20`, { frameWidth: FW, frameHeight: FH });
+    this.load.image('stage', 'assets/stages/palco-eddie.jpg?v=2115b2d');
+    for (const n of Object.keys(ANIMS)) this.load.spritesheet(n, `assets/eddie/${n}.png?v=2115b2d`, { frameWidth: FW, frameHeight: FH });
   }
 
   create() {
@@ -145,6 +148,7 @@ class Fight extends Phaser.Scene {
     this.projs = []; this.bombList = []; this.booms = []; this.fx = []; this.ghosts = []; this.bees = []; this.words = []; this.dlrs = [];
     this.flash = this.add.rectangle(0, 0, W, H, 0xffffff, 0).setOrigin(0).setDepth(55); this.flashT = 0;
     this.sparks = this.add.graphics().setDepth(30);
+    this.beamG = this.add.graphics().setDepth(24).setBlendMode(Phaser.BlendModes.ADD);
     this.superShade = this.add.rectangle(0, 0, W, H, 0x12001c, 1).setOrigin(0).setDepth(9).setAlpha(0); this.superDark = 0;
     this.debug = this.add.graphics().setDepth(40);
     this.showBoxes = false;
@@ -208,6 +212,7 @@ class Fight extends Phaser.Scene {
 
   newMatch() { this.wins = [0, 0]; this.round = 1; this.newRound(); }
   newRound() {
+    if (this.beamG) this.p.forEach(f => this.updateBeam(f, false));
     this.p.forEach(f => f.reset());
     [...this.projs, ...this.bombList, ...this.booms, ...(this.fx || []), ...(this.ghosts || []), ...(this.bees || [])].forEach(o => o.spr.destroy());
     this.projs = []; this.bombList = []; this.booms = []; this.fx = []; this.ghosts = []; this.bees = [];
@@ -328,14 +333,15 @@ class Fight extends Phaser.Scene {
       f.facing = op.x >= f.x ? 1 : -1;
       const punch = inp.lp || inp.hp, kick = inp.lk || inp.hk;
       if (as) { f.meter = 0; f.startMove('teacher'); f.inv = MOVES.teacher.inv; this.announce('teacher'); this.cameras.main.flash(120, 255, 80, 240); }
-      else if (sd || inp.special === 'panama' || (kick && hasMotion(f.buf, [2, 3, 6]))) { f.startMove('panama'); this.announce('panama'); }
-      else if (kick && !f.dlr && (inp.special === 'jumpcall' || hasMotion(f.buf, [6, 2, 3]))) { f.startMove('jumpcall'); this.announce('jumpcall'); }
+      else if (sd || inp.special === 'panama') { f.startMove('panama'); this.announce('panama'); }
       else if (punch && (inp.special === 'brownsound' || hasMotion(f.buf, [2, 5, 2]))) { f.startMove('brownsound'); f.inv = MOVES.brownsound.inv; this.announce('brownsound'); }
-      else if (kick && (inp.special === 'sharkbite' || hasMotion(f.buf, [2, 1, 4]))) { f.startMove('sharkbite'); this.announce('sharkbite'); }
       else if (kick && !f.swarm && (inp.special === 'bumblebee' || hasMotion(f.buf, [2, 5, 2]))) { f.startMove('bumblebee'); this.announce('bumblebee'); }
+      else if (kick && !f.dlr && (inp.special === 'jumpcall' || hasMotion(f.buf, [6, 2]))) { f.startMove('jumpcall'); this.announce('jumpcall'); }
+      else if (kick && hasMotion(f.buf, [2, 6])) { f.startMove('panama'); this.announce('panama'); }
+      else if (kick && (inp.special === 'sharkbite' || hasMotion(f.buf, [2, 4]))) { f.startMove('sharkbite'); this.announce('sharkbite'); }
+      else if (punch && !f.proj && (inp.special === 'eruption' || hasMotion(f.buf, [2, 6]))) { f.startMove('eruption'); f.projFast = !!inp.hp; this.announce('eruption'); }
+      else if (punch && !f.bombs && (inp.special === 'divebomb' || hasMotion(f.buf, [2, 4]))) { f.startMove('divebomb'); f.bombTarget = op.x; this.announce('divebomb'); }
       else if (punch && (inp.special === 'drill' || hasMotion(f.buf, [6, 5, 6]))) { f.startMove('drill'); this.announce('drill'); }
-      else if (punch && !f.proj && (inp.special === 'eruption' || hasMotion(f.buf, [2, 3, 6]))) { f.startMove('eruption'); f.projFast = !!inp.hp; this.announce('eruption'); }
-      else if (punch && !f.bombs && (inp.special === 'divebomb' || hasMotion(f.buf, [2, 1, 4]))) { f.startMove('divebomb'); f.bombTarget = op.x; this.announce('divebomb'); }
       else if (inp.lp) f.startMove('lp');
       else if (inp.hp) f.startMove('hp');
       else if (inp.lk) f.startMove('lk');
@@ -370,12 +376,12 @@ class Fight extends Phaser.Scene {
       if (f.move === 'teacher' && st >= 2 && st <= 5 && f.t % 4 === 0) this.addFx('fx_notes', f.x + f.facing * px(90), FLOOR - px(170), { vx: f.facing * 4, vy: -1 - Math.random() * 2, rate: 4, scale: 0.5 * SC });
       if (f.move === 'teacher' && st === 10 && !f.evFinish) {
         f.evFinish = true;
-        if (op.state !== 'ko' && f.hasHit && op.state === 'hit') { this.startGag(op, 'burnt'); this.say('TOSTADO!', op.x, FLOOR - px(270), '#ff7a1a', 44); }
+        if (op.state !== 'ko' && f.hasHit && op.state === 'hit') { this.startGag(op, 'burnt'); this.say('TOASTED!', op.x, FLOOR - px(270), '#ff7a1a', 44); }
       }
       if (m.summon !== undefined && st >= m.summon && !f.spawned) { f.spawned = true; this.spawnDLR(f, op); }
       if (m.dash) { if (st >= m.dash[0] && st <= m.dash[1]) f.vx = f.facing * 13; else if (st > m.dash[1]) f.vx *= 0.9; }
       if (m.rev !== undefined && st === m.rev && !f.evRev) {
-        f.evRev = true; this.say('VRUUUM!', f.x - f.facing * 40, FLOOR - px(200), '#ff3d6e', 38);
+        f.evRev = true; this.say('VROOOM!', f.x - f.facing * 40, FLOOR - px(200), '#ff3d6e', 38);
         this.addFx('projectile', f.x - f.facing * px(120), FLOOR - px(40), { rate: 3, scale: 0.5 * SC, flip: f.facing > 0, vx: -f.facing * 2 });
       }
       if (['eruption', 'divebomb', 'brownsound', 'panama', 'sharkbite', 'drill'].includes(f.move) && (f.move === 'panama' ? f.t >= 22 && f.t < 40 : f.t < 24) && f.t % 3 === 0) this.ghost(f);
@@ -467,15 +473,43 @@ class Fight extends Phaser.Scene {
   }
 
   updateBeam(f, on) {
-    if (!on) { if (f.beam) { f.beam.destroy(); f.beam = null; } return; }
-    const x0 = f.x + f.facing * px(100), y0 = FLOOR - px(152);
-    const reach = f.facing > 0 ? W - x0 + 40 : x0 + 40;
-    const key = this.textures.exists('fx_beam') ? 'fx_beam' : 'bolt';
-    if (!f.beam) f.beam = this.add.sprite(x0, y0, key, 0).setDepth(23).setOrigin(f.facing > 0 ? 0 : 1, 0.5).setFlipX(f.facing < 0);
-    const fw = f.beam.frame.width;
-    f.beam.setPosition(x0, y0).setFrame(Math.floor(f.t / 2) % (key === 'fx_beam' ? ANIMS.fx_beam : 3))
-      .setScale(reach / fw, (0.38 + Math.random() * 0.18) * SC);
-    if (f.t % 3 === 0) this.cameras.main.shake(60, 0.004);
+    const g = this.beamG;
+    if (!on) {
+      if (f.beam) { f.beam.destroy(); f.beamGlow.destroy(); f.beam = f.beamGlow = null; g.clear(); }
+      f.beamLen = 0; return;
+    }
+    const dir = f.facing, x0 = f.x + dir * px(100), y0 = FLOOR - px(152);
+    const full = dir > 0 ? W - x0 + 40 : x0 + 40;
+    if (!f.beam) {
+      // disparo: clarão branco, tranco forte e o feixe cresce da guitarra até a borda
+      this.cameras.main.flash(90, 255, 255, 255); this.cameras.main.shake(220, 0.016);
+      this.say('ZZZAAAP!', x0 + dir * 160, y0 - 70, '#3cf0ff', 46);
+      const mk = (depth) => this.add.tileSprite(x0, y0, 16, FH, 'fx_beam', 0).setOrigin(dir > 0 ? 0 : 1, 0.5).setDepth(depth).setFlipX(dir < 0).setBlendMode(Phaser.BlendModes.ADD);
+      f.beamGlow = mk(22); f.beam = mk(23); f.beamLen = 0;
+    }
+    f.beamLen = Math.min(full, f.beamLen + 120);
+    const len = f.beamLen, fr = Math.floor(f.t / 2) % ANIMS.fx_beam, thick = (0.42 + Math.random() * 0.16) * SC;
+    f.beam.setPosition(x0, y0).setFrame(fr).setSize(len, FH).setScale(1, thick);
+    f.beam.tilePositionX += 38 * dir;
+    f.beamGlow.setPosition(x0, y0).setFrame((fr + 2) % ANIMS.fx_beam).setSize(len, FH).setScale(1, thick * 2.1)
+      .setTint(f.t % 4 < 2 ? 0xff3df0 : 0x3cf0ff).setAlpha(0.35 + Math.random() * 0.25);
+    f.beamGlow.tilePositionX -= 22 * dir;
+    // núcleo branco pulsando e arcos elétricos em zigue-zague ao longo do feixe
+    g.clear();
+    const xa = dir > 0 ? x0 : x0 - len, core = px(8) + Math.random() * px(8);
+    g.fillStyle(0xffffff, 0.95); g.fillRect(xa, y0 - core / 2, len, core);
+    for (let k = 0; k < 4; k++) {
+      g.lineStyle(k < 2 ? 3 : 2, [0xffffff, 0x9fefff, 0xff8cf5, 0xffe14a][k], 0.9);
+      const pts = [];
+      for (let x = 0; x <= len; x += 26) pts.push({ x: x0 + dir * x, y: y0 + (Math.random() * 2 - 1) * px(30) * (0.4 + k * 0.25) });
+      g.strokePoints(pts, false);
+    }
+    // bola de energia na ponta da guitarra
+    g.fillStyle(0xffffff, 0.9); g.fillCircle(x0, y0, px(16) + Math.random() * px(8));
+    g.fillStyle(0x3cf0ff, 0.45); g.fillCircle(x0, y0, px(30) + Math.random() * px(10));
+    if (f.t % 4 === 0) this.addFx('fx_zap', x0, y0, { rate: 2, scale: 0.5 * SC });
+    if (f.t % 3 === 0) this.addFx('fx_spark', x0 + dir * Math.random() * len, y0 + (Math.random() * 2 - 1) * px(20), { rate: 2, scale: 0.45 * SC });
+    if (f.t % 3 === 0) this.cameras.main.shake(60, 0.006);
   }
 
   // piada de cada especial: balão de quadrinho + reação exagerada de quem apanhou
@@ -488,10 +522,10 @@ class Fight extends Phaser.Scene {
       case 'swell':
         def.stings++;
         this.say('BZZ!', sx, sy - 20, '#ffe14a', 24);
-        if (def.stings >= 3) { def.stings = 0; this.say('INCHOU!', def.x, FLOOR - px(290), '#ff5a5a', 44); if (def.airborne) def.pendGag = 'swell'; else this.startGag(def, 'swell'); }
+        if (def.stings >= 3) { def.stings = 0; this.say('SWOLLEN!', def.x, FLOOR - px(290), '#ff5a5a', 44); if (def.airborne) def.pendGag = 'swell'; else this.startGag(def, 'swell'); }
         break;
       case 'chomp':
-        this.say(Math.random() < 0.5 ? 'CHOMP!' : 'NHAC!', sx, sy - 30, '#3cf0ff', 38);
+        this.say(Math.random() < 0.5 ? 'CHOMP!' : 'CRUNCH!', sx, sy - 30, '#3cf0ff', 38);
         if (!def.airborne) def.vy = -6;
         break;
       case 'zap': def.buzz = 8; break;
@@ -579,7 +613,7 @@ class Fight extends Phaser.Scene {
     const shadow = this.add.ellipse(x, FLOOR + 2, px(150), px(18), 0x000000, 0.4).setDepth(6).setScale(0.2);
     this.dlrs.push({ owner: f, x, dy: -560, vy: 3, phase: 'fall', t: 0, spr, shadow });
     f.dlr = true;
-    this.say('FIIIIU...', x, 140, '#ff4fd8', 26);
+    this.say('INCOMING...', x, 140, '#ff4fd8', 26);
   }
 
   updateDLR() {
@@ -596,7 +630,7 @@ class Fight extends Phaser.Scene {
           this.addFx('fx_dust', d.x - 80, FLOOR, { rate: 4, oy: 0.75 }); this.addFx('fx_dust', d.x + 80, FLOOR, { rate: 4, oy: 0.75, flip: true });
           const box = { x: d.x - px(115), y: FLOOR - px(190), w: px(230), h: px(190) };
           if (def.state !== 'ko' && !(def.inv > 0) && overlap(box, def.hurtbox())) this.applyHit(d.owner, def, DLR, d.x, FLOOR - px(120), true);
-          else this.say('OPS!', d.x, FLOOR - 230, '#ff4fd8', 34);
+          else this.say('OOPS!', d.x, FLOOR - 230, '#ff4fd8', 34);
         }
       } else if (d.phase === 'impact' && d.t > 24) { d.phase = 'pose'; d.t = 0; d.spr.setFrame(3); }
       else if (d.phase === 'pose' && d.t > 36) { d.phase = 'leave'; d.t = 0; d.vy = -17; d.spr.setFrame(4); }
@@ -699,11 +733,18 @@ class Fight extends Phaser.Scene {
     this.bnName = this.add.text(0, 3, 'X', { fontFamily: FONT_CHROME, fontStyle: 'italic 900', fontSize: '38px', color: '#fff', stroke: '#0a0612', strokeThickness: 5, padding: { x: 16, y: 4 } }).setOrigin(0.5);
     this.bnTag = this.add.text(0, 34, 'x', { fontFamily: FONT_NEON, fontSize: '28px', color: '#fff', padding: { x: 16, y: 8 } }).setOrigin(0.5).setAngle(-4);
     c.add([this.bnBand, this.bnName, this.bnTag]);
+    // título gigante do super: 5150 bate no meio da tela
+    this.tBig = this.add.text(W / 2, H / 2 - 40, '5150', { fontFamily: FONT_CHROME, fontStyle: 'italic 900', fontSize: '230px', color: '#fff',
+      stroke: '#0a0612', strokeThickness: 16, padding: { x: 50, y: 24 } }).setOrigin(0.5).setDepth(59).setVisible(false);
+    this.chrome(this.tBig);
+    this.tBig.setShadow(0, 0, '#ff3df0', 48, true, false);
+    this.bigLines = this.add.graphics().setDepth(58); this.bigT = 0;
     this.banner = c; this.bannerT = 0; this.bannerPow = null;
   }
 
   announce(key) {
     const pw = POWERS[key]; if (!pw) return;
+    if (key === 'teacher') { this.bigT = BIG_T; this.flashT = 10; this.cameras.main.shake(260, 0.014); return; }
     this.bannerPow = pw; this.bannerT = 70; this.flashT = 8;
     this.bnName.setText(pw.name); this.chrome(this.bnName);
     this.bnName.setShadow(0, 0, pw.neon, 14, true, false);
@@ -712,6 +753,21 @@ class Fight extends Phaser.Scene {
   }
 
   // faixa inclinada com linhas de velocidade e bordas neon, redesenhada a cada quadro
+  drawBigTitle() {
+    const t = this.bigT, g = this.bigLines; g.clear();
+    this.tBig.setVisible(t > 0); if (t <= 0) return;
+    const age = BIG_T - t;
+    // entra de 3x para 1x em 7 quadros, segura tremendo, sai crescendo e sumindo
+    const sc = age < 7 ? 3 - age * (2 / 7) : t < 16 ? 1 + (16 - t) * 0.03 : 1 + Math.sin(age * 0.9) * 0.012;
+    this.tBig.setScale(sc).setAlpha(t < 16 ? t / 16 : Math.min(1, age / 4)).setAngle(-4 + (age < 10 ? Math.random() * 4 - 2 : 0));
+    // faixas neon atrás do número, abrindo do centro
+    const open = Math.min(1, age / 10), a = t < 16 ? t / 16 : 1, cy = H / 2 - 40;
+    for (const [dy, c, w] of [[-108, 0xff3df0, 6], [-96, 0x3cf0ff, 3], [96, 0x3cf0ff, 3], [108, 0xff3df0, 6]]) {
+      g.lineStyle(w, c, a); g.lineBetween(W / 2 - 470 * open, cy + dy, W / 2 + 470 * open, cy + dy);
+    }
+    g.fillStyle(0x0a0010, 0.55 * a); g.fillRect(W / 2 - 470 * open, cy - 92, 940 * open, 184);
+  }
+
   drawBanner() {
     const bt = this.bannerT, pw = this.bannerPow, c = this.banner;
     c.setVisible(bt > 0); this.tMode.setVisible(bt <= 0); if (bt <= 0 || !pw) return;
@@ -749,6 +805,7 @@ class Fight extends Phaser.Scene {
     }
     this.words = this.words.filter(w => { if (w.age >= 50) { w.t.destroy(); return false; } return true; });
     if (this.bannerT > 0) this.bannerT--;
+    if (this.bigT > 0) this.bigT--;
     if (this.flashT > 0) this.flashT--;
   }
 
@@ -794,6 +851,7 @@ class Fight extends Phaser.Scene {
     this.renderVictoryLights();
     for (const e of this.fx) e.spr.setFrame(Math.min(e.n - 1, Math.floor(e.t / e.rate)));
     this.drawBanner();
+    this.drawBigTitle();
     if (!this.p.some(f => f.move === 'teacher')) this.superDark = Math.max(0, this.superDark - 0.05);
     this.superShade.setAlpha(this.superDark);
     this.flash.setAlpha(this.flashT > 0 ? this.flashT / 8 * 0.6 : 0);
@@ -823,17 +881,17 @@ class Fight extends Phaser.Scene {
     });
     this.tTimer.setText(String(Math.max(0, this.timer)).padStart(2, '0'));
     this.tN2.setText(this.p[1].cpu ? 'EDDIE CPU' : 'EDDIE 2P');
-    this.tMode.setText(`P: 2P ${this.p[1].cpu ? 'CPU' : 'HUMANO'}   H: CAIXAS DE COLISÃO`);
+    this.tMode.setText(`P: 2P ${this.p[1].cpu ? 'CPU' : 'HUMAN'}   H: HITBOXES`);
 
     let msg = '', sub = '';
     if (this.phase === 'intro') msg = this.phaseT < 60 ? `ROUND ${this.round}` : 'FIGHT!';
     if (this.phase === 'ko') msg = 'K.O.';
     if (this.phase === 'time') msg = 'TIME';
     if ((this.phase === 'ko' || this.phase === 'time') && this.phaseT > 90) {
-      msg = this.winner < 0 ? 'EMPATE' : this.winner === 0 ? 'EDDIE VENCE' : 'EDDIE 2P VENCE';
+      msg = this.winner < 0 ? 'DRAW' : this.winner === 0 ? 'EDDIE WINS' : (this.p[1].cpu ? 'CPU WINS' : 'EDDIE 2P WINS');
     }
     if (this.phase === 'over') {
-      msg = this.wins[0] > this.wins[1] ? 'P1 VENCEU!' : 'P2 VENCEU!'; sub = 'APERTE ENTER PARA JOGAR DE NOVO';
+      msg = this.wins[0] > this.wins[1] ? 'P1 WINS!' : (this.p[1].cpu ? 'CPU WINS!' : 'P2 WINS!'); sub = 'PRESS ENTER TO PLAY AGAIN';
     }
     if (this.tMsg.text !== msg) { this.tMsg.setText(msg); if (msg) this.chrome(this.tMsg); }
     this.tSub.setText(sub);

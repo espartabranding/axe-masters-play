@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Axe Masters Protótipo</title>
+<title>Axe Masters Prototype</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,600;1,800;1,900&family=Mr+Dafoe&family=Press+Start+2P&display=swap">
 <style>
@@ -34,35 +34,35 @@ kbd{font-family:var(--px);font-size:10px;background:#2a1a3a;border:1px solid #4a
 .tip{font-size:13px;color:var(--muted)}
 </style>
 <main>
-  <div class="bar"><h1><span class="logo">AXE MASTERS</span><span class="sig">Protótipo 1</span></h1><button id="fs" type="button">⛶ TELA CHEIA (T)</button></div>
+  <div class="bar"><h1><span class="logo">AXE MASTERS</span><span class="sig">Prototype 1</span></h1><button id="fs" type="button">⛶ FULL SCREEN (T)</button></div>
   <div id="game"></div>
-  <p class="tip">Clique no jogo antes de jogar, para o teclado responder. <span id="dbg"></span></p>
-<script>window.addEventListener('error',e=>{document.getElementById('dbg').textContent='ERRO: '+e.message+' @'+(e.lineno||'')});</script>
+  <p class="tip">Click the game before playing so the keyboard responds. <span id="dbg"></span></p>
+<script>window.addEventListener('error',e=>{document.getElementById('dbg').textContent='ERROR: '+e.message+' @'+(e.lineno||'')});</script>
   <div class="ctrl">
     <div class="box">
-      <h2>P1 (você)</h2>
-      <p><kbd>←</kbd> <kbd>→</kbd> andar · segurar para trás defende · <kbd>↓</kbd> agachar (defesa baixa) · <kbd>↑</kbd> pular (com <kbd>←</kbd>/<kbd>→</kbd> pula para trás/frente) · chute no ar com <kbd>D</kbd> ou <kbd>F</kbd></p>
-      <p><kbd>A</kbd> soco fraco · <kbd>S</kbd> soco forte · <kbd>D</kbd> chute fraco · <kbd>F</kbd> chute forte</p>
+      <h2>P1 (you)</h2>
+      <p><kbd>←</kbd> <kbd>→</kbd> walk · hold back to block · <kbd>↓</kbd> crouch (low block) · <kbd>↑</kbd> jump (with <kbd>←</kbd>/<kbd>→</kbd> to jump back/forward) · air kick with <kbd>D</kbd> or <kbd>F</kbd></p>
+      <p><kbd>A</kbd> light punch · <kbd>S</kbd> heavy punch · <kbd>D</kbd> light kick · <kbd>F</kbd> heavy kick</p>
     </div>
     <div class="box">
-      <h2>Especiais</h2>
-      <p><b>Dive Bomb:</b> <kbd>↓</kbd> → <kbd>↓</kbd>+<kbd>←</kbd> → <kbd>←</kbd> + <kbd>A</kbd> ou <kbd>S</kbd>. Alavancada na guitarra: 3 bombas caem do céu onde o oponente está.</p>
-      <p><b>Brown Sound:</b> <kbd>↓</kbd> <kbd>↓</kbd> + <kbd>A</kbd> ou <kbd>S</kbd> (toque para baixo duas vezes). Coluna de distorção explode do chão em volta do Eddie; ótima contra quem pula.</p>
-      <p><b>Panama:</b> <kbd>S</kbd> + <kbd>D</kbd> juntos. O Eddie chega de Lamborghini e atropela: o oponente vira panqueca.</p>
-      <p><b>Jump!:</b> <kbd>→</kbd> <kbd>↓</kbd> <kbd>↘</kbd> + <kbd>D</kbd> ou <kbd>F</kbd>. O Eddie assobia e o David Lee Roth despenca do céu em espacate em cima do oponente.</p>
-      <p><b>Shark Bite:</b> <kbd>↓</kbd> → <kbd>↓</kbd>+<kbd>←</kbd> → <kbd>←</kbd> + <kbd>D</kbd> ou <kbd>F</kbd>. Saca a Ibanez Destroyer "Shark" e dá 3 mordidas.</p>
-      <p><b>Bumblebee Swarm:</b> <kbd>↓</kbd> <kbd>↓</kbd> + <kbd>D</kbd> ou <kbd>F</kbd>. Saca a Bumblebee e solta um enxame de abelhas que persegue o oponente.</p>
-      <p><b>Poundcake Drill:</b> <kbd>→</kbd> <kbd>→</kbd> + <kbd>A</kbd> ou <kbd>S</kbd>. Frankenstrat original + furadeira Makita nas cordas, vários acertos.</p>
-      <p><b>Hot for Teacher (super):</b> <kbd>A</kbd> + <kbd>S</kbd> juntos com a barra Feedback cheia (a barrinha roxa embaixo da vida, que enche ao bater e ao apanhar). Óculos de professor, tapping, joelhada deslizando e um raio que atravessa o palco.</p>
-      <p><b>Eruption:</b></p>
-      <p><kbd>↓</kbd> → <kbd>↓</kbd>+<kbd>→</kbd> → <kbd>→</kbd> + <kbd>A</kbd> ou <kbd>S</kbd> (meia-lua para frente + soco). Bola de fogo; com soco forte ela sai mais rápida.</p>
+      <h2>Specials</h2>
+      <p class="tip">Facing right; on the other side the arrows are mirrored. Only the 4 arrow keys, one after the other: tap them quickly and press the button while holding the last arrow.</p>
+      <p><b>Eruption:</b> <kbd>↓</kbd> <kbd>→</kbd> + <kbd>A</kbd> or <kbd>S</kbd>. Fireball; faster with <kbd>S</kbd>. Whoever gets hit is toasted.</p>
+      <p><b>Panama:</b> <kbd>S</kbd> + <kbd>D</kbd> together (or <kbd>↓</kbd> <kbd>→</kbd> + <kbd>D</kbd> or <kbd>F</kbd>). Eddie shows up in a Lamborghini and runs the opponent flat as a pancake.</p>
+      <p><b>Jump!:</b> <kbd>→</kbd> <kbd>↓</kbd> + <kbd>D</kbd> or <kbd>F</kbd>. David Lee Roth drops from the sky in a split, right on top of the opponent.</p>
+      <p><b>Dive Bomb:</b> <kbd>↓</kbd> <kbd>←</kbd> + <kbd>A</kbd> or <kbd>S</kbd>. Three bombs fall from the sky where the opponent stands.</p>
+      <p><b>Shark Bite:</b> <kbd>↓</kbd> <kbd>←</kbd> + <kbd>D</kbd> or <kbd>F</kbd>. Pulls out the Ibanez "Shark" and bites 3 times.</p>
+      <p><b>Brown Sound:</b> <kbd>↓</kbd> <kbd>↓</kbd> + <kbd>A</kbd> or <kbd>S</kbd> (tap down twice). A column of distortion bursts around Eddie; great against jumpers.</p>
+      <p><b>Bumblebee Swarm:</b> <kbd>↓</kbd> <kbd>↓</kbd> + <kbd>D</kbd> or <kbd>F</kbd>. A swarm of bees chases the opponent; three stings and he swells up.</p>
+      <p><b>Poundcake Drill:</b> <kbd>→</kbd> <kbd>→</kbd> + <kbd>A</kbd> or <kbd>S</kbd> (tap forward twice). A Makita drill on the strings, multiple hits.</p>
+      <p><b>5150 (super):</b> <kbd>A</kbd> + <kbd>S</kbd> together when the Feedback bar is full (the bar under your health; it fills as you hit and get hit, and flashes when ready). Tapping, a knee slide and a lightning beam across the stage.</p>
     </div>
     <div class="box">
-      <h2>Outros</h2>
-      <p><kbd>P</kbd> alterna o 2P entre CPU e humano (<kbd>I</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> + <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd>) · <kbd>H</kbd> mostra as caixas de colisão</p>
+      <h2>Other</h2>
+      <p><kbd>P</kbd> switches 2P between CPU and human (<kbd>I</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> + <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd>) · <kbd>H</kbd> shows the hitboxes</p>
     </div>
   </div>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.80.1/phaser.min.js"></script>
-<script src="game.js?v=8876c20"></script>
+<script src="game.js?v=2115b2d"></script>
 </html>
