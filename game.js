@@ -13,7 +13,7 @@ const ANIMS = {
 // SC: tamanho dos lutadores em relação ao cenário; caixas de acerto, efeitos e pulo acompanham
 const SC = 0.8, px = v => Math.round(v * SC);
 const BIG_T = 64; // quadros do título gigante do super (some antes do raio)
-const MAX_HP = 950, WALK_F = 3.2, WALK_B = 2.6, MIN_GAP = px(95), ROUND_TIME = 99, WALL = px(60);
+const MAX_HP = 950, WALK_F = 3.2, WALK_B = 2.6, MIN_GAP = px(125), ROUND_TIME = 99, WALL = px(85);
 const JUMP_V = -15.2, GRAV = 0.85, JUMP_VX = 3.6;
 
 // tipografia anos 80: cromado pesado (Kanit Black Italic), neon em script (Mr Dafoe) e arcade (Press Start 2P)
@@ -138,8 +138,8 @@ class Fight extends Phaser.Scene {
   constructor() { super('fight'); }
 
   preload() {
-    this.load.image('stage', 'assets/stages/palco-eddie.jpg?v=2115b2d');
-    for (const n of Object.keys(ANIMS)) this.load.spritesheet(n, `assets/eddie/${n}.png?v=2115b2d`, { frameWidth: FW, frameHeight: FH });
+    this.load.image('stage', 'assets/stages/palco-eddie.jpg?v=4db1f34');
+    for (const n of Object.keys(ANIMS)) this.load.spritesheet(n, `assets/eddie/${n}.png?v=4db1f34`, { frameWidth: FW, frameHeight: FH });
   }
 
   create() {
@@ -308,6 +308,8 @@ class Fight extends Phaser.Scene {
       f.holdBack = !!inp.back; f.holdDown = !!inp.down;
       this.updateFighter(f, op, inp);
     }
+    // raio do super some se o golpe foi interrompido (ex.: o Eddie apanhou no meio)
+    for (const f of this.p) if (f.beam && !(f.state === 'attack' && f.move === 'teacher')) this.updateBeam(f, false);
     this.separate(a, b);
     for (const f of this.p) this.checkHit(f, this.p[1 - f.side]);
     this.updateProjectiles();
@@ -418,6 +420,12 @@ class Fight extends Phaser.Scene {
       const push = (MIN_GAP - Math.abs(d)) / 2 * (d >= 0 ? 1 : -1);
       a.x = Phaser.Math.Clamp(a.x - push, WALL, W - WALL);
       b.x = Phaser.Math.Clamp(b.x + push, WALL, W - WALL);
+      // encurralado na parede: quem está livre leva o resto do empurrão, para nunca ficarem um dentro do outro
+      const dir = d >= 0 ? 1 : -1;
+      if (Math.abs(b.x - a.x) < MIN_GAP) {
+        if (a.x <= WALL || a.x >= W - WALL) b.x = Phaser.Math.Clamp(a.x + dir * MIN_GAP, WALL, W - WALL);
+        else a.x = Phaser.Math.Clamp(b.x - dir * MIN_GAP, WALL, W - WALL);
+      }
     }
   }
 
@@ -544,6 +552,8 @@ class Fight extends Phaser.Scene {
 
   // balão de onomatopeia: entra grande, encolhe com tranco, sobe e some
   say(text, x, y, color, size = 34) {
+    // não empilha o mesmo balão: se ele acabou de sair, espera
+    if (this.words.some(w => w.t.text === text && w.age < 20)) return;
     const t = this.add.text(Phaser.Math.Clamp(x, 90, W - 90), Phaser.Math.Clamp(y, 110, H - 80), text, {
       fontFamily: FONT_CHROME, fontStyle: 'italic 900', fontSize: size + 'px', color,
       stroke: '#14061f', strokeThickness: Math.round(size / 5), padding: { x: 12, y: 6 },
