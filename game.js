@@ -277,17 +277,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=6a44158' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=6a44158' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=6a44158' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=6a44158' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=6a44158' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=6a44158' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=6a44158' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=e05fc48' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=e05fc48' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=e05fc48' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=e05fc48' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=e05fc48' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=e05fc48' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=e05fc48' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=6a44158', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=e05fc48', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -407,9 +407,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=6a44158`);
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=6a44158`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=6a44158`, { frameWidth: 300, frameHeight: 300 });
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=e05fc48`);
+    this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=e05fc48`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=e05fc48`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -418,7 +419,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=6a44158`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=e05fc48`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -429,15 +430,20 @@ class Boot extends Phaser.Scene {
 // CAPA ANIMADA: o logo do Rock n' Bira despenca, "BATTLE" entra rasgando, os holofotes varrem o palco,
 // os lutadores acendem dos lados e o Ricardinho passa correndo com a bandeira. Qualquer botão começa.
 // ---------------------------------------------------------------------------------------------
-const TOAST_SPOTS = [[170, 92], [790, 92], [160, 218], [800, 218]]; // onde as canecas se encontram na capa
+const TOAST_SPOTS = [[170, 92], [790, 92], [795, 240], [805, 385]];
+const BIRA_X = 170; // onde o Ricardinho para na capa // onde as canecas se encontram na capa
 class Title extends Phaser.Scene {
   constructor() { super('title'); }
 
   create() {
     this.t = 0; this.going = false;
-    // fundo: o Templo escurecido, com um zoom lento
-    this.bg = this.add.image(W / 2, H / 2, this.textures.exists('temple') ? 'temple' : 'stage').setDisplaySize(W * 1.08, H * 1.08).setTint(0x5a4a7a);
-    this.add.rectangle(0, 0, W, H, 0x07030d, 0.55).setOrigin(0);
+    // fundo: a festa no bar, escurecida para o logo brilhar, com um zoom lento
+    const bgKey = ['title_bg', 'temple', 'stage'].find(k => this.textures.exists(k));
+    this.bg = this.add.image(W / 2, H / 2, bgKey).setDisplaySize(W * 1.08, H * 1.08).setTint(0x8a7a9a);
+    this.add.rectangle(0, 0, W, H, 0x07030d, 0.5).setOrigin(0);
+    // vinheta: mais escuro no meio de cima, atrás do logo
+    const v = this.add.graphics();
+    for (let i = 0; i < 12; i++) v.fillStyle(0x07030d, 0.05).fillEllipse(W / 2, 200, 640 - i * 36, 420 - i * 22);
     this.beams = this.add.graphics().setBlendMode(Phaser.BlendModes.ADD);
 
     // faíscas subindo do palco
@@ -451,15 +457,9 @@ class Title extends Phaser.Scene {
       frequency: 70, blendMode: 'ADD',
     });
 
-    // lutadores dos lados, no escuro até o logo cair
-    const ids = Object.keys(CHARS).filter(id => !CHARS[id].placeholder);
-    const side = [ids[0], ids[1] || ids[0]];
-    this.fighters = side.map((id, i) => {
-      const key = texKey(this, CHARS[id], 'idle');
-      const dir = i === 0 ? 1 : -1, x = i === 0 ? 150 : W - 150;
-      return this.add.sprite(x, FLOOR + 30, key, 0).setScale(SC * 1.05).setFlipX(dir < 0)
-        .setOrigin((dir > 0 ? AX : FW - AX) / FW, AY / FH).setTint(0x000000).setAlpha(0.9);
-    });
+    // o Ricardinho: entra correndo com a bandeira depois que o logo cai, freia e fica comemorando
+    this.biraKey = texKey(this, CHARS.eddie, 'bira');
+    this.bira = null;
 
     // o logo dourado: aura quente por trás, o logo, um reflexo de luz que passa por cima e estrelinhas piscando
     const LS = this.LS = 0.4, LY = this.LY = 196;
@@ -498,7 +498,6 @@ class Title extends Phaser.Scene {
     if (isTouch()) this.foot.setVisible(false);
 
     this.flash = this.add.rectangle(0, 0, W, H, 0xffffff, 0).setOrigin(0).setDepth(50);
-    this.bira = null; this.biraT = 150;
 
     this.onKey = e => {
       if (['Enter', 'Space', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'Digit7'].includes(e.code)) this.go();
@@ -514,8 +513,7 @@ class Title extends Phaser.Scene {
     this.cameras.main.shake(260, 0.012);
     this.flash.setAlpha(0.85); this.tweens.add({ targets: this.flash, alpha: 0, duration: 420 });
     this.landed = true;
-    this.fighters.forEach((f, i) => this.tweens.addCounter({ from: 0, to: 255, duration: 700, delay: 120 + i * 140,
-      onUpdate: tw => { const v = Math.round(tw.getValue()); f.setTint(Phaser.Display.Color.GetColor(v, v, v)); } }));
+    this.enterBira();
     this.tweens.add({ targets: this.slashBar, scaleX: 1, duration: 300, delay: 420, ease: 'Cubic.easeOut' });
     this.tweens.add({ targets: this.battle, x: W / 2, duration: 420, delay: 260, ease: 'Back.easeOut',
       onComplete: () => { this.cameras.main.shake(160, 0.008); this.ready = true; } });
@@ -564,7 +562,7 @@ class Title extends Phaser.Scene {
     if (this.going) return;
     if (!this.ready) { // apertou durante a abertura: pula direto para o fim
       this.tweens.killAll(); this.logo.setScale(this.LS).setAlpha(1).setAngle(0); this.battle.x = W / 2; this.slashBar.setScale(1, 1);
-      this.fighters.forEach(f => f.setTint(0xffffff)); this.press.setAlpha(1); this.foot.setAlpha(1);
+      this.enterBira(true); this.press.setAlpha(1); this.foot.setAlpha(1);
       this.landed = true; this.ready = true; return;
     }
     this.going = true;
@@ -618,24 +616,29 @@ class Title extends Phaser.Scene {
     // BATTLE e PRESS START
     if (this.ready) this.press.setAlpha(Math.floor(t / 28) % 2 ? 0.25 : 1);
 
-    // lutadores respirando
-    this.fighters.forEach((f, i) => setFr(f, Math.floor(t / 6 + i * 3) % (texFrames(this, f.texture.key) || 1)));
-
-    // o Ricardinho atravessa o palco com a bandeira de vez em quando
-    if (this.landed && !this.bira && --this.biraT <= 0) {
-      const key = texKey(this, CHARS.eddie, 'bira');
-      if (this.textures.exists(key)) {
-        const dir = Math.random() < 0.5 ? 1 : -1;
-        this.bira = { dir, x: dir > 0 ? -120 : W + 120, spr: this.add.sprite(0, FLOOR + 40, key, 0).setScale(SC * 0.85).setFlipX(dir < 0)
-          .setOrigin((dir > 0 ? AX : FW - AX) / FW, AY / FH).setDepth(5) };
+    // Ricardinho: corre (0-1), freia (2) e comemora (6-8, vai e volta)
+    const b = this.bira;
+    if (b) {
+      b.t++;
+      if (b.phase === 'run') {
+        b.x += 9; setFr(b.spr, Math.floor(b.t / 4) % 2);
+        if (b.x >= BIRA_X) { b.x = BIRA_X; b.phase = 'brake'; b.t = 0; setFr(b.spr, 2); this.cameras.main.shake(90, 0.004); }
+      } else if (b.phase === 'brake') {
+        if (b.t > 14) { b.phase = 'cheer'; b.t = 0; }
+      } else {
+        setFr(b.spr, [6, 7, 8, 7][Math.floor(b.t / 10) % 4]);
+        b.spr.y = FLOOR + 44 - (Math.floor(b.t / 10) % 4 === 2 ? 6 : 0); // pulinho na comemoração
       }
-      this.biraT = 420;
+      b.spr.x = Math.round(b.x);
+      b.shadow.x = b.x;
     }
-    if (this.bira) {
-      const b = this.bira; b.x += b.dir * 6;
-      b.spr.setPosition(Math.round(b.x), FLOOR + 40); setFr(b.spr, Math.floor(t / 4) % 2);
-      if (b.x < -160 || b.x > W + 160) { b.spr.destroy(); this.bira = null; }
-    }
+  }
+
+  enterBira(now = false) {
+    if (this.bira || !this.textures.exists(this.biraKey)) return;
+    const spr = this.add.sprite(-160, FLOOR + 44, this.biraKey, 0).setScale(1.05).setOrigin(AX / FW, AY / FH).setDepth(6);
+    const shadow = this.add.ellipse(-160, FLOOR + 46, 130, 16, 0x000000, 0.4).setDepth(5);
+    this.bira = { x: now ? BIRA_X : -160, t: 0, phase: now ? 'cheer' : 'run', spr, shadow };
   }
 }
 
