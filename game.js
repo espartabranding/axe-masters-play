@@ -145,8 +145,8 @@ class Fight extends Phaser.Scene {
   constructor() { super('fight'); }
 
   preload() {
-    this.load.image('stage', 'assets/stages/palco-eddie.jpg?v=462f4a1');
-    for (const n of Object.keys(ANIMS)) this.load.spritesheet(n, `assets/eddie/${n}.png?v=462f4a1`, { frameWidth: FW, frameHeight: FH });
+    this.load.image('stage', 'assets/stages/palco-eddie.jpg?v=2465532');
+    for (const n of Object.keys(ANIMS)) this.load.spritesheet(n, `assets/eddie/${n}.png?v=2465532`, { frameWidth: FW, frameHeight: FH });
   }
 
   create() {
@@ -182,6 +182,7 @@ class Fight extends Phaser.Scene {
     this.keys.boxes.on('down', () => { this.showBoxes = !this.showBoxes; });
     this.keys.mode.on('down', () => { this.p[1].cpu = !this.p[1].cpu; });
     this.keys.enter.on('down', () => { if (this.phase === 'over') this.newMatch(); });
+    this.input.on('pointerdown', () => { if (this.phase === 'over') this.newMatch(); }); // no celular: tocar na tela
     this.input.keyboard.addCapture([K.LEFT, K.RIGHT, K.DOWN, K.UP, K.SPACE]);
 
     this.acc = 0;
@@ -241,12 +242,14 @@ class Fight extends Phaser.Scene {
   readInput(f) {
     const n = f.side + 1, k = this.keys;
     if (f.cpu) return this.cpuThink(f, this.p[1 - f.side]);
-    const left = k['l' + n].isDown, right = k['r' + n].isDown;
-    const press = b => Phaser.Input.Keyboard.JustDown(k[b + n]);
+    // controles de toque (celular) valem para o P1, somados ao teclado
+    const T = n === 1 && window.TOUCH ? window.TOUCH : null;
+    const left = k['l' + n].isDown || !!(T && T.l), right = k['r' + n].isDown || !!(T && T.r);
+    const press = b => Phaser.Input.Keyboard.JustDown(k[b + n]) || !!(T && T.take(b));
     return {
       fwd: f.facing > 0 ? right && !left : left && !right,
       back: f.facing > 0 ? left && !right : right && !left,
-      down: k['d' + n].isDown, up: k['u' + n].isDown,
+      down: k['d' + n].isDown || !!(T && T.d), up: k['u' + n].isDown || !!(T && T.u),
       lp: press('lp'), hp: press('hp'), lk: press('lk'), hk: press('hk'),
     };
   }
@@ -935,6 +938,7 @@ class Fight extends Phaser.Scene {
     this.tTimer.setText(String(Math.max(0, this.timer)).padStart(2, '0'));
     this.tN2.setText(this.p[1].cpu ? 'EDDIE CPU' : 'EDDIE 2P');
     this.tMode.setText(`P: 2P ${this.p[1].cpu ? 'CPU' : 'HUMAN'}   H: HITBOXES`);
+    if (window.TOUCH && window.TOUCH.on) this.tMode.setVisible(false); // no celular não há teclado
 
     let msg = '', sub = '';
     if (this.phase === 'intro') msg = this.phaseT < 60 ? `ROUND ${this.round}` : 'FIGHT!';
@@ -944,7 +948,7 @@ class Fight extends Phaser.Scene {
       msg = this.winner < 0 ? 'DRAW' : this.winner === 0 ? 'EDDIE WINS' : (this.p[1].cpu ? 'CPU WINS' : 'EDDIE 2P WINS');
     }
     if (this.phase === 'over') {
-      msg = this.wins[0] > this.wins[1] ? 'P1 WINS!' : (this.p[1].cpu ? 'CPU WINS!' : 'P2 WINS!'); sub = 'PRESS ENTER TO PLAY AGAIN';
+      msg = this.wins[0] > this.wins[1] ? 'P1 WINS!' : (this.p[1].cpu ? 'CPU WINS!' : 'P2 WINS!'); sub = window.TOUCH && window.TOUCH.on ? 'TAP TO PLAY AGAIN' : 'PRESS ENTER TO PLAY AGAIN';
     }
     if (this.tMsg.text !== msg) { this.tMsg.setText(msg); if (msg) this.chrome(this.tMsg); }
     this.tSub.setText(sub);

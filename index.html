@@ -19,6 +19,37 @@ h1{margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;line-heigh
 .sig{font-family:var(--neon);font-weight:400;font-size:clamp(26px,4.5vw,36px);color:#fff;transform:rotate(-6deg);
   text-shadow:0 0 4px var(--hot),0 0 12px var(--hot),0 0 24px var(--hot)}
 #game{width:100%;outline:4px solid var(--line);background:#000;line-height:0;overflow:hidden}
+#game{position:relative}
+/* controles de toque: só em tela de toque */
+#touch,#rotate,.box.mobile{display:none}
+.touch .box.mobile{display:grid}
+.touch main>.tip{display:none}
+.touch #touch{display:block;position:absolute;inset:0;pointer-events:none;z-index:5;line-height:normal;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#stick{position:absolute;left:max(18px,env(safe-area-inset-left,0px));bottom:18px;width:min(34vh,150px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(60,240,255,.10),rgba(20,10,35,.45));border:3px solid rgba(60,240,255,.55);pointer-events:auto;touch-action:none;
+  box-shadow:0 0 18px rgba(60,240,255,.35)}
+#knob{position:absolute;left:50%;top:50%;width:42%;aspect-ratio:1;margin:-21% 0 0 -21%;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,#9fefff 35%,#3cf0ff 60%,#147a88);box-shadow:0 0 14px #3cf0ff}
+#btns{position:absolute;right:max(18px,env(safe-area-inset-right,0px));bottom:14px;width:min(40vh,176px);aspect-ratio:1;pointer-events:none}
+#btns button{position:absolute;width:44%;aspect-ratio:1;border-radius:50%;border:3px solid rgba(255,255,255,.65);pointer-events:auto;touch-action:none;
+  font-family:var(--chrome);font-style:italic;font-weight:900;font-size:clamp(16px,5vh,26px);color:#fff;text-shadow:0 2px 0 #000;padding:0;
+  box-shadow:0 0 14px rgba(0,0,0,.6),inset 0 -6px 0 rgba(0,0,0,.25)}
+#btns button.on{transform:scale(.9);filter:brightness(1.4)}
+#btns [data-b=lp]{left:0;top:28%;background:#7a3cff}
+#btns [data-b=hp]{left:28%;top:0;background:#ff3d6e}
+#btns [data-b=lk]{left:28%;top:56%;background:#3c9dff}
+#btns [data-b=hk]{right:0;top:28%;background:#ffb020}
+#rotate{position:absolute;inset:0;z-index:6;align-items:center;justify-content:center;text-align:center;padding:24px;line-height:1.3;
+  background:rgba(11,7,16,.92);font-family:var(--chrome);font-style:italic;font-weight:900;font-size:22px;color:var(--amp)}
+@media (orientation:portrait){.touch #rotate{display:flex}}
+/* celular deitado: o jogo ocupa a tela inteira */
+@media (orientation:landscape){
+  body.touch{padding:0;overflow:hidden}
+  .touch main{max-width:none;gap:0}
+  .touch .bar,.touch main>.tip,.touch .ctrl{display:none}
+  .touch #game{width:100vw;height:100vh;height:100dvh;outline:0;display:flex;align-items:center;justify-content:center}
+}
 #game canvas{max-width:100%}
 #game:fullscreen{border:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}
 .bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
@@ -35,7 +66,15 @@ kbd{font-family:var(--px);font-size:10px;background:#2a1a3a;border:1px solid #4a
 </style>
 <main>
   <div class="bar"><h1><span class="logo">AXE MASTERS</span><span class="sig">Prototype 1</span></h1><button id="fs" type="button">⛶ FULL SCREEN (T)</button></div>
-  <div id="game"></div>
+  <div id="game">
+    <div id="touch" aria-hidden="true"><div id="stick"><div id="knob"></div></div>
+      <div id="btns"><button type="button" data-b="lp">A</button><button type="button" data-b="hp">S</button><button type="button" data-b="lk">D</button><button type="button" data-b="hk">F</button></div></div>
+    <div id="rotate">Turn your phone sideways to play</div>
+  </div>
+  <div class="box mobile">
+    <h2>On your phone</h2>
+    <p>Turn the phone sideways. Drag the left stick to walk, crouch and jump; the arrow combos below work by sliding your thumb (for example ↓ then →). The buttons on the right are <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>F</kbd>; press two at once with two fingers for Panama (S+D), Spanish Fly (A+D) and the 5150 super (A+S). Tap the screen to play again after a match.</p>
+  </div>
   <p class="tip">Click the game before playing so the keyboard responds. <span id="dbg"></span></p>
 <script>window.addEventListener('error',e=>{document.getElementById('dbg').textContent='ERROR: '+e.message+' @'+(e.lineno||'')});</script>
   <div class="ctrl">
@@ -64,6 +103,38 @@ kbd{font-family:var(--px);font-size:10px;background:#2a1a3a;border:1px solid #4a
     </div>
   </div>
 </main>
+<script>
+// controles de toque: analógico (8 direções, deslizando o dedo) + botões A S D F com vários dedos ao mesmo tempo
+(() => {
+  const T = window.TOUCH = { on: false, l: false, r: false, u: false, d: false, pressed: {},
+    take(b) { const t = this.pressed[b]; if (t && performance.now() - t < 250) { this.pressed[b] = 0; return true; } this.pressed[b] = 0; return false; } };
+  const touchy = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+  if (!touchy) return;
+  T.on = true; document.body.classList.add('touch');
+  const stick = document.getElementById('stick'), knob = document.getElementById('knob');
+  let sid = null;
+  const move = e => {
+    const r = stick.getBoundingClientRect(), R = r.width / 2;
+    let dx = e.clientX - (r.left + R), dy = e.clientY - (r.top + R);
+    const len = Math.hypot(dx, dy), lim = R * 0.6;
+    if (len > lim) { dx *= lim / len; dy *= lim / len; }
+    knob.style.transform = `translate(${dx}px,${dy}px)`;
+    const t = R * 0.28;
+    T.l = dx < -t; T.r = dx > t; T.u = dy < -t; T.d = dy > t;
+  };
+  const end = e => { if (e.pointerId !== sid) return; sid = null; T.l = T.r = T.u = T.d = false; knob.style.transform = ''; };
+  stick.addEventListener('pointerdown', e => { e.preventDefault(); sid = e.pointerId; try { stick.setPointerCapture(sid); } catch (_) {} move(e); });
+  stick.addEventListener('pointermove', e => { if (e.pointerId === sid) move(e); });
+  stick.addEventListener('pointerup', end); stick.addEventListener('pointercancel', end);
+  for (const b of document.querySelectorAll('#btns button')) {
+    const k = b.dataset.b;
+    b.addEventListener('pointerdown', e => { e.preventDefault(); T.pressed[k] = performance.now(); b.classList.add('on'); try { b.setPointerCapture(e.pointerId); } catch (_) {} });
+    const up = () => b.classList.remove('on');
+    b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
+    b.addEventListener('contextmenu', e => e.preventDefault());
+  }
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.80.1/phaser.min.js"></script>
-<script src="game.js?v=462f4a1"></script>
+<script src="game.js?v=2465532"></script>
 </html>
