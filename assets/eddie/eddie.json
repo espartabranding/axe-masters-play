@@ -56,6 +56,22 @@
       "frames": 10,
       "file": "drill.png"
     },
+    "react": {
+      "frames": 10,
+      "file": "react.png"
+    },
+    "jumpcall": {
+      "frames": 5,
+      "file": "jumpcall.png"
+    },
+    "dlr": {
+      "frames": 5,
+      "file": "dlr.png"
+    },
+    "teacher": {
+      "frames": 10,
+      "file": "teacher.png"
+    },
     "fx_bee": {
       "frames": 4,
       "file": "fx_bee.png"
@@ -135,6 +151,14 @@
     "explosion": {
       "frames": 4,
       "file": "explosion.png"
+    },
+    "fx_beam": {
+      "frames": 4,
+      "file": "fx_beam.png"
+    },
+    "fx_zap": {
+      "frames": 4,
+      "file": "fx_zap.png"
     }
   }
 }
