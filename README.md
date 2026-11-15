@@ -1,6 +1,6 @@
-# Axe Masters (playable)
+# Rock n' Bira Battle (playable)
 
-A 16-bit fighting game starring legendary guitarists. Prototype with Eddie Van Halen and Slash.
+A 16-bit fighting game starring legendary guitarists, presented by Rock n' Bira Open Bar. Prototype with Eddie Van Halen and Slash.
 
 **Play:** https://espartabranding.github.io/axe-masters-play/
 
