@@ -135,8 +135,8 @@ class Fight extends Phaser.Scene {
   constructor() { super('fight'); }
 
   preload() {
-    this.load.image('stage', 'assets/stages/palco-eddie.jpg');
-    for (const n of Object.keys(ANIMS)) this.load.spritesheet(n, `assets/eddie/${n}.png`, { frameWidth: FW, frameHeight: FH });
+    this.load.image('stage', 'assets/stages/palco-eddie.jpg?v=8876c20');
+    for (const n of Object.keys(ANIMS)) this.load.spritesheet(n, `assets/eddie/${n}.png?v=8876c20`, { frameWidth: FW, frameHeight: FH });
   }
 
   create() {
