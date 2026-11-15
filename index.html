@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Axe Masters Protótipo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600&display=swap">
+<style>
+:root{--bg:#0b0710;--panel:#150d1f;--ink:#f3ecff;--muted:#9a8bb3;--hot:#ff3d6e;--amp:#ffc93c;--volt:#3cf0ff;--line:#2c1f3d;
+  --px:'Press Start 2P',monospace;--body:'Inter',system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);padding-block:20px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:980px;margin:0 auto;display:grid;gap:16px}
+h1{font-family:var(--px);font-size:clamp(14px,3vw,20px);color:var(--amp);margin:0}
+#game{width:100%;border:4px solid var(--line);background:#000;line-height:0}
+#game canvas{max-width:100%}
+#game:fullscreen{border:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+#fs{font-family:var(--px);font-size:11px;color:#0b0710;background:var(--amp);border:0;border-bottom:4px solid #b8860b;padding:10px 14px;cursor:pointer}
+#fs:hover{filter:brightness(1.1)}
+#fs:focus-visible{outline:3px solid var(--volt);outline-offset:2px}
+.ctrl{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.box{background:var(--panel);border:2px solid var(--line);padding:14px;display:grid;gap:8px;min-width:0}
+.box h2{font-family:var(--px);font-size:11px;color:var(--hot);margin:0}
+.box p{margin:0;font-size:14px;color:var(--muted);line-height:1.6}
+kbd{font-family:var(--px);font-size:10px;background:#2a1a3a;border:1px solid #4a2a60;border-bottom-width:3px;padding:3px 6px;color:var(--ink)}
+.tip{font-size:13px;color:var(--muted)}
+</style>
+<main>
+  <div class="bar"><h1>AXE MASTERS · Protótipo 1</h1><button id="fs" type="button">⛶ TELA CHEIA (T)</button></div>
+  <div id="game"></div>
+  <p class="tip">Clique no jogo antes de jogar, para o teclado responder. <span id="dbg"></span></p>
+<script>window.addEventListener('error',e=>{document.getElementById('dbg').textContent='ERRO: '+e.message+' @'+(e.lineno||'')});</script>
+  <div class="ctrl">
+    <div class="box">
+      <h2>P1 (você)</h2>
+      <p><kbd>←</kbd> <kbd>→</kbd> andar · segurar para trás defende · <kbd>↓</kbd> agachar (defesa baixa) · <kbd>↑</kbd> pular (com <kbd>←</kbd>/<kbd>→</kbd> pula para trás/frente) · chute no ar com <kbd>D</kbd> ou <kbd>F</kbd></p>
+      <p><kbd>A</kbd> soco fraco · <kbd>S</kbd> soco forte · <kbd>D</kbd> chute fraco · <kbd>F</kbd> chute forte</p>
+    </div>
+    <div class="box">
+      <h2>Especiais</h2>
+      <p><b>Dive Bomb:</b> <kbd>↓</kbd> → <kbd>↓</kbd>+<kbd>←</kbd> → <kbd>←</kbd> + <kbd>A</kbd> ou <kbd>S</kbd>. Alavancada na guitarra: 3 bombas caem do céu onde o oponente está.</p>
+      <p><b>Brown Sound:</b> <kbd>↓</kbd> <kbd>↓</kbd> + <kbd>A</kbd> ou <kbd>S</kbd> (toque para baixo duas vezes). Coluna de distorção explode do chão em volta do Eddie; ótima contra quem pula.</p>
+      <p><b>Panama:</b> <kbd>↓</kbd> → <kbd>↓</kbd>+<kbd>→</kbd> → <kbd>→</kbd> + <kbd>D</kbd> ou <kbd>F</kbd> (meia-lua para frente + chute). Arrancada de Lamborghini com joelhada.</p>
+      <p><b>Shark Bite:</b> <kbd>↓</kbd> → <kbd>↓</kbd>+<kbd>←</kbd> → <kbd>←</kbd> + <kbd>D</kbd> ou <kbd>F</kbd>. Saca a Ibanez Destroyer "Shark" e dá 3 mordidas.</p>
+      <p><b>Bumblebee Swarm:</b> <kbd>↓</kbd> <kbd>↓</kbd> + <kbd>D</kbd> ou <kbd>F</kbd>. Saca a Bumblebee e solta um enxame de abelhas que persegue o oponente.</p>
+      <p><b>Poundcake Drill:</b> <kbd>→</kbd> <kbd>→</kbd> + <kbd>A</kbd> ou <kbd>S</kbd>. Frankenstrat original + furadeira Makita nas cordas, vários acertos.</p>
+      <p><b>Eruption:</b></p>
+      <p><kbd>↓</kbd> → <kbd>↓</kbd>+<kbd>→</kbd> → <kbd>→</kbd> + <kbd>A</kbd> ou <kbd>S</kbd> (meia-lua para frente + soco). Bola de fogo; com soco forte ela sai mais rápida.</p>
+    </div>
+    <div class="box">
+      <h2>Outros</h2>
+      <p><kbd>P</kbd> alterna o 2P entre CPU e humano (<kbd>I</kbd> <kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> + <kbd>7</kbd> <kbd>8</kbd> <kbd>9</kbd> <kbd>0</kbd>) · <kbd>H</kbd> mostra as caixas de colisão</p>
+    </div>
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.80.1/phaser.min.js"></script>
+<script src="game.js"></script>
+</html>

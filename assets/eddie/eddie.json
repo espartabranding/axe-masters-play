@@ -1,0 +1,140 @@
+{
+  "frameWidth": 460,
+  "frameHeight": 300,
+  "anchorX": 220,
+  "anchorY": 290,
+  "anims": {
+    "idle": {
+      "frames": 10,
+      "file": "idle.png"
+    },
+    "walk_fwd": {
+      "frames": 10,
+      "file": "walk_fwd.png"
+    },
+    "walk_back": {
+      "frames": 10,
+      "file": "walk_back.png"
+    },
+    "lp": {
+      "frames": 10,
+      "file": "lp.png"
+    },
+    "hp": {
+      "frames": 10,
+      "file": "hp.png"
+    },
+    "lk": {
+      "frames": 10,
+      "file": "lk.png"
+    },
+    "hk": {
+      "frames": 10,
+      "file": "hk.png"
+    },
+    "brownsound": {
+      "frames": 10,
+      "file": "brownsound.png"
+    },
+    "panama": {
+      "frames": 10,
+      "file": "panama.png"
+    },
+    "victory": {
+      "frames": 10,
+      "file": "victory.png"
+    },
+    "sharkbite": {
+      "frames": 10,
+      "file": "sharkbite.png"
+    },
+    "bumblebee": {
+      "frames": 10,
+      "file": "bumblebee.png"
+    },
+    "drill": {
+      "frames": 10,
+      "file": "drill.png"
+    },
+    "fx_bee": {
+      "frames": 4,
+      "file": "fx_bee.png"
+    },
+    "fx_drill": {
+      "frames": 4,
+      "file": "fx_drill.png"
+    },
+    "fx_smoke": {
+      "frames": 4,
+      "file": "fx_smoke.png"
+    },
+    "fx_spark": {
+      "frames": 5,
+      "file": "fx_spark.png"
+    },
+    "fx_block": {
+      "frames": 5,
+      "file": "fx_block.png"
+    },
+    "fx_wave": {
+      "frames": 5,
+      "file": "fx_wave.png"
+    },
+    "fx_notes": {
+      "frames": 5,
+      "file": "fx_notes.png"
+    },
+    "fx_dust": {
+      "frames": 5,
+      "file": "fx_dust.png"
+    },
+    "eruption": {
+      "frames": 4,
+      "file": "eruption.png"
+    },
+    "bolt": {
+      "frames": 3,
+      "file": "bolt.png"
+    },
+    "block": {
+      "frames": 2,
+      "file": "block.png"
+    },
+    "hit": {
+      "frames": 3,
+      "file": "hit.png"
+    },
+    "ko": {
+      "frames": 5,
+      "file": "ko.png"
+    },
+    "jump": {
+      "frames": 6,
+      "file": "jump.png"
+    },
+    "crouch": {
+      "frames": 3,
+      "file": "crouch.png"
+    },
+    "jumpkick": {
+      "frames": 2,
+      "file": "jumpkick.png"
+    },
+    "projectile": {
+      "frames": 4,
+      "file": "projectile.png"
+    },
+    "divebomb": {
+      "frames": 5,
+      "file": "divebomb.png"
+    },
+    "bomb": {
+      "frames": 2,
+      "file": "bomb.png"
+    },
+    "explosion": {
+      "frames": 4,
+      "file": "explosion.png"
+    }
+  }
+}
