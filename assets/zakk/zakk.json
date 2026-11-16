@@ -1,0 +1,144 @@
+{
+  "frameWidth": 460,
+  "frameHeight": 300,
+  "anchorX": 220,
+  "anchorY": 290,
+  "anims": {
+    "idle": {
+      "frames": 10,
+      "file": "idle.png"
+    },
+    "walk_fwd": {
+      "frames": 10,
+      "file": "walk_fwd.png"
+    },
+    "walk_back": {
+      "frames": 10,
+      "file": "walk_back.png"
+    },
+    "lp": {
+      "frames": 10,
+      "file": "lp.png"
+    },
+    "hp": {
+      "frames": 10,
+      "file": "hp.png"
+    },
+    "lk": {
+      "frames": 10,
+      "file": "lk.png"
+    },
+    "hk": {
+      "frames": 10,
+      "file": "hk.png"
+    },
+    "react": {
+      "frames": 10,
+      "file": "react.png"
+    },
+    "skull": {
+      "frames": 4,
+      "file": "skull.png"
+    },
+    "fx_skull": {
+      "frames": 4,
+      "file": "fx_skull.png"
+    },
+    "block": {
+      "frames": 2,
+      "file": "block.png"
+    },
+    "hit": {
+      "frames": 3,
+      "file": "hit.png"
+    },
+    "ko": {
+      "frames": 5,
+      "file": "ko.png"
+    },
+    "jump": {
+      "frames": 6,
+      "file": "jump.png"
+    },
+    "crouch": {
+      "frames": 3,
+      "file": "crouch.png"
+    },
+    "jumpkick": {
+      "frames": 2,
+      "file": "jumpkick.png"
+    },
+    "stackcall": {
+      "frames": 5,
+      "file": "stackcall.png"
+    },
+    "amps": {
+      "frames": 5,
+      "file": "amps.png"
+    },
+    "moon": {
+      "frames": 10,
+      "file": "moon.png"
+    },
+    "berserker": {
+      "frames": 10,
+      "file": "berserker.png"
+    },
+    "traincall": {
+      "frames": 5,
+      "file": "traincall.png"
+    },
+    "train": {
+      "frames": 5,
+      "file": "train.png"
+    },
+    "spin": {
+      "frames": 10,
+      "file": "spin.png"
+    },
+    "bats": {
+      "frames": 10,
+      "file": "bats.png"
+    },
+    "fx_bat": {
+      "frames": 5,
+      "file": "fx_bat.png"
+    },
+    "warhorn": {
+      "frames": 10,
+      "file": "warhorn.png"
+    },
+    "fx_horn": {
+      "frames": 5,
+      "file": "fx_horn.png"
+    },
+    "pinch": {
+      "frames": 10,
+      "file": "pinch.png"
+    },
+    "fx_pinch": {
+      "frames": 5,
+      "file": "fx_pinch.png"
+    },
+    "tears": {
+      "frames": 10,
+      "file": "tears.png"
+    },
+    "victory": {
+      "frames": 10,
+      "file": "victory.png"
+    },
+    "sleep": {
+      "frames": 5,
+      "file": "sleep.png"
+    },
+    "dance": {
+      "frames": 5,
+      "file": "dance.png"
+    },
+    "deaf": {
+      "frames": 5,
+      "file": "deaf.png"
+    }
+  }
+}

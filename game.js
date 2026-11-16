@@ -250,6 +250,109 @@ function slashCpu(me, op, scene) {
 }
 
 // ---------------------------------------------------------------------------------------------
+// ZAKK WYLDE (ver docs/zakk-ficha.md): o maior e mais forte, anda devagar
+// ---------------------------------------------------------------------------------------------
+const ZAKK_ANIMS = {
+  idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
+  skull: 4, fx_skull: 4, block: 2, hit: 3, ko: 5, jump: 6, crouch: 3, jumpkick: 2,
+  stackcall: 5, amps: 5, moon: 10, berserker: 10, traincall: 5, train: 5, spin: 10,
+  bats: 10, fx_bat: 5, warhorn: 10, fx_horn: 5, tears: 10,
+  sleep: 5, dance: 5,
+};
+const ZAKK_POWERS = {
+  skull:      { name: 'SKULL SHOT',     tag: 'Black Label',      neon: '#ff7a1a', edge: 0xff7a1a, deep: 0x3a0d00 },
+  stackcall:  { name: 'STACK ATTACK',   tag: 'Wall of Amps',     neon: '#ffd27a', edge: 0xffd27a, deep: 0x2a1a04 },
+  moon:       { name: 'BARK AT THE MOON', tag: 'Werewolf',       neon: '#9fd8ff', edge: 0x9fd8ff, deep: 0x06182a },
+  berserker:  { name: 'BERSERKER',      tag: 'Viking Charge',    neon: '#ff5a5a', edge: 0xff5a5a, deep: 0x2a0606 },
+  traincall:  { name: 'CRAZY TRAIN',    tag: 'All aboard!',      neon: '#c77dff', edge: 0xc77dff, deep: 0x1d0838 },
+  spin:       { name: 'BULLSEYE SPIN',  tag: 'Les Paul Custom',  neon: '#f3ecd0', edge: 0xf3ecd0, deep: 0x1a1a14 },
+  bats:       { name: 'BAT ATTACK',     tag: 'Night Swarm',      neon: '#ff3d6e', edge: 0xff3d6e, deep: 0x33040f },
+  warhorn:    { name: 'WAR HORN',       tag: 'Viking Call',      neon: '#ffb347', edge: 0xffb347, deep: 0x2a1408 },
+  tears:      { name: 'NO MORE TEARS',  tag: 'Super!',           neon: '#9fd8ff', edge: 0x9fd8ff, deep: 0x06182a },
+};
+// caveira em chamas da Black Label Society
+const SKULL = { dmg: 80, hitstun: 18, blockstun: 12, push: 8, chip: 10, gag: 'burnt', word: ['SKULLED!', '#ff7a1a'] };
+// paredão de amplificadores caindo: não dá para defender agachado
+const AMPS = { dmg: 110, hitstun: 28, blockstun: 16, push: 6, chip: 12, shake: 0.016, overhead: true, gag: 'flat', word: ['CRUNCH!', '#ffd27a'] };
+// o Ozzy na locomotiva rente ao chão: só se defende agachado
+const TRAIN = { dmg: 105, hitstun: 28, blockstun: 16, push: 10, chip: 10, shake: 0.012, low: true, gag: 'flat', word: ['ALL ABOARD!', '#c77dff'] };
+// morcegos que perseguem e mordem
+const BAT = { dmg: 15, hitstun: 12, blockstun: 6, push: 3, chip: 3, gag: 'chomp' };
+// onda do chifre de guerra: lenta e grande; quem leva fica tonto
+const HORN = { dmg: 60, hitstun: 20, blockstun: 12, push: 6, chip: 6, gag: 'dizzy', word: ['HOOOONK!', '#ffb347'] };
+const ZAKK_MOVES = {
+  // Pinch Pick: palhetada curta com guincho
+  lp: { dur: [1, 1, 1, 1, 2, 2, 2, 1, 2, 1], active: [5, 6], dmg: 32, hit: { x: 40, y: -205, w: 110, h: 60 }, hitstun: 14, blockstun: 8, push: 5, wave: 4 },
+  // Bullseye Smash: a Les Paul desce como martelo
+  hp: { dur: [2, 2, 3, 3, 3, 4, 4, 3, 3, 3], active: [5, 6], dmg: 100, hit: { x: 20, y: -230, w: 175, h: 130 }, hitstun: 24, blockstun: 14, push: 10, shake: 0.008 },
+  // Boot Stomp: pisão curto de coturno
+  lk: { dur: [1, 2, 2, 2, 3, 3, 2, 2, 1, 1], active: [4, 5], dmg: 38, hit: { x: 30, y: -110, w: 140, h: 60 }, hitstun: 14, blockstun: 8, push: 6, dust: 4 },
+  // Biker Kick: chute frontal alto e pesado
+  hk: { dur: [2, 3, 3, 3, 3, 4, 4, 4, 4, 3], active: [4, 5, 6], dmg: 100, hit: { x: 20, y: -250, w: 160, h: 110 }, hitstun: 22, blockstun: 14, push: 11, shake: 0.007 },
+  // SKULL SHOT: arremessa a caveira em chamas
+  skull: { dur: [8, 6, 16, 12], spawn: 2, tex: 'fx_skull', payload: SKULL, speed: [5, 8], projScale: 0.6, projY: 200, ghost: [0, 20] },
+  // STACK ATTACK: o paredão de amplificadores despenca onde o oponente está
+  stackcall: { dur: [6, 12, 20, 16, 8], bombs: 2, tex: 'amps', payload: AMPS, offsets: [0], bombScale: 0.8, landY: 112, crash: 2 },
+  // BARK AT THE MOON: uiva, vira meio lobisomem e dá uma garrada subindo (pega quem pula; invencível no começo)
+  moon: { dur: [4, 4, 3, 2, 3, 5, 5, 4, 4, 3], active: [4, 5, 6], dmg: 120, hit: { x: -30, y: -380, w: 200, h: 380 }, hitstun: 26, blockstun: 16, push: 11, shake: 0.01, inv: 12, gag: 'dizzy', word: ['AWOOOO!', '#9fd8ff'], ghost: [0, 24] },
+  // BERSERKER: capacete viking e arrancada de cabeçada
+  berserker: { dur: [5, 6, 4, 4, 5, 5, 5, 6, 6, 5], active: [5, 6], dmg: 110, hit: { x: 0, y: -260, w: 230, h: 180 }, hitstun: 24, blockstun: 14, push: 13, shake: 0.01, dash: [3, 5], dust: 3, gag: 'dizzy', word: ['SKOL!', '#ff5a5a'], ghost: [10, 34] },
+  // CRAZY TRAIN: o Zakk grita e o Ozzy cruza a tela numa locomotiva rente ao chão
+  traincall: { dur: [6, 12, 14, 20, 10], slider: 2, tex: 'train', payload: TRAIN, sliderCycle: true, cry: ['CHOO CHOO!', '#c77dff'] },
+  // BULLSEYE SPIN: gira a Les Paul como hélice e acerta 3 vezes
+  spin: { dur: [3, 5, 4, 5, 5, 6, 6, 5, 4, 3], active: [3, 4, 5, 6], multi: 6, dmg: 40, hit: { x: 10, y: -250, w: 185, h: 170 }, hitstun: 14, blockstun: 8, push: 4, shake: 0.006, step: [3, 5, 3], word: ['WHIRRR!', '#f3ecd0'], ghost: [0, 24] },
+  // BAT ATTACK: abre o colete e sai uma revoada de morcegos
+  bats: { dur: [3, 5, 4, 6, 5, 6, 6, 5, 5, 3], swarm: 3, tex: 'fx_bat', payload: BAT, count: 6, swarmScale: 0.45 },
+  // WAR HORN: sopra o chifre viking; uma onda de som enorme rola devagar
+  warhorn: { dur: [4, 6, 6, 8, 8, 6, 8, 8, 6, 4], spawn: 5, tex: 'fx_horn', payload: HORN, speed: [2.6, 3.6], projScale: 0.9, projY: 126, projBox: [120, 120] },
+  // SUPER NO MORE TEARS (A + S com a barra cheia): lua cheia, solo e um raio de harmônico que atravessa a tela
+  tears: { dur: [8, 14, 8, 10, 12, 8, 16, 16, 12, 12], frames: [0, 1, 2, 3, 4, 5, 6, 6, 8, 9], active: [6, 7], multi: 3, dmg: 24,
+    hit: { x: 60, y: -235, w: 1100, h: 150 }, hitstun: 12, blockstun: 8, push: 1, chip: 4, gag: 'zap', beam: [6, 7], inv: 30, dark: true,
+    super: true, notes: [3, 5], finish: { at: 8, gag: 'burnt', word: ['TOASTED!', '#ff7a1a'] } },
+};
+const ZAKK_SPECIALS = [
+  { move: 'tears',     chord: ['lp', 'hp'], super: true },
+  { move: 'berserker', chord: ['hp', 'lk'] },
+  { move: 'traincall', chord: ['hp', 'hk'], lock: 'dlr' },
+  { move: 'moon',      btn: 'punch', motion: [2, 5, 2] },
+  { move: 'bats',      btn: 'kick',  motion: [2, 5, 2], lock: 'swarm' },
+  { move: 'traincall', btn: 'kick',  motion: [6, 2], lock: 'dlr' },
+  { move: 'berserker', btn: 'kick',  motion: [2, 6] },
+  { move: 'spin',      btn: 'kick',  motion: [2, 4] },
+  { move: 'skull',     btn: 'punch', motion: [2, 6], lock: 'proj' },
+  { move: 'stackcall', btn: 'punch', motion: [2, 4], lock: 'bombs' },
+  { move: 'warhorn',   btn: 'punch', motion: [6, 5, 6], lock: 'proj' },
+];
+function zakkCpu(me, op, scene) {
+  const d = Math.abs(op.x - me.x), r = Math.random(), inp = {};
+  const projIncoming = scene.projs.some(pr => pr.owner !== me && Math.abs(pr.x - me.x) < 280);
+  const threat = (op.state === 'attack' && d < 260) || projIncoming;
+  if (me.meter >= 100 && d < 700 && r < 0.04) { inp.special = 'tears'; inp.hp = true; me.cpuCD = 140; }
+  else if (op.airborne && d < 230 && r < 0.25) { inp.special = 'moon'; inp.hp = true; me.cpuCD = 40; }
+  else if (d > 200 && d < 420 && r > 0.93) { inp.special = 'berserker'; inp.hk = true; me.cpuCD = 45; }
+  else if (d < 200 && r > 0.9) { inp.special = 'spin'; inp.hk = true; me.cpuCD = 45; }
+  else if (d > 300 && !me.swarm && r < 0.05) { inp.special = 'bats'; inp.hk = true; me.cpuCD = 45; }
+  else if (d > 220 && !me.proj && r > 0.95) { inp.special = 'warhorn'; inp.hp = true; me.cpuCD = 60; }
+  else if (d > 160 && !me.dlr && r > 0.06 && r < 0.09) { inp.special = 'traincall'; inp.lk = true; me.cpuCD = 70; }
+  else if (projIncoming && r < 0.25) { inp.up = true; inp.fwd = true; me.cpuCD = 10; }
+  else if (threat && r < 0.5) { inp.back = true; me.cpuCD = 16; }
+  else if (d > 330) {
+    if (!me.proj && r < 0.25) { inp.special = 'skull'; inp[r < 0.12 ? 'lp' : 'hp'] = true; me.cpuCD = 30; }
+    else if (!me.bombs && r < 0.33) { inp.special = 'stackcall'; inp.hp = true; me.cpuCD = 50; }
+    else { inp.fwd = true; me.cpuCD = 12; }
+  } else if (d > 175) {
+    if (r < 0.08) { inp.up = true; inp.fwd = true; me.cpuCD = 14; }
+    else if (r < 0.8) inp.fwd = true;
+    me.cpuCD = me.cpuCD || 8;
+  }
+  else if (r < 0.55) { inp[['lp', 'lk', 'hp', 'hk'][(Math.random() * 4) | 0]] = true; me.cpuCD = 24; }
+  else if (r < 0.7) { inp.down = true; inp.back = true; me.cpuCD = 14; }
+  else if (r < 0.85) { inp.back = true; me.cpuCD = 12; }
+  else me.cpuCD = 8;
+  return inp;
+}
+
+// ---------------------------------------------------------------------------------------------
 // LUTADORES. Texturas: chave `${dir}_${folha}` (ex.: eddie_idle, slash_lp), arquivo assets/<dir>/<folha>.png.
 // Folha que o lutador não tem cai na do placeholder e depois na do Eddie (efeitos comuns); nada disso trava o jogo.
 // ---------------------------------------------------------------------------------------------
@@ -266,6 +369,12 @@ CHARS.slash = {
   jumpkick: JUMPKICK, bigTitle: 'APPETITE', bigSize: 150, blurb: 'Top Hat',
   stage: 'slash',
 };
+CHARS.zakk = {
+  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25,
+  anims: ZAKK_ANIMS, moves: ZAKK_MOVES, powers: ZAKK_POWERS, specials: ZAKK_SPECIALS, cpu: zakkCpu,
+  jumpkick: JUMPKICK, bigTitle: 'NO MORE TEARS', bigSize: 95, blurb: 'Black Label',
+  stage: 'zakk',
+};
 for (const [id, c] of Object.entries(CHARS)) c.id = id;
 
 // EASTER EGG (A + S + D, qualquer lutador): o Ricardinho entra correndo com a bandeira do Rock n' Bira nas costas
@@ -277,17 +386,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=0fbcf46' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=0fbcf46' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=0fbcf46' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=0fbcf46' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=0fbcf46' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=0fbcf46' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=0fbcf46' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=65b8f64' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=65b8f64' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=65b8f64' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=65b8f64' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=65b8f64' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=65b8f64' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=65b8f64' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=0fbcf46', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=65b8f64', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -299,6 +408,9 @@ const GAGS = {
   sleep: { dur: 150, tex: 'sleep', vuln: true, frame: t => t < 30 ? 0 : t < 45 ? 1 : t < 55 ? 2 : t < 125 ? 3 : 4 },
   // Sweet Child: dança enfeitiçado sem parar; também fica sem defesa
   dance: { dur: 130, tex: 'dance', vuln: true, frame: t => Math.floor(t / 9) % 5 },
+  // Pinch Harmonic do Zakk: surdo, tapa os ouvidos e cambaleia sem defesa
+  // quem ainda não tem a folha 'deaf' usa os quadros de tonto da folha react
+  deaf: { dur: 120, tex: 'deaf', vuln: true, frame: t => Math.floor(t / 10) % 5, alt: t => 5 + (Math.floor(t / 12) % 2) },
 };
 const HURT = { x: -45, y: -235, w: 90, h: 235 };
 const HURT_CROUCH = { x: -50, y: -150, w: 100, h: 150 };
@@ -407,10 +519,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=0fbcf46`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=65b8f64`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=0fbcf46`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=0fbcf46`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=65b8f64`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=65b8f64`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -419,7 +531,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=0fbcf46`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=65b8f64`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1223,6 +1335,7 @@ class Fight extends Phaser.Scene {
       f.vx *= 0.8;
       if (f.gag.k === 'sleep' && f.t >= 55 && f.t < 125 && f.t % 22 === 0) this.say(['z', 'Zz', 'Zzz'][(f.t / 22 | 0) % 3], f.x + f.facing * -px(40), FLOOR - px(90) - (f.t % 44), '#c77dff', 30);
       if (f.gag.k === 'dance' && f.t % 14 === 0) this.addFx('fx_sweet', f.x, FLOOR - px(280), { vy: -1.2, rate: 5, scale: 0.35 * SC }, this.p[1 - f.side].char);
+      if (f.gag.k === 'deaf' && f.t % 30 === 10) this.say(['WHAT?!', 'HUH?', 'EEEEE!'][(f.t / 30 | 0) % 3], f.x, FLOOR - px(290), '#ff3d3d', 30);
       if (f.gag.k === 'burnt' && f.t % 9 === 0 && f.t < 50) this.addFx('fx_smoke', f.x + (Math.random() * 30 - 15), FLOOR - px(250), { rate: 5, scale: 0.35 * SC, vy: -1 }, ch);
       if (f.t >= GAGS[f.gag.k].dur) { f.state = 'idle'; f.t = 0; f.gag = null; }
     } else if (f.state === 'hit' || f.state === 'block') {
@@ -1379,6 +1492,7 @@ class Fight extends Phaser.Scene {
       case 'zap': def.buzz = 8; break;
       case 'sleep': if (def.airborne) def.pendGag = 'sleep'; else this.startGag(def, 'sleep'); break;
       case 'dance': if (def.airborne) def.pendGag = 'dance'; else this.startGag(def, 'dance'); break;
+      case 'deaf': if (def.airborne) def.pendGag = 'deaf'; else this.startGag(def, 'deaf'); break;
       case 'wah':
         def.buzz = 12;
         if (att.t % 10 < 4) this.say(Math.random() < 0.5 ? 'WAH!' : 'WAH-WAH!', sx, sy - 30 - Math.random() * 30, '#c77dff', 32);
@@ -1393,7 +1507,7 @@ class Fight extends Phaser.Scene {
   startGag(f, k) {
     f.state = 'gag'; f.t = 0; f.gag = { k }; f.move = null; f.jk = null; f.stun = 0;
     f.inv = GAGS[k].vuln ? 0 : GAGS[k].dur + 20; f.spin = false; f.rot = 0;
-    if (k === 'flat' || k === 'sleep' || k === 'dance') f.vx = 0;
+    if (k === 'flat' || k === 'sleep' || k === 'dance' || k === 'deaf') f.vx = 0;
   }
 
   // balão de onomatopeia: entra grande, encolhe com tranco, sobe e some
@@ -1551,7 +1665,7 @@ class Fight extends Phaser.Scene {
     const spr = this.add.sprite(x, FLOOR, this.tk(f.char, m.tex || 'axl'), 0).setDepth(22).setFlipX(dir < 0).setScale(SC)
       .setOrigin((dir > 0 ? AX : FW - AX) / FW, AY / FH);
     const shadow = this.add.ellipse(x, FLOOR + 2, px(150), px(16), 0x000000, 0.35).setDepth(6);
-    this.sliders.push({ owner: f, x, dir, t: 0, phase: 'run', spr, shadow, hit: false, payload: m.payload || AXL });
+    this.sliders.push({ owner: f, x, dir, t: 0, phase: 'run', spr, shadow, hit: false, payload: m.payload || AXL, cycle: !!m.sliderCycle, cry: m.cry || ['YEAAAH!', '#ff3d6e'], n: this.nf(this.tk(f.char, m.tex || 'axl')) });
     f.dlr = true;
   }
 
@@ -1559,16 +1673,17 @@ class Fight extends Phaser.Scene {
     for (const d of this.sliders) {
       d.t++;
       const def = this.p[1 - d.owner.side];
-      if (d.phase === 'run') { d.x += d.dir * 9; setFr(d.spr, 0); if (d.t > 14) { d.phase = 'slide'; d.t = 0; this.say('YEAAAH!', d.x + d.dir * 80, FLOOR - px(260), '#ff3d6e', 34); } }
+      if (d.phase === 'run') { d.x += d.dir * 9; setFr(d.spr, d.cycle ? Math.floor(d.t / 4) % d.n : 0); if (d.t > 14) { d.phase = 'slide'; d.t = 0; this.say(d.cry[0], d.x + d.dir * 80, FLOOR - px(260), d.cry[1], 34); } }
       else if (d.phase === 'slide') {
         d.x += d.dir * Math.max(5, 16 - d.t * 0.12);
-        setFr(d.spr, d.t < 6 ? 1 : 2 + (Math.floor(d.t / 5) % 2));
+        setFr(d.spr, d.cycle ? Math.floor(d.t / 4) % d.n : d.t < 6 ? 1 : 2 + (Math.floor(d.t / 5) % 2));
         if (d.t % 4 === 0) this.addFx('fx_dust', d.x - d.dir * px(60), FLOOR, { rate: 3, oy: 0.75, scale: 0.6, flip: d.dir < 0 }, d.owner.char);
         const box = d.dir > 0 ? { x: d.x - px(40), y: FLOOR - px(110), w: px(190), h: px(110) } : { x: d.x - px(150), y: FLOOR - px(110), w: px(190), h: px(110) };
         if (!d.hit && def.state !== 'ko' && !(def.inv > 0) && overlap(box, def.hurtbox())) { d.hit = true; this.applyHit(d.owner, def, d.payload, d.x + d.dir * px(100), FLOOR - px(60), true); }
         // para depois de passar pelo oponente ou perto da borda
         const past = d.dir > 0 ? d.x > def.x + px(160) : d.x < def.x - px(160);
-        if ((past && d.t > 20) || d.x < WALL || d.x > W - WALL) { d.phase = 'pose'; d.t = 0; setFr(d.spr, 4); }
+        if (d.cycle) { if (d.x < -200 || d.x > W + 200) d.dead = true; } // a locomotiva segue até sair da tela
+        else if ((past && d.t > 20) || d.x < WALL || d.x > W - WALL) { d.phase = 'pose'; d.t = 0; setFr(d.spr, 4); }
       } else if (d.phase === 'pose') { if (d.t > 50) { d.phase = 'leave'; d.t = 0; } }
       else if (d.phase === 'leave') { d.spr.setAlpha(1 - d.t / 20); d.shadow.setAlpha(0.35 * (1 - d.t / 20)); if (d.t >= 20) d.dead = true; }
       d.spr.setPosition(Math.round(d.x), FLOOR); d.shadow.x = d.x;
@@ -1847,7 +1962,11 @@ class Fight extends Phaser.Scene {
       case 'attack': { const m = f.m, s = f.moveStep(); return [m.anim || f.move, m.frames ? m.frames[s] : s]; }
       case 'block': return ['block', f.holdDown ? 1 : 0];
       case 'hit': return ['hit', f.spin ? 2 : Math.min(2, Math.floor(f.t / 5))];
-      case 'gag': return [GAGS[f.gag.k].tex || 'react', GAGS[f.gag.k].frame(f.t)];
+      case 'gag': {
+        const g = GAGS[f.gag.k];
+        if (g.alt && this.tk(f.char, g.tex) === '__MISSING') return ['react', g.alt(f.t)];
+        return [g.tex || 'react', g.frame(f.t)];
+      }
       case 'victory': return ['victory', Math.floor(f.t / 6) % 10]; // tapping em loop, pose fixa
       case 'ko': { const d = [8, 10, 10, 12]; let acc = 0, i = 0; while (i < 4 && f.t >= (acc += d[i])) i++; return ['ko', i]; }
     }
