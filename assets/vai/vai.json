@@ -1,0 +1,152 @@
+{
+  "frameWidth": 460,
+  "frameHeight": 300,
+  "anchorX": 220,
+  "anchorY": 290,
+  "anims": {
+    "idle": {
+      "frames": 10,
+      "file": "idle.png"
+    },
+    "walk_fwd": {
+      "frames": 10,
+      "file": "walk_fwd.png"
+    },
+    "walk_back": {
+      "frames": 10,
+      "file": "walk_back.png"
+    },
+    "lp": {
+      "frames": 10,
+      "file": "lp.png"
+    },
+    "hp": {
+      "frames": 10,
+      "file": "hp.png"
+    },
+    "lk": {
+      "frames": 10,
+      "file": "lk.png"
+    },
+    "hk": {
+      "frames": 10,
+      "file": "hk.png"
+    },
+    "react": {
+      "frames": 10,
+      "file": "react.png"
+    },
+    "block": {
+      "frames": 2,
+      "file": "block.png"
+    },
+    "hit": {
+      "frames": 5,
+      "file": "hit.png"
+    },
+    "ko": {
+      "frames": 5,
+      "file": "ko.png"
+    },
+    "jump": {
+      "frames": 5,
+      "file": "jump.png"
+    },
+    "crouch": {
+      "frames": 5,
+      "file": "crouch.png"
+    },
+    "jumpkick": {
+      "frames": 2,
+      "file": "jumpkick.png"
+    },
+    "heartshot": {
+      "frames": 10,
+      "file": "heartshot.png"
+    },
+    "fx_heart": {
+      "frames": 10,
+      "file": "fx_heart.png"
+    },
+    "aliencall": {
+      "frames": 5,
+      "file": "aliencall.png"
+    },
+    "ufo": {
+      "frames": 10,
+      "file": "ufo.png"
+    },
+    "wind": {
+      "frames": 10,
+      "file": "wind.png"
+    },
+    "fx_fan": {
+      "frames": 5,
+      "file": "fx_fan.png"
+    },
+    "juice": {
+      "frames": 10,
+      "file": "juice.png"
+    },
+    "horsecall": {
+      "frames": 5,
+      "file": "horsecall.png"
+    },
+    "horse": {
+      "frames": 5,
+      "file": "horse.png"
+    },
+    "greenmen": {
+      "frames": 15,
+      "file": "greenmen.png"
+    },
+    "fx_alien": {
+      "frames": 10,
+      "file": "fx_alien.png"
+    },
+    "talking": {
+      "frames": 10,
+      "file": "talking.png"
+    },
+    "fx_blah": {
+      "frames": 5,
+      "file": "fx_blah.png"
+    },
+    "tender": {
+      "frames": 10,
+      "file": "tender.png"
+    },
+    "fx_love": {
+      "frames": 5,
+      "file": "fx_love.png"
+    },
+    "tripleneck": {
+      "frames": 15,
+      "file": "tripleneck.png"
+    },
+    "triplefury": {
+      "frames": 10,
+      "file": "triplefury.png"
+    },
+    "victory": {
+      "frames": 10,
+      "file": "victory.png"
+    },
+    "sleep": {
+      "frames": 5,
+      "file": "sleep.png"
+    },
+    "dance": {
+      "frames": 5,
+      "file": "dance.png"
+    },
+    "deaf": {
+      "frames": 5,
+      "file": "deaf.png"
+    },
+    "fx_tribeam": {
+      "frames": 10,
+      "file": "fx_tribeam.png"
+    }
+  }
+}

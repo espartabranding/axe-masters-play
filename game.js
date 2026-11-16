@@ -23,7 +23,7 @@ const EDDIE_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, eruption: 4, block: 2, hit: 3, ko: 5,
   jump: 6, crouch: 3, jumpkick: 2, projectile: 4, divebomb: 5, bomb: 2, explosion: 4,
   brownsound: 10, panama: 10, victory: 10, sharkbite: 10, bumblebee: 10, drill: 10,
-  fx_bee: 4, fx_drill: 4, fx_smoke: 4, react: 10, jumpcall: 5, dlr: 5, teacher: 10, fx_beam: 4, fx_zap: 4, spanish: 10, sleep: 5, fx_hypno: 5, dance: 5, bira: 10, deaf: 5,
+  fx_bee: 4, fx_drill: 4, fx_smoke: 4, react: 10, jumpcall: 5, dlr: 5, teacher: 10, fx_beam: 4, fx_zap: 4, spanish: 10, sleep: 5, fx_hypno: 5, dance: 5, bira: 10, deaf: 5, cry: 10,
   fx_spark: 5, fx_block: 5, fx_wave: 5, fx_notes: 5, fx_dust: 5,
 };
 // letreiro de cada especial: nome cromado + assinatura neon na cor do poder
@@ -148,7 +148,7 @@ const SLASH_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
   tophat: 4, fx_hat: 4, block: 2, hit: 3, ko: 5, jump: 6, crouch: 3, jumpkick: 2,
   paradise: 10, jungle: 10, snakepit: 10, fx_snake: 5, smoke: 10, fx_cloud: 5, axlcall: 5, axl: 5, doubleneck: 10, sweet: 10, raincall: 5, piano: 5, appetite: 10,
-  sleep: 5, dance: 5, fx_sweet: 5, deaf: 5,
+  sleep: 5, dance: 5, fx_sweet: 5, deaf: 5, cry: 10,
 };
 const SLASH_POWERS = {
   tophat:     { name: 'TOP HAT',        tag: 'Boomerang',        neon: '#c9a0ff', edge: 0xc9a0ff, deep: 0x1d0838 },
@@ -259,7 +259,7 @@ const ZAKK_ANIMS = {
   skull: 4, fx_skull: 4, block: 2, hit: 3, ko: 5, jump: 6, crouch: 3, jumpkick: 2,
   stackcall: 5, amps: 5, moon: 10, berserker: 10, traincall: 5, train: 5, spin: 10,
   bats: 10, fx_bat: 5, warhorn: 10, fx_horn: 5, tears: 10, pinch: 10, fx_pinch: 5,
-  sleep: 5, dance: 5, deaf: 5,
+  sleep: 5, dance: 5, deaf: 5, cry: 10,
 };
 const ZAKK_POWERS = {
   skull:      { name: 'SKULL SHOT',     tag: 'Black Label',      neon: '#ff7a1a', edge: 0xff7a1a, deep: 0x3a0d00 },
@@ -362,6 +362,119 @@ function zakkCpu(me, op, scene) {
 }
 
 // ---------------------------------------------------------------------------------------------
+// STEVE VAI (ver docs/vai-ficha.md): alto, magro e rápido; o mais frágil do elenco
+// ---------------------------------------------------------------------------------------------
+const VAI_ANIMS = {
+  idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
+  block: 2, hit: 5, ko: 5, jump: 5, crouch: 5, jumpkick: 2,
+  heartshot: 10, fx_heart: 10, aliencall: 5, ufo: 10, wind: 10, fx_fan: 5, juice: 10, horsecall: 5, horse: 5,
+  greenmen: 15, fx_alien: 10, talking: 10, fx_blah: 5, tender: 10, fx_love: 5, tripleneck: 15, triplefury: 10, fx_tribeam: 10,
+  sleep: 5, dance: 5, deaf: 5,
+};
+const VAI_POWERS = {
+  heartshot:  { name: 'HEART SHOT',     tag: 'Ibanez Heart',      neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
+  aliencall:  { name: 'ALIEN LOVE SECRETS', tag: 'Beam me up',    neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
+  wind:       { name: 'WIND MACHINE',   tag: 'Hair Power',        neon: '#9fd8ff', edge: 0x9fd8ff, deep: 0x06182a },
+  juice:      { name: 'JUICE',          tag: 'Sugar Rush',        neon: '#ffb347', edge: 0xffb347, deep: 0x2a1408 },
+  horsecall:  { name: 'BAD HORSIE',     tag: 'Neigh!',            neon: '#ff5a5a', edge: 0xff5a5a, deep: 0x2a0606 },
+  tripleneck: { name: 'TRIPLE NECK',    tag: 'Three of a kind',   neon: '#f3ecd0', edge: 0xf3ecd0, deep: 0x1a1a14 },
+  greenmen:   { name: 'LITTLE GREEN MEN', tag: 'Take me to your leader', neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
+  talking:    { name: 'TALKING GUITAR', tag: 'Blah blah blah',    neon: '#ffe14a', edge: 0xffe14a, deep: 0x1a1600 },
+  tender:     { name: 'TENDER SURRENDER', tag: 'The Ballad',      neon: '#ff8cf5', edge: 0xff8cf5, deep: 0x2a0a26 },
+  triplefury: { name: 'TRIPLE FURY',    tag: 'Super!',            neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
+};
+// coração verde neon: projétil reto
+const HEART = { dmg: 75, hitstun: 18, blockstun: 12, push: 8, chip: 9, gag: 'dizzy', word: ['LOVE HURTS!', '#7dff6a'] };
+// o disco voador desce, puxa no raio e solta de cara no chão: não dá para defender agachado
+const UFO = { dmg: 100, hitstun: 28, blockstun: 16, push: 4, chip: 10, shake: 0.012, overhead: true, gag: 'flat', word: ['ABDUCTED!', '#7dff6a'] };
+// o cavalo preto cruza a tela galopando: só se defende agachado
+const HORSE = { dmg: 100, hitstun: 28, blockstun: 16, push: 11, chip: 10, shake: 0.012, low: true, gag: 'dizzy', word: ['NEIGH!', '#ff5a5a'] };
+// homenzinhos verdes correndo no chão atrás do oponente
+const ALIEN = { dmg: 16, hitstun: 12, blockstun: 6, push: 3, chip: 3, low: true, gag: 'chomp' };
+// balão gigante de BLAH BLAH BLAH: lento e grande; quem leva fica tonto de tanto falatório
+const BLAH = { dmg: 60, hitstun: 20, blockstun: 12, push: 5, chip: 6, gag: 'dizzy', word: ['YADDA YADDA!', '#ffe14a'] };
+// a balada: quem leva cai de joelhos chorando de emoção, sem defesa
+const TENDER = { dmg: 20, hitstun: 10, blockstun: 8, push: 1, chip: 2, gag: 'cry', word: ['SO BEAUTIFUL!', '#ff8cf5'] };
+const VAI_MOVES = {
+  // Whammy Jab: palhetada rápida puxando a alavanca
+  lp: { dur: [1, 1, 1, 2, 2, 2, 1, 1, 2, 1], active: [3, 4, 5], dmg: 28, hit: { x: 40, y: -200, w: 115, h: 60 }, hitstun: 14, blockstun: 8, push: 5, wave: 4 },
+  // JEM Swing: gira a JEM pela alça vazada e acerta com o corpo da guitarra
+  hp: { dur: [2, 2, 3, 3, 3, 4, 4, 3, 3, 3], active: [4, 5, 6], dmg: 85, hit: { x: 10, y: -260, w: 175, h: 150 }, hitstun: 22, blockstun: 14, push: 10, shake: 0.006 },
+  // Snap Kick: chute rápido e alto de bota de caubói
+  lk: { dur: [1, 2, 2, 2, 3, 3, 2, 2, 1, 1], active: [3, 4, 5], dmg: 33, hit: { x: 30, y: -215, w: 150, h: 70 }, hitstun: 14, blockstun: 8, push: 6 },
+  // Hair Spin Kick: chute girando, o cabelo voando
+  hk: { dur: [2, 3, 3, 3, 3, 4, 4, 4, 4, 3], active: [4, 5, 6], dmg: 90, hit: { x: 20, y: -240, w: 160, h: 110 }, hitstun: 22, blockstun: 14, push: 10, shake: 0.006 },
+  // HEART SHOT: aponta a guitarra e dispara um coração verde neon
+  heartshot: { dur: [4, 4, 4, 8, 6, 5, 4, 4, 3, 3], spawn: 3, tex: 'fx_heart', payload: HEART, speed: [5.5, 8.5], projScale: 0.75, projY: 175, projBox: [80, 70], ghost: [0, 20] },
+  // ALIEN LOVE SECRETS: olha para o céu e um disco voador desce em cima do oponente
+  aliencall: { dur: [6, 12, 14, 26, 14], summon: 2, tex: 'ufo', payload: UFO, summonFrames: [0, 1, 4, 6, 9], summonSay: ['BEAM ME UP!', '#7dff6a'] },
+  // WIND MACHINE: um ventilador gigante sopra de baixo; quem estiver no ar voa longe (invencível no começo)
+  wind: { dur: [4, 3, 3, 3, 4, 6, 6, 5, 4, 3], active: [3, 4, 5, 6], dmg: 115, hit: { x: -40, y: -380, w: 220, h: 380 }, hitstun: 26, blockstun: 16, push: 12, shake: 0.01, inv: 12,
+    prop: { at: 1, tex: 'fx_fan', dx: -70, rate: 8, scale: 0.75 }, gag: 'dizzy', word: ['WHOOOOSH!', '#9fd8ff'], ghost: [0, 24] },
+  // JUICE: um gole de suco e dispara deslizando de joelhos com a guitarra para frente
+  juice: { dur: [6, 8, 6, 5, 3, 4, 4, 4, 6, 6], active: [4, 5, 6, 7], dmg: 105, hit: { x: 0, y: -200, w: 230, h: 160 }, hitstun: 24, blockstun: 14, push: 12, shake: 0.008, dash: [4, 7], dust: 4,
+    rev: { at: 2, fx: 'fx_smoke', word: ['SLUUURP!', '#ffb347'] }, gag: 'dizzy', word: ['JUICED!', '#ffb347'], ghost: [16, 40] },
+  // BAD HORSIE: o Vai relincha na guitarra e um cavalo preto cruza a tela galopando
+  horsecall: { dur: [6, 10, 12, 20, 10], slider: 2, tex: 'horse', payload: HORSE, sliderCycle: true, cry: ['NEIIIGH!', '#ff5a5a'] },
+  // TRIPLE NECK: troca pela Ibanez branca de três braços e acerta 3 vezes, uma com cada braço
+  tripleneck: { dur: [3, 5, 4, 4, 5, 5, 5, 6, 5, 4], frames: [2, 3, 5, 6, 7, 8, 9, 10, 12, 14], active: [3, 4, 5, 6], multi: 6, dmg: 40, hit: { x: 10, y: -280, w: 190, h: 220 }, hitstun: 14, blockstun: 8, push: 4, shake: 0.006,
+    smoke: 0, step: [3, 6, 3], word: ['TWANG TWANG TWANG!', '#f3ecd0'], ghost: [0, 24] },
+  // LITTLE GREEN MEN: um riff esquisito e uma turma de homenzinhos verdes sai correndo atrás do oponente
+  greenmen: { dur: [3, 4, 4, 5, 5, 6, 5, 5, 5, 4], frames: [0, 2, 4, 6, 8, 10, 11, 12, 13, 14], swarm: 4, tex: 'fx_alien', payload: ALIEN, count: 4, ground: true, swarmScale: 0.45, groundY: 44 },
+  // TALKING GUITAR: a guitarra "fala" e um balão gigante de BLAH BLAH BLAH rola devagar
+  talking: { dur: [4, 6, 6, 8, 8, 6, 8, 8, 6, 4], spawn: 4, tex: 'fx_blah', payload: BLAH, speed: [2.6, 3.6], projScale: 1.15, projY: 205, projBox: [150, 100], projText: 'BLAH BLAH\nBLAH!' },
+  // TENDER SURRENDER (A + D): a balada solta corações e notas; quem leva cai de joelhos chorando
+  tender: { dur: [6, 8, 10, 10, 10, 10, 10, 8, 10, 8], waves: [3, 5, 7], tex: 'fx_love', payload: TENDER },
+  // SUPER TRIPLE FURY (A + S com a barra cheia): tela escura, a guitarra de três braços e três raios (verde, rosa e azul)
+  triplefury: { dur: [8, 12, 10, 12, 10, 14, 14, 14, 12, 10], active: [5, 6, 7], multi: 3, dmg: 24,
+    hit: { x: 60, y: -260, w: 1100, h: 170 }, hitstun: 12, blockstun: 8, push: 1, chip: 4, gag: 'zap', beam: [5, 7], inv: 30, dark: true,
+    super: true, tex: 'fx_tribeam', beamPlain: true, beamY: 205, notes: [2, 4], finish: { at: 8, gag: 'burnt', word: ['TOASTED!', '#ff7a1a'] } },
+};
+const VAI_SPECIALS = [
+  { move: 'triplefury', chord: ['lp', 'hp'], super: true },
+  { move: 'tender',     chord: ['lp', 'lk'], lock: 'hypno' },
+  { move: 'juice',      chord: ['hp', 'lk'] },
+  { move: 'horsecall',  chord: ['hp', 'hk'], lock: 'dlr' },
+  { move: 'wind',       btn: 'punch', motion: [2, 5, 2] },
+  { move: 'greenmen',   btn: 'kick',  motion: [2, 5, 2], lock: 'swarm' },
+  { move: 'horsecall',  btn: 'kick',  motion: [6, 2], lock: 'dlr' },
+  { move: 'juice',      btn: 'kick',  motion: [2, 6] },
+  { move: 'tripleneck', btn: 'kick',  motion: [2, 4] },
+  { move: 'heartshot',  btn: 'punch', motion: [2, 6], lock: 'proj' },
+  { move: 'aliencall',  btn: 'punch', motion: [2, 4], lock: 'dlr' },
+  { move: 'talking',    btn: 'punch', motion: [6, 5, 6], lock: 'proj' },
+];
+function vaiCpu(me, op, scene) {
+  const d = Math.abs(op.x - me.x), r = Math.random(), inp = {};
+  const projIncoming = scene.projs.some(pr => pr.owner !== me && Math.abs(pr.x - me.x) < 280);
+  const threat = (op.state === 'attack' && d < 260) || projIncoming;
+  if (me.meter >= 100 && d < 700 && r < 0.04) { inp.special = 'triplefury'; inp.hp = true; me.cpuCD = 140; }
+  else if (op.airborne && d < 240 && r < 0.25) { inp.special = 'wind'; inp.hp = true; me.cpuCD = 40; }
+  else if (d > 200 && d < 420 && r > 0.93) { inp.special = 'juice'; inp.hk = true; me.cpuCD = 45; }
+  else if (d < 200 && r > 0.9) { inp.special = 'tripleneck'; inp.hk = true; me.cpuCD = 45; }
+  else if (d > 300 && !me.swarm && r < 0.05) { inp.special = 'greenmen'; inp.hk = true; me.cpuCD = 45; }
+  else if (d > 220 && !me.proj && r > 0.95) { inp.special = 'talking'; inp.hp = true; me.cpuCD = 60; }
+  else if (d > 200 && !me.hypno && r > 0.09 && r < 0.11) { inp.special = 'tender'; inp.lp = true; me.cpuCD = 100; }
+  else if (d > 160 && !me.dlr && r > 0.06 && r < 0.09) { inp.special = 'horsecall'; inp.lk = true; me.cpuCD = 70; }
+  else if (projIncoming && r < 0.25) { inp.up = true; inp.fwd = true; me.cpuCD = 10; }
+  else if (threat && r < 0.6) { inp.back = true; me.cpuCD = 16; }
+  else if (d > 330) {
+    if (!me.proj && r < 0.25) { inp.special = 'heartshot'; inp[r < 0.12 ? 'lp' : 'hp'] = true; me.cpuCD = 30; }
+    else if (!me.dlr && r < 0.33) { inp.special = 'aliencall'; inp.hp = true; me.cpuCD = 60; }
+    else { inp.fwd = true; me.cpuCD = 12; }
+  } else if (d > 175) {
+    if (r < 0.12) { inp.up = true; inp.fwd = true; me.cpuCD = 14; }
+    else if (r < 0.75) inp.fwd = true;
+    me.cpuCD = me.cpuCD || 8;
+  }
+  else if (r < 0.5) { inp[['lp', 'lk', 'hp', 'hk'][(Math.random() * 4) | 0]] = true; me.cpuCD = 22; }
+  else if (r < 0.65) { inp.down = true; inp.back = true; me.cpuCD = 14; }
+  else if (r < 0.85) { inp.back = true; me.cpuCD = 12; }
+  else me.cpuCD = 8;
+  return inp;
+}
+
+// ---------------------------------------------------------------------------------------------
 // LUTADORES. Texturas: chave `${dir}_${folha}` (ex.: eddie_idle, slash_lp), arquivo assets/<dir>/<folha>.png.
 // Folha que o lutador não tem cai na do placeholder e depois na do Eddie (efeitos comuns); nada disso trava o jogo.
 // ---------------------------------------------------------------------------------------------
@@ -386,6 +499,13 @@ CHARS.zakk = {
   size: 1.31, // size: medido pelo rosto, a cabeça do Zakk fica 25% maior que a do Eddie (sem aumento ela tem ~95% da dele); vale para corpo, efeitos, caixa de dano e alcance
   // a vitória do Zakk é uma sequência de poses (grito, cerveja, chifrinhos): ~0,5 s cada
 };
+CHARS.vai = {
+  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9,
+  anims: VAI_ANIMS, moves: VAI_MOVES, powers: VAI_POWERS, specials: VAI_SPECIALS, cpu: vaiCpu,
+  jumpkick: JUMPKICK, bigTitle: 'TRIPLE FURY', bigSize: 120, blurb: 'Ibanez JEM',
+  stage: 'stadium', // palco da casa ainda não existe
+  size: 1.12, // o Vai foi desenhado com a cabeça pequena para o corpo: com 1.12 o rosto fica do tamanho do do Eddie
+};
 for (const [id, c] of Object.entries(CHARS)) c.id = id;
 
 // EASTER EGG (A + S + D, qualquer lutador): o Ricardinho entra correndo com a bandeira do Rock n' Bira nas costas
@@ -397,17 +517,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=c97cb18' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=c97cb18' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=c97cb18' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=c97cb18' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=c97cb18' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=c97cb18' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=c97cb18' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=4a44c19' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=4a44c19' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=4a44c19' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=4a44c19' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=4a44c19' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=4a44c19' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=4a44c19' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=c97cb18', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=4a44c19', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -422,6 +542,8 @@ const GAGS = {
   // Pinch Harmonic do Zakk: surdo, tapa os ouvidos e cambaleia sem defesa
   // quem ainda não tem a folha 'deaf' usa os quadros de tonto da folha react
   deaf: { dur: 120, tex: 'deaf', vuln: true, frame: t => Math.floor(t / 10) % 5, alt: t => 5 + (Math.floor(t / 12) % 2) },
+  // Tender Surrender do Vai: cai de joelhos chorando de emoção, rios de lágrimas, sem defesa
+  cry: { dur: 140, tex: 'cry', vuln: true, frame: t => t < 50 ? Math.floor(t / 10) : 5 + (Math.floor((t - 50) / 8) % 5), alt: t => 5 + (Math.floor(t / 12) % 2) },
 };
 const HURT = { x: -45, y: -235, w: 90, h: 235 };
 const HURT_CROUCH = { x: -50, y: -150, w: 100, h: 150 };
@@ -489,7 +611,7 @@ class Fighter {
     return d.length - 1;
   }
   startMove(name) {
-    this.state = 'attack'; this.move = name; this.t = 0; this.hasHit = false; this.vx = 0; this.spawned = false; this.evWave = false; this.evDust = false; this.evRise = false; this.evSmoke = false; this.evRev = false; this.evFinish = false; this.lastHitT = -99;
+    this.state = 'attack'; this.move = name; this.t = 0; this.hasHit = false; this.vx = 0; this.spawned = false; this.evWave = false; this.evDust = false; this.evRise = false; this.evSmoke = false; this.evRev = false; this.evFinish = false; this.evProp = false; this.lastHitT = -99;
   }
 }
 
@@ -532,10 +654,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=c97cb18`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=4a44c19`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=c97cb18`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=c97cb18`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=4a44c19`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=4a44c19`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -544,7 +666,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=c97cb18`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=4a44c19`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1159,7 +1281,7 @@ class Fight extends Phaser.Scene {
   newRound() {
     if (this.beamG) this.p.forEach(f => this.updateBeam(f, false));
     this.p.forEach(f => f.reset());
-    [...this.projs, ...this.bombList, ...this.booms, ...(this.fx || []), ...(this.ghosts || []), ...(this.bees || [])].forEach(o => o.spr.destroy());
+    [...this.projs, ...this.bombList, ...this.booms, ...(this.fx || []), ...(this.ghosts || []), ...(this.bees || [])].forEach(o => { o.spr.destroy(); if (o.label) o.label.destroy(); });
     this.projs = []; this.bombList = []; this.booms = []; this.fx = []; this.ghosts = []; this.bees = [];
     (this.words || []).forEach(w => w.t.destroy()); this.words = [];
     (this.dlrs || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.dlrs = [];
@@ -1332,6 +1454,7 @@ class Fight extends Phaser.Scene {
       if (m.wave !== undefined && st === m.wave && !f.evWave) { f.evWave = true; this.addFx('fx_wave', f.x + f.facing * px(135), FLOOR - px(195), { vx: f.facing * 3, flip: f.facing < 0, rate: 3, scale: 0.8 * SC }, ch); }
       if (m.dust !== undefined && st === m.dust && !f.evDust) { f.evDust = true; this.addFx('fx_dust', f.x, FLOOR, { rate: 4, oy: 0.75 }, ch); }
       if (m.blast !== undefined && st >= m.blast && !f.evRise) { f.evRise = true; this.boom(f.x, FLOOR + 10, 1.3, ch); this.addFx('fx_dust', f.x - 70, FLOOR, { rate: 4, oy: 0.75 }, ch); this.addFx('fx_dust', f.x + 70, FLOOR, { rate: 4, oy: 0.75, flip: true }, ch); }
+      if (m.prop && st === m.prop.at && !f.evProp) { f.evProp = true; this.addFx(m.prop.tex, f.x + f.facing * px(m.prop.dx || 0), FLOOR + px(6), { rate: m.prop.rate || 6, scale: (m.prop.scale || 1) * SC, oy: AY / FH, flip: f.facing < 0 }, ch); }
       if (m.smoke !== undefined && st === m.smoke && !f.evSmoke) { f.evSmoke = true; this.addFx('fx_smoke', f.x - f.facing * px(40), FLOOR - px(120), { rate: 4, scale: SC }, ch); }
       if (m.step) { if (st >= m.step[0] && st <= m.step[1]) f.vx = f.facing * m.step[2]; else f.vx = 0; }
       if (m.sparks && st >= m.sparks[0] && st <= m.sparks[1] && f.t % 3 === 0) this.addFx(m.sparksFx || 'fx_drill', f.x + f.facing * px(m.sparksFx ? 110 : 70), FLOOR - px(m.sparksFx ? 185 : 150), { rate: 2, scale: 0.8 * SC, flip: f.facing < 0, vx: m.sparksFx ? f.facing * 3 : 0 }, ch);
@@ -1360,6 +1483,7 @@ class Fight extends Phaser.Scene {
       f.vx *= 0.8;
       if (f.gag.k === 'sleep' && f.t >= 55 && f.t < 125 && f.t % 22 === 0) this.say(['z', 'Zz', 'Zzz'][(f.t / 22 | 0) % 3], f.x + f.facing * -px(40), FLOOR - px(90) - (f.t % 44), '#c77dff', 30);
       if (f.gag.k === 'dance' && f.t % 14 === 0) this.addFx('fx_sweet', f.x, FLOOR - px(280), { vy: -1.2, rate: 5, scale: 0.35 * SC }, this.p[1 - f.side].char);
+      if (f.gag.k === 'cry' && f.t % 28 === 14) this.say(['SNIFF...', 'SOB!', 'WAAAH!'][(f.t / 28 | 0) % 3], f.x, FLOOR - px(270), '#9fd8ff', 30);
       if (f.gag.k === 'deaf' && f.t % 30 === 10) this.say(['WHAT?!', 'HUH?', 'EEEEE!'][(f.t / 30 | 0) % 3], f.x, FLOOR - px(290), '#ff3d3d', 30);
       if (f.gag.k === 'burnt' && f.t % 9 === 0 && f.t < 50) this.addFx('fx_smoke', f.x + (Math.random() * 30 - 15), FLOOR - px(250), { rate: 5, scale: 0.35 * SC, vy: -1 }, ch);
       if (f.t >= GAGS[f.gag.k].dur) { f.state = 'idle'; f.t = 0; f.gag = null; }
@@ -1463,7 +1587,7 @@ class Fight extends Phaser.Scene {
       if (f.beam) { f.beam.destroy(); f.beamGlow.destroy(); f.beam = f.beamGlow = null; g.clear(); }
       f.beamLen = 0; return;
     }
-    const dir = f.facing, x0 = f.x + dir * px(100), y0 = FLOOR - px(152);
+    const dir = f.facing, plain = !!(f.m && f.m.beamPlain), x0 = f.x + dir * px(plain ? 92 : 100), y0 = FLOOR - px((f.m && f.m.beamY) || 152);
     const full = dir > 0 ? W - x0 + 40 : x0 + 40;
     const key = this.tk(f.char, (f.m && f.m.tex) || 'fx_beam'), nb = this.nf(key);
     if (!f.beam) {
@@ -1477,15 +1601,16 @@ class Fight extends Phaser.Scene {
     const len = f.beamLen, fr = Math.floor(f.t / 2) % nb, thick = (0.42 + Math.random() * 0.16) * SC;
     f.beam.setPosition(x0, y0).setSize(len, FH).setScale(1, thick); setFr(f.beam, fr);
     f.beam.tilePositionX += 38 * dir;
-    f.beamGlow.setPosition(x0, y0).setSize(len, FH).setScale(1, thick * 2.1)
-      .setTint(f.t % 4 < 2 ? 0xff3df0 : 0x3cf0ff).setAlpha(0.35 + Math.random() * 0.25);
+    if (plain) f.beam.setScale(1, (0.62 + Math.random() * 0.1) * SC); // três raios coloridos: mais grossos, sem núcleo branco por cima
+    f.beamGlow.setPosition(x0, y0).setSize(len, FH).setScale(1, plain ? 0.9 * SC : thick * 2.1)
+      .setTint(plain ? 0xffffff : (f.t % 4 < 2 ? 0xff3df0 : 0x3cf0ff)).setAlpha(plain ? 0 : 0.35 + Math.random() * 0.25);
     setFr(f.beamGlow, (fr + 2) % nb);
     f.beamGlow.tilePositionX -= 22 * dir;
     // núcleo branco pulsando e arcos elétricos em zigue-zague ao longo do feixe
     g.clear();
     const xa = dir > 0 ? x0 : x0 - len, core = px(8) + Math.random() * px(8);
-    g.fillStyle(0xffffff, 0.95); g.fillRect(xa, y0 - core / 2, len, core);
-    for (let k = 0; k < 4; k++) {
+    if (!plain) { g.fillStyle(0xffffff, 0.95); g.fillRect(xa, y0 - core / 2, len, core); }
+    for (let k = 0; k < (plain ? 0 : 4); k++) {
       g.lineStyle(k < 2 ? 3 : 2, [0xffffff, 0x9fefff, 0xff8cf5, 0xffe14a][k], 0.9);
       const pts = [];
       for (let x = 0; x <= len; x += 26) pts.push({ x: x0 + dir * x, y: y0 + (Math.random() * 2 - 1) * px(30) * (0.4 + k * 0.25) });
@@ -1519,6 +1644,7 @@ class Fight extends Phaser.Scene {
       case 'sleep': if (def.airborne) def.pendGag = 'sleep'; else this.startGag(def, 'sleep'); break;
       case 'dance': if (def.airborne) def.pendGag = 'dance'; else this.startGag(def, 'dance'); break;
       case 'deaf': if (def.airborne) def.pendGag = 'deaf'; else this.startGag(def, 'deaf'); break;
+      case 'cry': if (def.airborne) def.pendGag = 'cry'; else this.startGag(def, 'cry'); break;
       case 'wah':
         def.buzz = 12;
         if (att.t % 10 < 4) this.say(Math.random() < 0.5 ? 'WAH!' : 'WAH-WAH!', sx, sy - 30 - Math.random() * 30, '#c77dff', 32);
@@ -1533,7 +1659,7 @@ class Fight extends Phaser.Scene {
   startGag(f, k) {
     f.state = 'gag'; f.t = 0; f.gag = { k }; f.move = null; f.jk = null; f.stun = 0;
     f.inv = GAGS[k].vuln ? 0 : GAGS[k].dur + 20; f.spin = false; f.rot = 0;
-    if (k === 'flat' || k === 'sleep' || k === 'dance' || k === 'deaf') f.vx = 0;
+    if (k === 'flat' || k === 'sleep' || k === 'dance' || k === 'deaf' || k === 'cry') f.vx = 0;
   }
 
   // balão de onomatopeia: entra grande, encolhe com tranco, sobe e some
@@ -1563,6 +1689,10 @@ class Fight extends Phaser.Scene {
     const sp = m.speed || [5, 8];
     const pr = { owner: f, x, y, dir: f.facing, v: f.projFast ? sp[1] : sp[0], spr, t: 0, payload: m.payload || PROJ, boomerang: !!m.boomerang, box: (m.projBox || [72, 48]).map(v => v * SC / 0.8) };
     if (pr.boomerang) { pr.v0 = pr.v; pr.acc = -pr.v / 150; } // vai longe, freia e volta para a mão
+    if (m.projText) { // texto dentro do balão (Talking Guitar)
+      pr.label = this.add.text(x, y - px(8), m.projText, { fontFamily: FONT_CHROME, fontStyle: 'italic 900', fontSize: Math.round(19 * SC / 0.8) + 'px', color: '#14061f', align: 'center', padding: { x: 6, y: 4 } })
+        .setOrigin(0.5).setDepth(21);
+    }
     f.proj = pr; this.projs.push(pr);
   }
 
@@ -1576,13 +1706,14 @@ class Fight extends Phaser.Scene {
         if (pr.v < -pr.v0 * 1.3) pr.v = -pr.v0 * 1.3;
       }
       pr.x += pr.dir * pr.v; pr.t++;
+      if (pr.label) pr.label.setPosition(pr.x, pr.y - 10).setAngle(Math.sin(pr.t / 8) * 6);
       const box = { x: pr.x - pr.box[0] / 2, y: pr.y - pr.box[1] / 2, w: pr.box[0], h: pr.box[1] };
       const def = this.p[1 - pr.owner.side];
       if (def.state !== 'ko' && !(def.inv > 0) && overlap(box, def.hurtbox())) { pr.dead = true; this.applyHit(pr.owner, def, pr.payload, pr.x + pr.dir * 30, pr.y, true); }
       for (const o of this.projs) if (o !== pr && !o.dead && o.owner !== pr.owner && Math.abs(o.x - pr.x) < 60) { o.dead = pr.dead = true; this.boom((o.x + pr.x) / 2, pr.y + 40, 0.8, pr.owner.char); }
       if (pr.x < -100 || pr.x > W + 100) pr.dead = true;
     }
-    this.projs = this.projs.filter(pr => { if (pr.dead) { pr.spr.destroy(); pr.owner.proj = null; } return !pr.dead; });
+    this.projs = this.projs.filter(pr => { if (pr.dead) { pr.spr.destroy(); if (pr.label) pr.label.destroy(); pr.owner.proj = null; } return !pr.dead; });
   }
 
   // ENXAME (Bumblebee): saem da guitarra e perseguem o oponente
@@ -1590,7 +1721,7 @@ class Fight extends Phaser.Scene {
     const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const m = f.m, n = m.count || 6, key = this.tk(f.char, m.tex || 'fx_bee');
     for (let i = 0; i < n; i++) {
-      const x = f.x + f.facing * px(m.ground ? 90 + i * 35 : 110), y = m.ground ? FLOOR - px(22) : FLOOR - px(170) + (i - (n - 1) / 2) * 12;
+      const x = f.x + f.facing * px(m.ground ? 90 + i * 35 : 110), y = m.ground ? FLOOR - px(m.groundY || 22) : FLOOR - px(170) + (i - (n - 1) / 2) * 12;
       const spr = this.add.sprite(x, y, key, 0).setDepth(24).setScale((m.swarmScale || 0.55) * SC).setFlipX(f.facing < 0);
       this.bees.push({ owner: f, x, y, vx: f.facing * (m.ground ? 2 : 4 + Math.random() * 2), vy: m.ground ? 0 : (Math.random() - 0.5) * 3, t: 0, ph: Math.random() * 6, spr, n: this.nf(key), payload: m.payload || BEE, ground: !!m.ground });
     }
@@ -1654,9 +1785,10 @@ class Fight extends Phaser.Scene {
     const spr = this.add.sprite(x, FLOOR - 560, this.tk(f.char, m.tex || 'dlr'), 0).setDepth(22).setFlipX(f.facing < 0).setScale(SC)
       .setOrigin((f.facing > 0 ? AX : FW - AX) / FW, AY / FH);
     const shadow = this.add.ellipse(x, FLOOR + 2, px(150), px(18), 0x000000, 0.4).setDepth(6).setScale(0.2);
-    this.dlrs.push({ owner: f, x, dy: -560, vy: 3, phase: 'fall', t: 0, spr, shadow, payload: m.payload || DLR });
+    this.dlrs.push({ owner: f, x, dy: -560, vy: 3, phase: 'fall', t: 0, spr, shadow, payload: m.payload || DLR, fr: m.summonFrames || [0, 1, 2, 3, 4] });
     f.dlr = true;
-    this.say('INCOMING...', x, 140, '#ff4fd8', 26);
+    const cue = m.summonSay || ['INCOMING...', '#ff4fd8'];
+    this.say(cue[0], x, 140, cue[1], 26);
   }
 
   updateDLR() {
@@ -1665,18 +1797,18 @@ class Fight extends Phaser.Scene {
       const def = this.p[1 - d.owner.side];
       if (d.phase === 'fall') {
         d.vy += 0.75; d.dy += d.vy;
-        setFr(d.spr, d.vy < 9 ? 0 : 1);
+        setFr(d.spr, d.fr[d.vy < 9 ? 0 : 1]);
         d.shadow.setScale(Math.min(1, 0.2 + d.t / 45));
         if (d.dy >= 0) {
-          d.dy = 0; d.phase = 'impact'; d.t = 0; setFr(d.spr, 2);
+          d.dy = 0; d.phase = 'impact'; d.t = 0; setFr(d.spr, d.fr[2]);
           this.cameras.main.shake(180, 0.012);
           this.addFx('fx_dust', d.x - 80, FLOOR, { rate: 4, oy: 0.75 }, d.owner.char); this.addFx('fx_dust', d.x + 80, FLOOR, { rate: 4, oy: 0.75, flip: true }, d.owner.char);
           const box = { x: d.x - px(115), y: FLOOR - px(190), w: px(230), h: px(190) };
           if (def.state !== 'ko' && !(def.inv > 0) && overlap(box, def.hurtbox())) this.applyHit(d.owner, def, d.payload, d.x, FLOOR - px(120), true);
           else this.say('OOPS!', d.x, FLOOR - 230, '#ff4fd8', 34);
         }
-      } else if (d.phase === 'impact' && d.t > 24) { d.phase = 'pose'; d.t = 0; setFr(d.spr, 3); }
-      else if (d.phase === 'pose' && d.t > 36) { d.phase = 'leave'; d.t = 0; d.vy = -17; setFr(d.spr, 4); }
+      } else if (d.phase === 'impact' && d.t > 24) { d.phase = 'pose'; d.t = 0; setFr(d.spr, d.fr[3]); }
+      else if (d.phase === 'pose' && d.t > 36) { d.phase = 'leave'; d.t = 0; d.vy = -17; setFr(d.spr, d.fr[4]); }
       else if (d.phase === 'leave') {
         d.vy -= 0.4; d.dy += d.vy; d.x += d.owner.facing * -3; // sobe acelerando até sumir pelo alto
         d.shadow.setScale(Math.max(0, 1 + d.dy / 300));

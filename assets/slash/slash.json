@@ -139,6 +139,10 @@
     "deaf": {
       "frames": 5,
       "file": "deaf.png"
+    },
+    "cry": {
+      "frames": 10,
+      "file": "cry.png"
     }
   }
 }
