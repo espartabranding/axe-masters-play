@@ -179,6 +179,10 @@
     "fx_zap": {
       "frames": 4,
       "file": "fx_zap.png"
+    },
+    "deaf": {
+      "frames": 5,
+      "file": "deaf.png"
     }
   }
 }

@@ -135,6 +135,10 @@
     "fx_sweet": {
       "frames": 5,
       "file": "fx_sweet.png"
+    },
+    "deaf": {
+      "frames": 5,
+      "file": "deaf.png"
     }
   }
 }

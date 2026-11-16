@@ -23,7 +23,7 @@ const EDDIE_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, eruption: 4, block: 2, hit: 3, ko: 5,
   jump: 6, crouch: 3, jumpkick: 2, projectile: 4, divebomb: 5, bomb: 2, explosion: 4,
   brownsound: 10, panama: 10, victory: 10, sharkbite: 10, bumblebee: 10, drill: 10,
-  fx_bee: 4, fx_drill: 4, fx_smoke: 4, react: 10, jumpcall: 5, dlr: 5, teacher: 10, fx_beam: 4, fx_zap: 4, spanish: 10, sleep: 5, fx_hypno: 5, dance: 5, bira: 10,
+  fx_bee: 4, fx_drill: 4, fx_smoke: 4, react: 10, jumpcall: 5, dlr: 5, teacher: 10, fx_beam: 4, fx_zap: 4, spanish: 10, sleep: 5, fx_hypno: 5, dance: 5, bira: 10, deaf: 5,
   fx_spark: 5, fx_block: 5, fx_wave: 5, fx_notes: 5, fx_dust: 5,
 };
 // letreiro de cada especial: nome cromado + assinatura neon na cor do poder
@@ -148,7 +148,7 @@ const SLASH_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
   tophat: 4, fx_hat: 4, block: 2, hit: 3, ko: 5, jump: 6, crouch: 3, jumpkick: 2,
   paradise: 10, jungle: 10, snakepit: 10, fx_snake: 5, smoke: 10, fx_cloud: 5, axlcall: 5, axl: 5, doubleneck: 10, sweet: 10, raincall: 5, piano: 5, appetite: 10,
-  sleep: 5, dance: 5, fx_sweet: 5,
+  sleep: 5, dance: 5, fx_sweet: 5, deaf: 5,
 };
 const SLASH_POWERS = {
   tophat:     { name: 'TOP HAT',        tag: 'Boomerang',        neon: '#c9a0ff', edge: 0xc9a0ff, deep: 0x1d0838 },
@@ -258,8 +258,8 @@ const ZAKK_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
   skull: 4, fx_skull: 4, block: 2, hit: 3, ko: 5, jump: 6, crouch: 3, jumpkick: 2,
   stackcall: 5, amps: 5, moon: 10, berserker: 10, traincall: 5, train: 5, spin: 10,
-  bats: 10, fx_bat: 5, warhorn: 10, fx_horn: 5, tears: 10,
-  sleep: 5, dance: 5,
+  bats: 10, fx_bat: 5, warhorn: 10, fx_horn: 5, tears: 10, pinch: 10, fx_pinch: 5,
+  sleep: 5, dance: 5, deaf: 5,
 };
 const ZAKK_POWERS = {
   skull:      { name: 'SKULL SHOT',     tag: 'Black Label',      neon: '#ff7a1a', edge: 0xff7a1a, deep: 0x3a0d00 },
@@ -270,8 +270,11 @@ const ZAKK_POWERS = {
   spin:       { name: 'BULLSEYE SPIN',  tag: 'Les Paul Custom',  neon: '#f3ecd0', edge: 0xf3ecd0, deep: 0x1a1a14 },
   bats:       { name: 'BAT ATTACK',     tag: 'Night Swarm',      neon: '#ff3d6e', edge: 0xff3d6e, deep: 0x33040f },
   warhorn:    { name: 'WAR HORN',       tag: 'Viking Call',      neon: '#ffb347', edge: 0xffb347, deep: 0x2a1408 },
+  pinch:      { name: 'PINCH HARMONIC', tag: 'Squeal!',          neon: '#ff3d3d', edge: 0xff3d3d, deep: 0x2a0606 },
   tears:      { name: 'NO MORE TEARS',  tag: 'Super!',           neon: '#9fd8ff', edge: 0x9fd8ff, deep: 0x06182a },
 };
+// guincho de harmônico: a onda de alvo deixa quem leva surdo, tapando os ouvidos e sem defesa
+const PINCH = { dmg: 30, hitstun: 12, blockstun: 10, push: 2, chip: 4, gag: 'deaf', word: ['EEEEEEE!', '#ff3d3d'] };
 // caveira em chamas da Black Label Society
 const SKULL = { dmg: 80, hitstun: 18, blockstun: 12, push: 8, chip: 10, gag: 'burnt', word: ['SKULLED!', '#ff7a1a'] };
 // paredão de amplificadores caindo: não dá para defender agachado
@@ -307,6 +310,8 @@ const ZAKK_MOVES = {
   bats: { dur: [3, 5, 4, 6, 5, 6, 6, 5, 5, 3], swarm: 3, tex: 'fx_bat', payload: BAT, count: 6, swarmScale: 0.45 },
   // WAR HORN: sopra o chifre viking; uma onda de som enorme rola devagar
   warhorn: { dur: [4, 6, 6, 8, 8, 6, 8, 8, 6, 4], spawn: 5, tex: 'fx_horn', payload: HORN, speed: [2.6, 3.6], projScale: 0.9, projY: 126, projBox: [120, 120] },
+  // PINCH HARMONIC (A + D): guincho na guitarra e uma onda de alvo vermelha e branca rola até o oponente
+  pinch: { dur: [4, 5, 4, 5, 4, 4, 5, 6, 8, 6], spawn: 7, tex: 'fx_pinch', payload: PINCH, speed: [4, 6], projScale: 0.7, projY: 150, projBox: [90, 90] },
   // SUPER NO MORE TEARS (A + S com a barra cheia): lua cheia, solo e um raio de harmônico que atravessa a tela
   tears: { dur: [8, 14, 8, 10, 12, 8, 16, 16, 12, 12], frames: [0, 1, 2, 3, 4, 5, 6, 6, 8, 9], active: [6, 7], multi: 3, dmg: 24,
     hit: { x: 60, y: -235, w: 1100, h: 150 }, hitstun: 12, blockstun: 8, push: 1, chip: 4, gag: 'zap', beam: [6, 7], inv: 30, dark: true,
@@ -316,6 +321,7 @@ const ZAKK_SPECIALS = [
   { move: 'tears',     chord: ['lp', 'hp'], super: true },
   { move: 'berserker', chord: ['hp', 'lk'] },
   { move: 'traincall', chord: ['hp', 'hk'], lock: 'dlr' },
+  { move: 'pinch',     chord: ['lp', 'lk'], lock: 'proj' },
   { move: 'moon',      btn: 'punch', motion: [2, 5, 2] },
   { move: 'bats',      btn: 'kick',  motion: [2, 5, 2], lock: 'swarm' },
   { move: 'traincall', btn: 'kick',  motion: [6, 2], lock: 'dlr' },
@@ -335,6 +341,7 @@ function zakkCpu(me, op, scene) {
   else if (d < 200 && r > 0.9) { inp.special = 'spin'; inp.hk = true; me.cpuCD = 45; }
   else if (d > 300 && !me.swarm && r < 0.05) { inp.special = 'bats'; inp.hk = true; me.cpuCD = 45; }
   else if (d > 220 && !me.proj && r > 0.95) { inp.special = 'warhorn'; inp.hp = true; me.cpuCD = 60; }
+  else if (d > 180 && d < 520 && !me.proj && r > 0.03 && r < 0.05) { inp.special = 'pinch'; inp.lp = true; me.cpuCD = 60; }
   else if (d > 160 && !me.dlr && r > 0.06 && r < 0.09) { inp.special = 'traincall'; inp.lk = true; me.cpuCD = 70; }
   else if (projIncoming && r < 0.25) { inp.up = true; inp.fwd = true; me.cpuCD = 10; }
   else if (threat && r < 0.5) { inp.back = true; me.cpuCD = 16; }
@@ -390,17 +397,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=d31db3a' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=d31db3a' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=d31db3a' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=d31db3a' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=d31db3a' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=d31db3a' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=d31db3a' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=920765c' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=920765c' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=920765c' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=920765c' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=920765c' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=920765c' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=920765c' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=d31db3a', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=920765c', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -525,10 +532,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=d31db3a`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=920765c`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=d31db3a`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=d31db3a`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=920765c`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=920765c`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -537,7 +544,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=d31db3a`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=920765c`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
