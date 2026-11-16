@@ -397,17 +397,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=920765c' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=920765c' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=920765c' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=920765c' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=920765c' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=920765c' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=920765c' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=c97cb18' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=c97cb18' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=c97cb18' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=c97cb18' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=c97cb18' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=c97cb18' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=c97cb18' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=920765c', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=c97cb18', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -532,10 +532,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=920765c`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=c97cb18`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=920765c`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=920765c`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=c97cb18`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=c97cb18`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -544,7 +544,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=920765c`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=c97cb18`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -878,16 +878,18 @@ class Select extends Phaser.Scene {
     this.input.keyboard.addCapture([37, 38, 39, 40, 32]);
     this.stickX = 0;
     this.refresh();
+    // toque no seu lutador grande: volta a escolher (o teclado usa Esc); depois do refresh, para a área de toque ter o tamanho do quadro
+    this.big[0].setInteractive({ useHandCursor: true }).on('pointerdown', () => { this.lock = [false, false]; this.refresh(); });
   }
 
   key(e) {
     if (this.t < 10) return; // não herda a tecla que encerrou a luta
     const c = e.code;
-    if (c === 'ArrowLeft') this.moveCur(0, -1);
-    else if (c === 'ArrowRight') this.moveCur(0, 1);
-    else if (c === 'KeyA' || c === 'Enter' || c === 'Space') { if (this.lock[0] && this.lock[1]) this.tryStart(); else this.pick(0); }
-    else if (c === 'Escape' || c === 'Backspace') { this.lock = [false, false]; this.refresh(); }
-    else if (c === 'KeyP') { this.cpu = !this.cpu; this.lock[1] = false; if (this.cpu && this.lock[0]) this.cpuPick(); this.refresh(); }
+    if (c === 'ArrowLeft') this.moveCur(this.active(), -1);
+    else if (c === 'ArrowRight') this.moveCur(this.active(), 1);
+    else if (c === 'KeyA' || c === 'Enter' || c === 'Space') { if (this.lock[0] && this.lock[1]) this.tryStart(); else this.pick(this.active()); }
+    else if (c === 'Escape' || c === 'Backspace') this.back();
+    else if (c === 'KeyP') { this.cpu = !this.cpu; this.lock[1] = false; this.refresh(); }
     else if (!this.cpu && c === 'KeyJ') this.moveCur(1, -1);
     else if (!this.cpu && c === 'KeyL') this.moveCur(1, 1);
     else if (!this.cpu && c === 'Digit7') { if (this.lock[0] && this.lock[1]) this.tryStart(); else this.pick(1); }
@@ -899,24 +901,31 @@ class Select extends Phaser.Scene {
     this.cur[s] = (this.cur[s] + d + n) % n;
     this.refresh();
   }
+  // contra a CPU, o 1P escolhe os dois: primeiro o seu lutador, depois o da CPU (setas + A/Enter)
+  active() { return this.cpu && this.lock[0] && !this.lock[1] ? 1 : 0; }
   pick(s) {
     this.lock[s] = true;
-    if (s === 0 && this.cpu) this.cpuPick();
     this.refresh();
   }
-  // CPU pega o outro lutador (ou o mesmo, se só houver um)
-  cpuPick() {
-    const other = this.ids.findIndex((_, i) => i !== this.cur[0]);
-    this.cur[1] = other >= 0 ? other : this.cur[0];
-    this.lock[1] = true;
+  // Esc volta um passo: desfaz a escolha da CPU e depois a do 1P
+  back() {
+    if (this.cpu && this.lock[1]) this.lock[1] = false;
+    else this.lock = [false, false];
+    this.refresh();
   }
+  // toque: 1º retrato é o seu, o 2º é o da CPU; tocar de novo no da CPU (ou em FIGHT!) começa
   tapCard(i) {
-    if (this.lock[0] && this.cur[0] === i) { if (!this.lock[1]) this.pick(1); this.tryStart(true); return; }
+    if (!this.lock[0]) { this.cur[0] = i; this.pick(0); return; }
+    if (this.cpu) {
+      if (this.lock[1] && this.cur[1] === i) { this.tryStart(true); return; }
+      this.cur[1] = i; this.pick(1); return;
+    }
+    if (this.cur[0] === i) { if (!this.lock[1]) this.pick(1); this.tryStart(true); return; }
     this.lock[0] = false; this.cur[0] = i; this.pick(0);
   }
   tryStart(fromTap) {
     if (!this.lock[0]) { if (fromTap) this.pick(0); else return; }
-    if (!this.lock[1]) { if (this.cpu) this.cpuPick(); else return this.refresh(); }
+    if (!this.lock[1]) { if (this.cpu && fromTap) this.lock[1] = true; else return this.refresh(); }
     const chars = [this.ids[this.cur[0]], this.ids[this.cur[1]]];
     this.registry.set('pick', { cur: [...this.cur], cpu: this.cpu });
     this.cameras.main.flash(150, 255, 80, 240);
@@ -938,9 +947,11 @@ class Select extends Phaser.Scene {
     });
     const ready = this.lock[0] && this.lock[1];
     this.fightBtn.setAlpha(this.lock[0] ? 1 : 0.45);
-    this.hint.setText(isTouch() ? (ready ? 'TAP FIGHT! (OR THE PORTRAIT AGAIN)' : 'TAP A PORTRAIT TO PICK')
+    const cpuTurn = this.active() === 1;
+    this.hint.setText(isTouch() ? (ready ? 'TAP FIGHT! (OR THE CPU PORTRAIT AGAIN)   TAP YOUR FIGHTER TO CHANGE' : cpuTurn ? 'NOW TAP THE CPU FIGHTER' : 'TAP A PORTRAIT TO PICK')
       : ready ? 'A / ENTER: FIGHT   ESC: CHANGE'
-        : `1P: < > + A/ENTER   ${this.cpu ? 'P: 2P HUMAN' : '2P: J L + 7   P: 2P CPU'}`);
+        : cpuTurn ? '< > CHOOSE THE CPU FIGHTER   A/ENTER: PICK   ESC: BACK'
+          : `1P: < > + A/ENTER   ${this.cpu ? 'P: 2P HUMAN' : '2P: J L + 7   P: 2P CPU'}`);
   }
 
   update() {
@@ -949,9 +960,9 @@ class Select extends Phaser.Scene {
     const T = window.TOUCH;
     if (T && T.on) {
       const sx = T.l ? -1 : T.r ? 1 : 0;
-      if (sx && sx !== this.stickX) this.moveCur(0, sx);
+      if (sx && sx !== this.stickX) this.moveCur(this.active(), sx);
       this.stickX = sx;
-      if (T.take('lp')) { if (this.lock[0] && this.lock[1]) this.tryStart(true); else this.pick(0); }
+      if (T.take('lp')) { if (this.lock[0] && this.lock[1]) this.tryStart(true); else this.pick(this.active()); }
     }
     // moldura piscando em volta do retrato de cada jogador
     const g = this.cursorG; g.clear();
