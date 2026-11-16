@@ -5,6 +5,8 @@ const W = 960, H = 540, FLOOR = 472; // linha do piso do palco
 const FW = 460, FH = 300, AX = 220, AY = 290;
 // SC: tamanho dos lutadores em relação ao cenário; caixas de acerto, efeitos e pulo acompanham
 const SC = 0.8, px = v => Math.round(v * SC);
+// escala de um lutador (CHARS.<id>.size: o Zakk é ~31% maior); usada também nos efeitos e objetos que ele solta
+const scOf = f => SC * ((f && f.char && f.char.size) || 1);
 const BIG_T = 64; // quadros do título gigante do super (some antes do raio)
 const MIN_GAP = px(125), ROUND_TIME = 99, WALL = px(85);
 const JUMP_V = -15.2, GRAV = 0.85, JUMP_VX = 3.6;
@@ -373,7 +375,8 @@ CHARS.zakk = {
   name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25,
   anims: ZAKK_ANIMS, moves: ZAKK_MOVES, powers: ZAKK_POWERS, specials: ZAKK_SPECIALS, cpu: zakkCpu,
   jumpkick: JUMPKICK, bigTitle: 'NO MORE TEARS', bigSize: 95, blurb: 'Black Label',
-  stage: 'zakk', vicRate: 28, // a vitória do Zakk é uma sequência de poses (grito, cerveja, chifrinhos): ~0,5 s cada
+  stage: 'zakk', vicRate: 28, size: 1.31, // size: medido pelo rosto, a cabeça do Zakk fica 25% maior que a do Eddie (sem aumento ela tem ~95% da dele); vale para corpo, efeitos, caixa de dano e alcance
+  // a vitória do Zakk é uma sequência de poses (grito, cerveja, chifrinhos): ~0,5 s cada
 };
 for (const [id, c] of Object.entries(CHARS)) c.id = id;
 
@@ -386,17 +389,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=7ceb2c2' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=7ceb2c2' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=7ceb2c2' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=7ceb2c2' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=7ceb2c2' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=7ceb2c2' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=7ceb2c2' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=3f20983' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=3f20983' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=3f20983' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=3f20983' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=3f20983' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=3f20983' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=3f20983' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=7ceb2c2', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=3f20983', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -464,11 +467,13 @@ class Fighter {
   canBlock() { return this.free || this.state === 'block'; }
   hurtbox() {
     const hb = this.state === 'crouch' || (this.state === 'block' && this.holdDown) ? (this.char.hurtCrouch || HURT_CROUCH) : (this.char.hurt || HURT);
-    return { x: this.x + hb.x * SC, y: FLOOR + this.y + hb.y * SC, w: hb.w * SC, h: hb.h * SC };
+    const k = SC * (this.char.size || 1);
+    return { x: this.x + hb.x * k, y: FLOOR + this.y + hb.y * k, w: hb.w * k, h: hb.h * k };
   }
   boxFrom(h) {
-    const x = this.facing > 0 ? this.x + h.x * SC : this.x - (h.x + h.w) * SC;
-    return { x, y: FLOOR + this.y + h.y * SC, w: h.w * SC, h: h.h * SC };
+    const k = SC * (this.char.size || 1);
+    const x = this.facing > 0 ? this.x + h.x * k : this.x - (h.x + h.w) * k;
+    return { x, y: FLOOR + this.y + h.y * k, w: h.w * k, h: h.h * k };
   }
   moveStep() {
     const d = this.m.dur; let acc = 0;
@@ -519,10 +524,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=7ceb2c2`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=3f20983`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=7ceb2c2`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=7ceb2c2`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=3f20983`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=3f20983`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -531,7 +536,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=7ceb2c2`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=3f20983`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -915,7 +920,7 @@ class Select extends Phaser.Scene {
     [0, 1].forEach(s => {
       const c = CHARS[this.ids[this.cur[s]]];
       const key = texKey(this, c, 'idle');
-      if (this.big[s].texture.key !== key) this.big[s].setTexture(key);
+      if (this.big[s].texture.key !== key) this.big[s].setTexture(key).setScale(SC * 1.05 * (c.size || 1));
       this.big[s].setTint(s === 1 && sameLook ? P2_TINT : 0xffffff).setAlpha(this.lock[s] ? 1 : 0.75);
       this.names[s].setText(c.name); chrome(this.names[s]);
       this.names[s].setShadow(0, 0, s === 0 ? '#ff3d6e' : '#3cf0ff', 16, true, false);
@@ -1300,7 +1305,7 @@ class Fight extends Phaser.Scene {
     } else if (f.state === 'land') {
       if (f.t >= 5) { f.state = 'idle'; f.t = 0; f.facing = op.x >= f.x ? 1 : -1; }
     } else if (f.state === 'attack') {
-      const m = f.m;
+      const m = f.m, SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem golpeia
       if (m.spawn !== undefined && !f.spawned && f.moveStep() >= m.spawn) { f.spawned = true; this.spawnProjectile(f); }
       if (m.bombs !== undefined && !f.spawned && f.moveStep() >= m.bombs) { f.spawned = true; this.spawnBombs(f, op); }
       const st = f.moveStep();
@@ -1361,16 +1366,16 @@ class Fight extends Phaser.Scene {
   separate(a, b) {
     if (a.state === 'ko' || b.state === 'ko' || a.y < -px(120) || b.y < -px(120)) return;
     if ([a, b].some(f => f.state === 'gag' && f.gag.k === 'flat')) return; // o carro passa por cima de quem virou panqueca
-    const d = b.x - a.x;
-    if (Math.abs(d) < MIN_GAP) {
-      const push = (MIN_GAP - Math.abs(d)) / 2 * (d >= 0 ? 1 : -1);
+    const d = b.x - a.x, G = MIN_GAP * ((a.char.size || 1) + (b.char.size || 1)) / 2; // lutador maior ocupa mais espaço
+    if (Math.abs(d) < G) {
+      const push = (G - Math.abs(d)) / 2 * (d >= 0 ? 1 : -1);
       a.x = Phaser.Math.Clamp(a.x - push, WALL, W - WALL);
       b.x = Phaser.Math.Clamp(b.x + push, WALL, W - WALL);
       // encurralado na parede: quem está livre leva o resto do empurrão, para nunca ficarem um dentro do outro
       const dir = d >= 0 ? 1 : -1;
-      if (Math.abs(b.x - a.x) < MIN_GAP) {
-        if (a.x <= WALL || a.x >= W - WALL) b.x = Phaser.Math.Clamp(a.x + dir * MIN_GAP, WALL, W - WALL);
-        else a.x = Phaser.Math.Clamp(b.x - dir * MIN_GAP, WALL, W - WALL);
+      if (Math.abs(b.x - a.x) < G) {
+        if (a.x <= WALL || a.x >= W - WALL) b.x = Phaser.Math.Clamp(a.x + dir * G, WALL, W - WALL);
+        else a.x = Phaser.Math.Clamp(b.x - dir * G, WALL, W - WALL);
       }
     }
   }
@@ -1412,7 +1417,7 @@ class Fight extends Phaser.Scene {
     def.hp -= m.dmg; def.move = null; def.jk = null;
     if (!(am && am.super)) { att.meter = Math.min(100, att.meter + m.dmg * 0.3); def.meter = Math.min(100, def.meter + m.dmg * 0.15); }
     const hitFx = am && am.hitFx ? this.tk(att.char, am.hitFx) : null;
-    if (hitFx && hitFx !== '__MISSING') this.addFx(am.hitFx, def.x, FLOOR + def.y - px(160), { rate: 2, scale: 0.8 * SC }, att.char);
+    if (hitFx && hitFx !== '__MISSING') this.addFx(am.hitFx, def.x, FLOOR + def.y - px(160), { rate: 2, scale: 0.8 * scOf(att) }, att.char);
     else this.spark(sx, sy, 0xffe14a, att.char);
     if (m.shake) this.cameras.main.shake(120, m.shake);
     if (m.dmg >= 75) this.addFx('fx_notes', def.x, FLOOR + def.y - px(250), { vy: -1.2, rate: 5, scale: 0.9 * SC }, att.char);
@@ -1432,6 +1437,7 @@ class Fight extends Phaser.Scene {
 
   // raio do super: textura do golpe (m.tex), núcleo branco e arcos elétricos desenhados por cima
   updateBeam(f, on) {
+    const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const g = this.beamG;
     if (!on) {
       if (f.beam) { f.beam.destroy(); f.beamGlow.destroy(); f.beam = f.beamGlow = null; g.clear(); }
@@ -1530,11 +1536,12 @@ class Fight extends Phaser.Scene {
 
   // PROJÉTIL (Eruption): anda reto; dois projéteis se anulam
   spawnProjectile(f) {
+    const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const m = f.m, x = f.x + f.facing * px(125), y = FLOOR - px(m.projY || 145);
     const spr = this.add.sprite(x, y, this.tk(f.char, m.tex || 'projectile'), 0).setDepth(20).setFlipX(f.facing < 0).setScale((m.projScale || 1.35) * SC);
     if (f.tint !== 0xffffff) spr.setTint(f.tint);
     const sp = m.speed || [5, 8];
-    const pr = { owner: f, x, y, dir: f.facing, v: f.projFast ? sp[1] : sp[0], spr, t: 0, payload: m.payload || PROJ, boomerang: !!m.boomerang, box: m.projBox || [72, 48] };
+    const pr = { owner: f, x, y, dir: f.facing, v: f.projFast ? sp[1] : sp[0], spr, t: 0, payload: m.payload || PROJ, boomerang: !!m.boomerang, box: (m.projBox || [72, 48]).map(v => v * SC / 0.8) };
     if (pr.boomerang) { pr.v0 = pr.v; pr.acc = -pr.v / 150; } // vai longe, freia e volta para a mão
     f.proj = pr; this.projs.push(pr);
   }
@@ -1560,6 +1567,7 @@ class Fight extends Phaser.Scene {
 
   // ENXAME (Bumblebee): saem da guitarra e perseguem o oponente
   spawnSwarm(f) {
+    const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const m = f.m, n = m.count || 6, key = this.tk(f.char, m.tex || 'fx_bee');
     for (let i = 0; i < n; i++) {
       const x = f.x + f.facing * px(m.ground ? 90 + i * 35 : 110), y = m.ground ? FLOOR - px(22) : FLOOR - px(170) + (i - (n - 1) / 2) * 12;
@@ -1621,6 +1629,7 @@ class Fight extends Phaser.Scene {
 
   // AJUDANTE (Jump!): cai do céu onde o oponente está; sombra no chão avisa. Folha: 0-1 caindo, 2 impacto, 3 pose, 4 saindo.
   spawnDLR(f, op) {
+    const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const m = f.m, x = Phaser.Math.Clamp(op.x, 90, W - 90);
     const spr = this.add.sprite(x, FLOOR - 560, this.tk(f.char, m.tex || 'dlr'), 0).setDepth(22).setFlipX(f.facing < 0).setScale(SC)
       .setOrigin((f.facing > 0 ? AX : FW - AX) / FW, AY / FH);
@@ -1661,6 +1670,7 @@ class Fight extends Phaser.Scene {
   // DESLIZANDO (You Could Be Mine): o ajudante entra pela borda de trás e cruza a tela rente ao chão.
   // Folha: 0 correndo, 1 se jogando, 2-3 deslizando, 4 pose no fim. Golpe baixo (só defende agachado).
   spawnSlider(f) {
+    const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const m = f.m, dir = f.facing, x = dir > 0 ? -60 : W + 60;
     const spr = this.add.sprite(x, FLOOR, this.tk(f.char, m.tex || 'axl'), 0).setDepth(22).setFlipX(dir < 0).setScale(SC)
       .setOrigin((dir > 0 ? AX : FW - AX) / FW, AY / FH);
@@ -1777,11 +1787,11 @@ class Fight extends Phaser.Scene {
 
   // CHUVA DO CÉU (Dive Bomb): caem miradas onde o oponente estava e só explodem no chão
   spawnBombs(f, op) {
-    const m = f.m, target = op.x, key = this.tk(f.char, m.tex || 'bomb');
+    const k = scOf(f) / SC, m = f.m, target = op.x, key = this.tk(f.char, m.tex || 'bomb');
     (m.offsets || [-70, 0, 70]).forEach((off, i) => {
       const x = Phaser.Math.Clamp(target + off * f.facing, 40, W - 40);
-      const spr = this.add.sprite(x, -60, key, 0).setDepth(25).setScale(m.bombScale || 1.6).setVisible(false).setFlipX(f.facing < 0);
-      this.bombList.push({ owner: f, x, y: m.crash ? -260 : -60, vy: 5, delay: i * 12, spr, t: 0, n: m.crash ? m.crash : this.nf(key), payload: m.payload || BOMB, landY: m.landY || 25, crash: m.crash, key });
+      const spr = this.add.sprite(x, -60, key, 0).setDepth(25).setScale((m.bombScale || 1.6) * k).setVisible(false).setFlipX(f.facing < 0);
+      this.bombList.push({ owner: f, x, y: m.crash ? -260 : -60, vy: 5, delay: i * 12, spr, t: 0, n: m.crash ? m.crash : this.nf(key), payload: m.payload || BOMB, landY: (m.landY || 25) * k, crash: m.crash, key });
       f.bombs++;
     });
   }
@@ -1982,8 +1992,9 @@ class Fight extends Phaser.Scene {
       const oy = f.spin ? 0.55 : AY / FH;
       f.spr.setFlipX(f.facing < 0).setOrigin((f.facing > 0 ? AX : FW - AX) / FW, oy).setRotation(f.spin ? f.rot : 0);
       const sw = 1 + f.stings * 0.06;
-      const lift = f.spin ? -(AY - 0.55 * FH) * SC * sw : 0, jit = f.buzz > 0 ? (Math.random() * 10 - 5) : 0;
-      f.spr.setScale(sw * SC);
+      const sz = sw * SC * (f.char.size || 1);
+      const lift = f.spin ? -(AY - 0.55 * FH) * sz : 0, jit = f.buzz > 0 ? (Math.random() * 10 - 5) : 0;
+      f.spr.setScale(sz);
       f.spr.x = Math.round(f.x + jit); f.spr.y = Math.round(FLOOR + f.y + lift);
       f.shadow.x = f.x; f.shadow.setScale(Math.max(0.4, 1 + f.y / 240));
     }
