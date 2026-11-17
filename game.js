@@ -368,7 +368,7 @@ const VAI_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
   block: 2, hit: 5, ko: 5, jump: 5, crouch: 5, jumpkick: 2,
   heartshot: 10, fx_eyeshot: 10, aliencall: 5, fx_storylight: 10, levitate: 10, fx_pyramid: 10, crossroads: 10, etcall: 5, fx_et: 5,
-  greenmen: 15, fx_fairy: 10, thirdeye: 10, fx_spiral: 10, tender: 10, fx_love: 5, tripleneck: 15, triplefury: 10, fx_tribeam: 10, fx_bigeye: 10,
+  greenmen: 15, fx_fairy: 10, thirdeye: 10, fx_spiral: 10, tender: 10, fx_love: 5, tripleneck: 15, triplefury: 10, fx_tribeam: 10, fx_tribeam0: 10, fx_tribeam1: 10, fx_tribeam2: 10, fx_bigeye: 10,
   sleep: 5, dance: 5, deaf: 5,
 };
 // o Vai místico: o triângulo com o olho (Olho da Providência) é a marca dele
@@ -423,14 +423,16 @@ const VAI_MOVES = {
   // PASSION AND WARFARE: as fadas da capa do disco saem voando e perseguem o oponente
   fairies: { anim: 'greenmen', dur: [3, 4, 4, 5, 5, 6, 5, 5, 5, 4], frames: [0, 2, 4, 6, 8, 10, 11, 12, 13, 14], swarm: 4, tex: 'fx_fairy', payload: FAIRY, count: 5, swarmScale: 0.42 },
   // THIRD EYE: o terceiro olho se abre na testa e solta uma espiral hipnótica que rola devagar
-  thirdeye: { dur: [5, 6, 6, 6, 8, 6, 6, 8, 8, 8], spawn: 8, tex: 'fx_spiral', payload: SPIRAL, speed: [2.8, 3.8], projScale: 0.85, projY: 230, projBox: [120, 120], projAdd: true },
+  thirdeye: { dur: [5, 6, 6, 6, 8, 6, 6, 8, 8, 8], spawn: 8, tex: 'fx_spiral', payload: SPIRAL, speed: [2.8, 3.8], projScale: 0.85, projY: 195, projBox: [120, 120], projAdd: true,
+    eyeBeam: 8, eyeAt: [5, -195] }, // feixe da testa até a espiral (desenhado no jogo); eyeAt: testa em px do quadro, a partir dos pés
   // TENDER SURRENDER (A + D): a balada solta corações e notas; quem leva cai de joelhos chorando
   tender: { dur: [6, 8, 10, 10, 10, 10, 10, 8, 10, 8], waves: [3, 5, 7], tex: 'fx_love', payload: TENDER },
   // SUPER FOR THE LOVE OF GOD (A + S com a barra cheia): tela escura, o triângulo gigante com o olho se acende atrás dele
   // e a guitarra de três braços solta três raios cheios de triângulos
   lovegod: { anim: 'triplefury', dur: [8, 12, 10, 12, 10, 14, 14, 14, 12, 10], active: [5, 6, 7], multi: 3, dmg: 24,
     hit: { x: 60, y: -260, w: 1100, h: 170 }, hitstun: 12, blockstun: 8, push: 1, chip: 4, gag: 'zap', beam: [5, 7], inv: 30, dark: true,
-    super: true, tex: 'fx_tribeam', beamPlain: true, beamY: 205, beamFx: 'fx_eyeshot', backdrop: 'fx_bigeye', notes: [2, 4],
+    super: true, beamTips: [[80, -173], [86, -156], [88, -133]], beamTexs: ['fx_tribeam0', 'fx_tribeam1', 'fx_tribeam2'], beamFx: 'fx_eyeshot', // pontas dos 3 braços (px do quadro, a partir dos pés)
+    backdrop: 'fx_bigeye', notes: [2, 4],
     finish: { at: 8, gag: 'burnt', word: ['TOASTED!', '#ff7a1a'] } },
 };
 const VAI_SPECIALS = [
@@ -520,17 +522,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=b333cde' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=b333cde' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=b333cde' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=b333cde' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=b333cde' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=b333cde' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=b333cde' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=0b15eaa' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=0b15eaa' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=0b15eaa' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=0b15eaa' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=0b15eaa' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=0b15eaa' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=0b15eaa' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=b333cde', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=0b15eaa', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -657,10 +659,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=b333cde`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=0b15eaa`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=b333cde`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=b333cde`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=0b15eaa`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=0b15eaa`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -669,7 +671,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=b333cde`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=0b15eaa`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1220,6 +1222,7 @@ class Fight extends Phaser.Scene {
     this.flash = this.add.rectangle(0, 0, W, H, 0xffffff, 0).setOrigin(0).setDepth(55); this.flashT = 0;
     this.sparks = this.add.graphics().setDepth(30);
     this.beamG = this.add.graphics().setDepth(24).setBlendMode(Phaser.BlendModes.ADD);
+    this.eyeG = this.add.graphics().setDepth(24).setBlendMode(Phaser.BlendModes.ADD); // feixe do terceiro olho do Vai
     this.superShade = this.add.rectangle(0, 0, W, H, 0x12001c, 1).setOrigin(0).setDepth(9).setAlpha(0); this.superDark = 0;
     this.debug = this.add.graphics().setDepth(40);
     this.showBoxes = false;
@@ -1363,7 +1366,7 @@ class Fight extends Phaser.Scene {
       this.updateFighter(f, op, inp);
     }
     // raio do super some se o golpe foi interrompido (ex.: o lutador apanhou no meio)
-    for (const f of this.p) if (f.beam && !(f.state === 'attack' && f.m && f.m.beam)) this.updateBeam(f, false);
+    for (const f of this.p) if ((f.beam || f.tri) && !(f.state === 'attack' && f.m && f.m.beam)) this.updateBeam(f, false);
     this.separate(a, b);
     for (const f of this.p) this.checkHit(f, this.p[1 - f.side]);
     this.updateProjectiles();
@@ -1584,7 +1587,35 @@ class Fight extends Phaser.Scene {
   }
 
   // raio do super: textura do golpe (m.tex), núcleo branco e arcos elétricos desenhados por cima
+  // SUPER DO VAI: um raio saindo da ponta de cada braço da guitarra, abrindo em leque
+  updateTriBeam(f, on) {
+    if (!on) { if (f.tri) { f.tri.forEach(s => s.destroy()); f.tri = null; } f.beamLen = 0; return; }
+    const m = f.m, k = scOf(f), dir = f.facing;
+    if (!f.tri) {
+      this.cameras.main.flash(90, 255, 255, 255); this.cameras.main.shake(220, 0.016);
+      this.say('ZZZAAAP!', f.x + dir * 260, FLOOR - 230, '#3cf0ff', 46);
+      f.tri = m.beamTexs.map(n => this.add.tileSprite(0, 0, 16, FH, this.tk(f.char, n), 0).setOrigin(dir > 0 ? 0 : 1, 0.5)
+        .setDepth(23).setFlipX(dir < 0).setBlendMode(Phaser.BlendModes.ADD));
+      f.beamLen = 0;
+    }
+    f.beamLen = Math.min(W + 300, f.beamLen + 120);
+    const nb = this.nf(this.tk(f.char, m.beamTexs[0]));
+    f.tri.forEach((s, i) => {
+      const [tx, ty] = m.beamTips[i], x = f.x + dir * tx * k, y = FLOOR + ty * k;
+      s.setPosition(x, y).setSize(f.beamLen, FH).setScale(1, (0.36 + Math.random() * 0.08) * k).setRotation(dir * (i - 1) * 0.07);
+      setFr(s, Math.floor(f.t / 2) % nb); s.tilePositionX += 38 * dir;
+      if (f.t % 3 === i) this.addFx('fx_spark', x, y, { rate: 2, scale: 0.35 * k }, f.char);
+    });
+    // triângulos com o olho correndo por cada raio
+    if (m.beamFx && f.t % 5 === 0) {
+      const i = (f.t / 5 | 0) % 3, [tx, ty] = m.beamTips[i];
+      this.addFx(m.beamFx, f.x + dir * tx * k, FLOOR + ty * k, { rate: 2, scale: 0.36 * k, vx: dir * 16, vy: (i - 1) * 16 * 0.07, flip: dir < 0 }, f.char);
+    }
+    if (f.t % 3 === 0) this.cameras.main.shake(60, 0.006);
+  }
+
   updateBeam(f, on) {
+    if ((on && f.m && f.m.beamTips) || f.tri) return this.updateTriBeam(f, on);
     const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const g = this.beamG;
     if (!on) {
@@ -2170,6 +2201,17 @@ class Fight extends Phaser.Scene {
     for (const bm of this.bombList) { bm.spr.y = bm.y; setFr(bm.spr, Math.floor(bm.t / 5) % bm.n); }
     for (const bo of this.booms) setFr(bo.spr, Math.min(bo.n - 1, Math.floor(bo.t / 5)));
 
+    // THIRD EYE: feixe dourado da testa até a espiral
+    const eg = this.eyeG; eg.clear();
+    for (const f of this.p) {
+      const m = f.m;
+      if (f.state !== 'attack' || !m || m.eyeBeam === undefined || f.moveStep() < m.eyeBeam) continue;
+      const k = scOf(f), dir = f.facing, x0 = f.x + dir * m.eyeAt[0] * k, y0 = FLOOR + m.eyeAt[1] * k;
+      const x1 = f.proj ? f.proj.x : x0 + dir * 90 * k, y1 = f.proj ? f.proj.y : y0, w = (16 + Math.random() * 6) * k;
+      eg.fillStyle(0xffd23c, 0.45); eg.fillTriangle(x0, y0, x1, y1 - w, x1, y1 + w);
+      eg.lineStyle(3, 0xffffff, 0.9); eg.lineBetween(x0, y0, x1, y1);
+      eg.fillStyle(0xffffff, 0.95); eg.fillCircle(x0, y0, 5 * k + Math.random() * 2);
+    }
     this.renderVictoryLights();
     for (const e of this.fx) setFr(e.spr, (e.from || 0) + Math.min(e.n - 1, Math.floor(e.t / e.rate)));
     this.drawWeather();

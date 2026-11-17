@@ -136,6 +136,18 @@
       "frames": 10,
       "file": "fx_tribeam.png"
     },
+    "fx_tribeam0": {
+      "frames": 10,
+      "file": "fx_tribeam0.png"
+    },
+    "fx_tribeam1": {
+      "frames": 10,
+      "file": "fx_tribeam1.png"
+    },
+    "fx_tribeam2": {
+      "frames": 10,
+      "file": "fx_tribeam2.png"
+    },
     "fx_storylight": {
       "frames": 10,
       "file": "fx_storylight.png"
