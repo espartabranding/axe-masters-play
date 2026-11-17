@@ -64,53 +64,41 @@
       "frames": 10,
       "file": "heartshot.png"
     },
-    "fx_heart": {
-      "frames": 10,
-      "file": "fx_heart.png"
-    },
     "aliencall": {
       "frames": 5,
       "file": "aliencall.png"
-    },
-    "ufo": {
-      "frames": 10,
-      "file": "ufo.png"
-    },
-    "wind": {
-      "frames": 10,
-      "file": "wind.png"
-    },
-    "fx_fan": {
-      "frames": 5,
-      "file": "fx_fan.png"
-    },
-    "juice": {
-      "frames": 10,
-      "file": "juice.png"
-    },
-    "horsecall": {
-      "frames": 5,
-      "file": "horsecall.png"
-    },
-    "horse": {
-      "frames": 5,
-      "file": "horse.png"
     },
     "greenmen": {
       "frames": 15,
       "file": "greenmen.png"
     },
-    "fx_alien": {
+    "fx_eyeshot": {
       "frames": 10,
-      "file": "fx_alien.png"
+      "file": "fx_eyeshot.png"
     },
-    "talking": {
+    "levitate": {
       "frames": 10,
-      "file": "talking.png"
+      "file": "levitate.png"
     },
-    "fx_blah": {
+    "crossroads": {
+      "frames": 10,
+      "file": "crossroads.png"
+    },
+    "etcall": {
       "frames": 5,
-      "file": "fx_blah.png"
+      "file": "etcall.png"
+    },
+    "fx_et": {
+      "frames": 5,
+      "file": "fx_et.png"
+    },
+    "thirdeye": {
+      "frames": 10,
+      "file": "thirdeye.png"
+    },
+    "fx_fairy": {
+      "frames": 10,
+      "file": "fx_fairy.png"
     },
     "tender": {
       "frames": 10,
@@ -147,6 +135,22 @@
     "fx_tribeam": {
       "frames": 10,
       "file": "fx_tribeam.png"
+    },
+    "fx_storylight": {
+      "frames": 10,
+      "file": "fx_storylight.png"
+    },
+    "fx_pyramid": {
+      "frames": 10,
+      "file": "fx_pyramid.png"
+    },
+    "fx_spiral": {
+      "frames": 10,
+      "file": "fx_spiral.png"
+    },
+    "fx_bigeye": {
+      "frames": 10,
+      "file": "fx_bigeye.png"
     }
   }
 }

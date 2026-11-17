@@ -367,32 +367,33 @@ function zakkCpu(me, op, scene) {
 const VAI_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
   block: 2, hit: 5, ko: 5, jump: 5, crouch: 5, jumpkick: 2,
-  heartshot: 10, fx_heart: 10, aliencall: 5, ufo: 10, wind: 10, fx_fan: 5, juice: 10, horsecall: 5, horse: 5,
-  greenmen: 15, fx_alien: 10, talking: 10, fx_blah: 5, tender: 10, fx_love: 5, tripleneck: 15, triplefury: 10, fx_tribeam: 10,
+  heartshot: 10, fx_eyeshot: 10, aliencall: 5, fx_storylight: 10, levitate: 10, fx_pyramid: 10, crossroads: 10, etcall: 5, fx_et: 5,
+  greenmen: 15, fx_fairy: 10, thirdeye: 10, fx_spiral: 10, tender: 10, fx_love: 5, tripleneck: 15, triplefury: 10, fx_tribeam: 10, fx_bigeye: 10,
   sleep: 5, dance: 5, deaf: 5,
 };
+// o Vai místico: o triângulo com o olho (Olho da Providência) é a marca dele
 const VAI_POWERS = {
-  heartshot:  { name: 'HEART SHOT',     tag: 'Ibanez Heart',      neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
-  aliencall:  { name: 'ALIEN LOVE SECRETS', tag: 'Beam me up',    neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
-  wind:       { name: 'WIND MACHINE',   tag: 'Hair Power',        neon: '#9fd8ff', edge: 0x9fd8ff, deep: 0x06182a },
-  juice:      { name: 'JUICE',          tag: 'Sugar Rush',        neon: '#ffb347', edge: 0xffb347, deep: 0x2a1408 },
-  horsecall:  { name: 'BAD HORSIE',     tag: 'Neigh!',            neon: '#ff5a5a', edge: 0xff5a5a, deep: 0x2a0606 },
-  tripleneck: { name: 'TRIPLE NECK',    tag: 'Three of a kind',   neon: '#f3ecd0', edge: 0xf3ecd0, deep: 0x1a1a14 },
-  greenmen:   { name: 'LITTLE GREEN MEN', tag: 'Take me to your leader', neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
-  talking:    { name: 'TALKING GUITAR', tag: 'Blah blah blah',    neon: '#ffe14a', edge: 0xffe14a, deep: 0x1a1600 },
-  tender:     { name: 'TENDER SURRENDER', tag: 'The Ballad',      neon: '#ff8cf5', edge: 0xff8cf5, deep: 0x2a0a26 },
-  triplefury: { name: 'TRIPLE FURY',    tag: 'Super!',            neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
+  eyeshot:    { name: 'EYE OF PROVIDENCE',  tag: 'All-seeing',        neon: '#ffd23c', edge: 0xffd23c, deep: 0x2a1a04 },
+  storylight: { name: 'THE STORY OF LIGHT', tag: 'Divine Light',      neon: '#fff1c4', edge: 0xffe9a8, deep: 0x2a2208 },
+  levitate:   { name: 'LEVITATION',         tag: 'Ommmm...',          neon: '#ffd23c', edge: 0xffd23c, deep: 0x2a1a04 },
+  crossroads: { name: 'CROSSROADS',         tag: "Devil's Guitarist", neon: '#ff3d3d', edge: 0xff3d3d, deep: 0x2a0606 },
+  etcall:     { name: 'ALIEN LOVE SECRETS', tag: 'Hop on!',           neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
+  tripleneck: { name: 'TRIPLE NECK',        tag: 'Three of a kind',   neon: '#f3ecd0', edge: 0xf3ecd0, deep: 0x1a1a14 },
+  fairies:    { name: 'PASSION AND WARFARE', tag: 'The Fairies',      neon: '#9fefff', edge: 0x9fefff, deep: 0x06182a },
+  thirdeye:   { name: 'THIRD EYE',          tag: 'Hypnosis',          neon: '#c77dff', edge: 0xc77dff, deep: 0x1d0838 },
+  tender:     { name: 'TENDER SURRENDER',   tag: 'The Ballad',        neon: '#ff8cf5', edge: 0xff8cf5, deep: 0x2a0a26 },
+  lovegod:    { name: 'FOR THE LOVE OF GOD', tag: 'Super!',           neon: '#ffd23c', edge: 0xffd23c, deep: 0x2a1a04 },
 };
-// coração verde neon: projétil reto
-const HEART = { dmg: 75, hitstun: 18, blockstun: 12, push: 8, chip: 9, gag: 'dizzy', word: ['LOVE HURTS!', '#7dff6a'] };
-// o disco voador desce, puxa no raio e solta de cara no chão: não dá para defender agachado
-const UFO = { dmg: 100, hitstun: 28, blockstun: 16, push: 4, chip: 10, shake: 0.012, overhead: true, gag: 'flat', word: ['ABDUCTED!', '#7dff6a'] };
-// o cavalo preto cruza a tela galopando: só se defende agachado
-const HORSE = { dmg: 100, hitstun: 28, blockstun: 16, push: 11, chip: 10, shake: 0.012, low: true, gag: 'dizzy', word: ['NEIGH!', '#ff5a5a'] };
-// homenzinhos verdes correndo no chão atrás do oponente
-const ALIEN = { dmg: 16, hitstun: 12, blockstun: 6, push: 3, chip: 3, low: true, gag: 'chomp' };
-// balão gigante de BLAH BLAH BLAH: lento e grande; quem leva fica tonto de tanto falatório
-const BLAH = { dmg: 60, hitstun: 20, blockstun: 12, push: 5, chip: 6, gag: 'dizzy', word: ['YADDA YADDA!', '#ffe14a'] };
+// triângulo com o olho: projétil reto
+const EYE = { dmg: 75, hitstun: 18, blockstun: 12, push: 8, chip: 9, gag: 'dizzy', word: ['ALL-SEEING!', '#ffd23c'] };
+// coluna de luz divina que desce do olho no céu: não dá para defender agachado
+const LIGHT = { dmg: 100, hitstun: 28, blockstun: 16, push: 4, chip: 10, shake: 0.012, overhead: true, gag: 'burnt', word: ['ENLIGHTENED!', '#fff1c4'] };
+// o ETzinho da arte do Vai cruza o palco na nave, rente ao chão: só se defende agachado
+const ET = { dmg: 100, hitstun: 28, blockstun: 16, push: 10, chip: 10, shake: 0.012, low: true, gag: 'flat', word: ['BEEP BEEP!', '#7dff6a'] };
+// fadas da capa do Passion and Warfare: perseguem e beliscam
+const FAIRY = { dmg: 15, hitstun: 12, blockstun: 6, push: 3, chip: 3, gag: 'swell' };
+// espiral do terceiro olho: lenta e grande; quem leva fica hipnotizado (tonto)
+const SPIRAL = { dmg: 60, hitstun: 20, blockstun: 12, push: 5, chip: 6, gag: 'dizzy', word: ['HYPNOTIZED!', '#c77dff'] };
 // a balada: quem leva cai de joelhos chorando de emoção, sem defesa
 const TENDER = { dmg: 20, hitstun: 10, blockstun: 8, push: 1, chip: 2, gag: 'cry', word: ['SO BEAUTIFUL!', '#ff8cf5'] };
 const VAI_MOVES = {
@@ -404,63 +405,65 @@ const VAI_MOVES = {
   lk: { dur: [1, 2, 2, 2, 3, 3, 2, 2, 1, 1], active: [3, 4, 5], dmg: 33, hit: { x: 30, y: -215, w: 150, h: 70 }, hitstun: 14, blockstun: 8, push: 6 },
   // Hair Spin Kick: chute girando, o cabelo voando
   hk: { dur: [2, 3, 3, 3, 3, 4, 4, 4, 4, 3], active: [4, 5, 6], dmg: 90, hit: { x: 20, y: -240, w: 160, h: 110 }, hitstun: 22, blockstun: 14, push: 10, shake: 0.006 },
-  // HEART SHOT: aponta a guitarra e dispara um coração verde neon
-  heartshot: { dur: [4, 4, 4, 8, 6, 5, 4, 4, 3, 3], spawn: 3, tex: 'fx_heart', payload: HEART, speed: [5.5, 8.5], projScale: 0.75, projY: 175, projBox: [80, 70], ghost: [0, 20] },
-  // ALIEN LOVE SECRETS: olha para o céu e um disco voador desce em cima do oponente
-  aliencall: { dur: [6, 12, 14, 26, 14], summon: 2, tex: 'ufo', payload: UFO, summonFrames: [0, 1, 4, 6, 9], summonSay: ['BEAM ME UP!', '#7dff6a'] },
-  // WIND MACHINE: um ventilador gigante sopra de baixo; quem estiver no ar voa longe (invencível no começo)
-  wind: { dur: [4, 3, 3, 3, 4, 6, 6, 5, 4, 3], active: [3, 4, 5, 6], dmg: 115, hit: { x: -40, y: -380, w: 220, h: 380 }, hitstun: 26, blockstun: 16, push: 12, shake: 0.01, inv: 12,
-    prop: { at: 1, tex: 'fx_fan', dx: -70, rate: 8, scale: 0.75 }, gag: 'dizzy', word: ['WHOOOOSH!', '#9fd8ff'], ghost: [0, 24] },
-  // JUICE: um gole de suco e dispara deslizando de joelhos com a guitarra para frente
-  juice: { dur: [6, 8, 6, 5, 3, 4, 4, 4, 6, 6], active: [4, 5, 6, 7], dmg: 105, hit: { x: 0, y: -200, w: 230, h: 160 }, hitstun: 24, blockstun: 14, push: 12, shake: 0.008, dash: [4, 7], dust: 4,
-    rev: { at: 2, fx: 'fx_smoke', word: ['SLUUURP!', '#ffb347'] }, gag: 'dizzy', word: ['JUICED!', '#ffb347'], ghost: [16, 40] },
-  // BAD HORSIE: o Vai relincha na guitarra e um cavalo preto cruza a tela galopando
-  horsecall: { dur: [6, 10, 12, 20, 10], slider: 2, tex: 'horse', payload: HORSE, sliderCycle: true, cry: ['NEIIIGH!', '#ff5a5a'] },
+  // EYE OF PROVIDENCE: aponta a guitarra e dispara o triângulo dourado com o olho, girando
+  eyeshot: { anim: 'heartshot', dur: [4, 4, 4, 8, 6, 5, 4, 4, 3, 3], spawn: 3, tex: 'fx_eyeshot', payload: EYE, speed: [5.5, 8.5], projScale: 0.7, projY: 175, projBox: [80, 70], ghost: [0, 20] },
+  // THE STORY OF LIGHT: olha para o céu; um olho gigante no triângulo se abre sobre o oponente e despeja uma coluna de luz
+  storylight: { anim: 'aliencall', dur: [6, 12, 14, 30, 14], summon: 2, tex: 'fx_storylight', payload: LIGHT, summonFrames: [0, 1, 5, 6, 9], summonSay: ['LOOK UP...', '#fff1c4'], summonAdd: true, summonFall: 260 },
+  // LEVITATION: flutua meditando e uma pirâmide de luz sobe em volta dele; quem estiver no ar voa longe (invencível no começo)
+  levitate: { dur: [4, 3, 3, 3, 4, 6, 6, 5, 4, 3], active: [3, 4, 5, 6], dmg: 115, hit: { x: -70, y: -380, w: 240, h: 380 }, hitstun: 26, blockstun: 16, push: 12, shake: 0.01, inv: 14,
+    prop: { at: 1, tex: 'fx_pyramid', dx: 0, rate: 4, scale: 1.05, add: true }, gag: 'dizzy', word: ['OMMMMM!', '#ffd23c'], ghost: [0, 24] },
+  // CROSSROADS: o guitarrista do diabo do filme; avança numa aura vermelha metralhando shred (vários acertos)
+  crossroads: { dur: [6, 6, 4, 4, 4, 4, 4, 4, 5, 6], active: [3, 4, 5, 6, 7, 8], multi: 5, dmg: 16, hit: { x: 10, y: -240, w: 170, h: 130 }, hitstun: 10, blockstun: 6, push: 2,
+    step: [2, 8, 4.5], sparks: [3, 8], sparksFx: 'fx_notes', gag: 'buzz', word: ['DUEL!', '#ff3d3d'], ghost: [0, 40] },
+  // ALIEN LOVE SECRETS: o Vai chama e o ETzinho (da arte dele) cruza o palco numa nave voando baixo
+  etcall: { dur: [6, 10, 12, 20, 10], slider: 2, tex: 'fx_et', payload: ET, sliderCycle: true, sliderOwnScale: true, cry: ['WHEEEE!', '#7dff6a'] },
   // TRIPLE NECK: troca pela Ibanez branca de três braços e acerta 3 vezes, uma com cada braço
   tripleneck: { dur: [3, 5, 4, 4, 5, 5, 5, 6, 5, 4], frames: [2, 3, 5, 6, 7, 8, 9, 10, 12, 14], active: [3, 4, 5, 6], multi: 6, dmg: 40, hit: { x: 10, y: -280, w: 190, h: 220 }, hitstun: 14, blockstun: 8, push: 4, shake: 0.006,
     smoke: 0, step: [3, 6, 3], word: ['TWANG TWANG TWANG!', '#f3ecd0'], ghost: [0, 24] },
-  // LITTLE GREEN MEN: um riff esquisito e uma turma de homenzinhos verdes sai correndo atrás do oponente
-  greenmen: { dur: [3, 4, 4, 5, 5, 6, 5, 5, 5, 4], frames: [0, 2, 4, 6, 8, 10, 11, 12, 13, 14], swarm: 4, tex: 'fx_alien', payload: ALIEN, count: 4, ground: true, swarmScale: 0.45, groundY: 44 },
-  // TALKING GUITAR: a guitarra "fala" e um balão gigante de BLAH BLAH BLAH rola devagar
-  talking: { dur: [4, 6, 6, 8, 8, 6, 8, 8, 6, 4], spawn: 4, tex: 'fx_blah', payload: BLAH, speed: [2.6, 3.6], projScale: 1.15, projY: 205, projBox: [150, 100], projText: 'BLAH BLAH\nBLAH!' },
+  // PASSION AND WARFARE: as fadas da capa do disco saem voando e perseguem o oponente
+  fairies: { anim: 'greenmen', dur: [3, 4, 4, 5, 5, 6, 5, 5, 5, 4], frames: [0, 2, 4, 6, 8, 10, 11, 12, 13, 14], swarm: 4, tex: 'fx_fairy', payload: FAIRY, count: 5, swarmScale: 0.42 },
+  // THIRD EYE: o terceiro olho se abre na testa e solta uma espiral hipnótica que rola devagar
+  thirdeye: { dur: [5, 6, 6, 6, 8, 6, 6, 8, 8, 8], spawn: 8, tex: 'fx_spiral', payload: SPIRAL, speed: [2.8, 3.8], projScale: 0.85, projY: 230, projBox: [120, 120], projAdd: true },
   // TENDER SURRENDER (A + D): a balada solta corações e notas; quem leva cai de joelhos chorando
   tender: { dur: [6, 8, 10, 10, 10, 10, 10, 8, 10, 8], waves: [3, 5, 7], tex: 'fx_love', payload: TENDER },
-  // SUPER TRIPLE FURY (A + S com a barra cheia): tela escura, a guitarra de três braços e três raios (verde, rosa e azul)
-  triplefury: { dur: [8, 12, 10, 12, 10, 14, 14, 14, 12, 10], active: [5, 6, 7], multi: 3, dmg: 24,
+  // SUPER FOR THE LOVE OF GOD (A + S com a barra cheia): tela escura, o triângulo gigante com o olho se acende atrás dele
+  // e a guitarra de três braços solta três raios cheios de triângulos
+  lovegod: { anim: 'triplefury', dur: [8, 12, 10, 12, 10, 14, 14, 14, 12, 10], active: [5, 6, 7], multi: 3, dmg: 24,
     hit: { x: 60, y: -260, w: 1100, h: 170 }, hitstun: 12, blockstun: 8, push: 1, chip: 4, gag: 'zap', beam: [5, 7], inv: 30, dark: true,
-    super: true, tex: 'fx_tribeam', beamPlain: true, beamY: 205, notes: [2, 4], finish: { at: 8, gag: 'burnt', word: ['TOASTED!', '#ff7a1a'] } },
+    super: true, tex: 'fx_tribeam', beamPlain: true, beamY: 205, beamFx: 'fx_eyeshot', backdrop: 'fx_bigeye', notes: [2, 4],
+    finish: { at: 8, gag: 'burnt', word: ['TOASTED!', '#ff7a1a'] } },
 };
 const VAI_SPECIALS = [
-  { move: 'triplefury', chord: ['lp', 'hp'], super: true },
+  { move: 'lovegod',    chord: ['lp', 'hp'], super: true },
   { move: 'tender',     chord: ['lp', 'lk'], lock: 'hypno' },
-  { move: 'juice',      chord: ['hp', 'lk'] },
-  { move: 'horsecall',  chord: ['hp', 'hk'], lock: 'dlr' },
-  { move: 'wind',       btn: 'punch', motion: [2, 5, 2] },
-  { move: 'greenmen',   btn: 'kick',  motion: [2, 5, 2], lock: 'swarm' },
-  { move: 'horsecall',  btn: 'kick',  motion: [6, 2], lock: 'dlr' },
-  { move: 'juice',      btn: 'kick',  motion: [2, 6] },
+  { move: 'crossroads', chord: ['hp', 'lk'] },
+  { move: 'etcall',     chord: ['hp', 'hk'], lock: 'dlr' },
+  { move: 'levitate',   btn: 'punch', motion: [2, 5, 2] },
+  { move: 'fairies',    btn: 'kick',  motion: [2, 5, 2], lock: 'swarm' },
+  { move: 'etcall',     btn: 'kick',  motion: [6, 2], lock: 'dlr' },
+  { move: 'crossroads', btn: 'kick',  motion: [2, 6] },
   { move: 'tripleneck', btn: 'kick',  motion: [2, 4] },
-  { move: 'heartshot',  btn: 'punch', motion: [2, 6], lock: 'proj' },
-  { move: 'aliencall',  btn: 'punch', motion: [2, 4], lock: 'dlr' },
-  { move: 'talking',    btn: 'punch', motion: [6, 5, 6], lock: 'proj' },
+  { move: 'eyeshot',    btn: 'punch', motion: [2, 6], lock: 'proj' },
+  { move: 'storylight', btn: 'punch', motion: [2, 4], lock: 'dlr' },
+  { move: 'thirdeye',   btn: 'punch', motion: [6, 5, 6], lock: 'proj' },
 ];
 function vaiCpu(me, op, scene) {
   const d = Math.abs(op.x - me.x), r = Math.random(), inp = {};
   const projIncoming = scene.projs.some(pr => pr.owner !== me && Math.abs(pr.x - me.x) < 280);
   const threat = (op.state === 'attack' && d < 260) || projIncoming;
-  if (me.meter >= 100 && d < 700 && r < 0.04) { inp.special = 'triplefury'; inp.hp = true; me.cpuCD = 140; }
-  else if (op.airborne && d < 240 && r < 0.25) { inp.special = 'wind'; inp.hp = true; me.cpuCD = 40; }
-  else if (d > 200 && d < 420 && r > 0.93) { inp.special = 'juice'; inp.hk = true; me.cpuCD = 45; }
+  if (me.meter >= 100 && d < 700 && r < 0.04) { inp.special = 'lovegod'; inp.hp = true; me.cpuCD = 140; }
+  else if (op.airborne && d < 240 && r < 0.25) { inp.special = 'levitate'; inp.hp = true; me.cpuCD = 40; }
+  else if (d > 200 && d < 420 && r > 0.93) { inp.special = 'crossroads'; inp.hk = true; me.cpuCD = 45; }
   else if (d < 200 && r > 0.9) { inp.special = 'tripleneck'; inp.hk = true; me.cpuCD = 45; }
-  else if (d > 300 && !me.swarm && r < 0.05) { inp.special = 'greenmen'; inp.hk = true; me.cpuCD = 45; }
-  else if (d > 220 && !me.proj && r > 0.95) { inp.special = 'talking'; inp.hp = true; me.cpuCD = 60; }
+  else if (d > 300 && !me.swarm && r < 0.05) { inp.special = 'fairies'; inp.hk = true; me.cpuCD = 45; }
+  else if (d > 220 && !me.proj && r > 0.95) { inp.special = 'thirdeye'; inp.hp = true; me.cpuCD = 60; }
   else if (d > 200 && !me.hypno && r > 0.09 && r < 0.11) { inp.special = 'tender'; inp.lp = true; me.cpuCD = 100; }
-  else if (d > 160 && !me.dlr && r > 0.06 && r < 0.09) { inp.special = 'horsecall'; inp.lk = true; me.cpuCD = 70; }
+  else if (d > 160 && !me.dlr && r > 0.06 && r < 0.09) { inp.special = 'etcall'; inp.lk = true; me.cpuCD = 70; }
   else if (projIncoming && r < 0.25) { inp.up = true; inp.fwd = true; me.cpuCD = 10; }
   else if (threat && r < 0.6) { inp.back = true; me.cpuCD = 16; }
   else if (d > 330) {
-    if (!me.proj && r < 0.25) { inp.special = 'heartshot'; inp[r < 0.12 ? 'lp' : 'hp'] = true; me.cpuCD = 30; }
-    else if (!me.dlr && r < 0.33) { inp.special = 'aliencall'; inp.hp = true; me.cpuCD = 60; }
+    if (!me.proj && r < 0.25) { inp.special = 'eyeshot'; inp[r < 0.12 ? 'lp' : 'hp'] = true; me.cpuCD = 30; }
+    else if (!me.dlr && r < 0.33) { inp.special = 'storylight'; inp.hp = true; me.cpuCD = 60; }
     else { inp.fwd = true; me.cpuCD = 12; }
   } else if (d > 175) {
     if (r < 0.12) { inp.up = true; inp.fwd = true; me.cpuCD = 14; }
@@ -502,7 +505,7 @@ CHARS.zakk = {
 CHARS.vai = {
   name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9,
   anims: VAI_ANIMS, moves: VAI_MOVES, powers: VAI_POWERS, specials: VAI_SPECIALS, cpu: vaiCpu,
-  jumpkick: JUMPKICK, bigTitle: 'TRIPLE FURY', bigSize: 120, blurb: 'Ibanez JEM',
+  jumpkick: JUMPKICK, bigTitle: 'FOR THE LOVE OF GOD', bigSize: 78, blurb: 'Ibanez JEM',
   stage: 'stadium', // palco da casa ainda não existe
   size: 1.12, // o Vai foi desenhado com a cabeça pequena para o corpo: com 1.12 o rosto fica do tamanho do do Eddie
 };
@@ -517,17 +520,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=4a44c19' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=4a44c19' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=4a44c19' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=4a44c19' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=4a44c19' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=4a44c19' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=4a44c19' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=b333cde' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=b333cde' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=b333cde' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=b333cde' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=b333cde' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=b333cde' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=b333cde' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=4a44c19', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=b333cde', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -654,10 +657,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=4a44c19`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=b333cde`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=4a44c19`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=4a44c19`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=b333cde`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=b333cde`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -666,7 +669,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=4a44c19`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=b333cde`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1454,7 +1457,7 @@ class Fight extends Phaser.Scene {
       if (m.wave !== undefined && st === m.wave && !f.evWave) { f.evWave = true; this.addFx('fx_wave', f.x + f.facing * px(135), FLOOR - px(195), { vx: f.facing * 3, flip: f.facing < 0, rate: 3, scale: 0.8 * SC }, ch); }
       if (m.dust !== undefined && st === m.dust && !f.evDust) { f.evDust = true; this.addFx('fx_dust', f.x, FLOOR, { rate: 4, oy: 0.75 }, ch); }
       if (m.blast !== undefined && st >= m.blast && !f.evRise) { f.evRise = true; this.boom(f.x, FLOOR + 10, 1.3, ch); this.addFx('fx_dust', f.x - 70, FLOOR, { rate: 4, oy: 0.75 }, ch); this.addFx('fx_dust', f.x + 70, FLOOR, { rate: 4, oy: 0.75, flip: true }, ch); }
-      if (m.prop && st === m.prop.at && !f.evProp) { f.evProp = true; this.addFx(m.prop.tex, f.x + f.facing * px(m.prop.dx || 0), FLOOR + px(6), { rate: m.prop.rate || 6, scale: (m.prop.scale || 1) * SC, oy: AY / FH, flip: f.facing < 0 }, ch); }
+      if (m.prop && st === m.prop.at && !f.evProp) { f.evProp = true; this.addFx(m.prop.tex, f.x + f.facing * px(m.prop.dx || 0), FLOOR + px(6), { rate: m.prop.rate || 6, scale: (m.prop.scale || 1) * SC, oy: AY / FH, flip: f.facing < 0, add: m.prop.add }, ch); }
       if (m.smoke !== undefined && st === m.smoke && !f.evSmoke) { f.evSmoke = true; this.addFx('fx_smoke', f.x - f.facing * px(40), FLOOR - px(120), { rate: 4, scale: SC }, ch); }
       if (m.step) { if (st >= m.step[0] && st <= m.step[1]) f.vx = f.facing * m.step[2]; else f.vx = 0; }
       if (m.sparks && st >= m.sparks[0] && st <= m.sparks[1] && f.t % 3 === 0) this.addFx(m.sparksFx || 'fx_drill', f.x + f.facing * px(m.sparksFx ? 110 : 70), FLOOR - px(m.sparksFx ? 185 : 150), { rate: 2, scale: 0.8 * SC, flip: f.facing < 0, vx: m.sparksFx ? f.facing * 3 : 0 }, ch);
@@ -1462,6 +1465,7 @@ class Fight extends Phaser.Scene {
       if (m.slide !== undefined) f.vx = st === m.slide ? f.facing * 5 : (st > m.slide ? 0 : f.vx);
       if (m.beam) this.updateBeam(f, st >= m.beam[0] && st <= m.beam[1]);
       if (m.dark) this.superDark = Math.min(0.78, (this.superDark || 0) + 0.06);
+      if (m.backdrop && f.t === 2) this.addFx(m.backdrop, f.x - f.facing * px(10), FLOOR - px(200), { rate: Math.ceil(m.dur.reduce((s, v) => s + v, 0) / 10), scale: 1.25 * SC, add: true, depth: 9.5 }, ch);
       if (m.notes && st >= m.notes[0] && st <= m.notes[1] && f.t % 4 === 0) this.addFx('fx_notes', f.x + f.facing * px(90), FLOOR - px(170), { vx: f.facing * 4, vy: -1 - Math.random() * 2, rate: 4, scale: 0.5 * SC }, ch);
       if (m.finish && st === m.finish.at && !f.evFinish) {
         f.evFinish = true;
@@ -1620,6 +1624,8 @@ class Fight extends Phaser.Scene {
     g.fillStyle(0xffffff, 0.9); g.fillCircle(x0, y0, px(16) + Math.random() * px(8));
     g.fillStyle(0x3cf0ff, 0.45); g.fillCircle(x0, y0, px(30) + Math.random() * px(10));
     if (f.t % 4 === 0) this.addFx('fx_zap', x0, y0, { rate: 2, scale: 0.5 * SC }, f.char);
+    // triângulos com o olho correndo pelos três raios
+    if (f.m && f.m.beamFx && f.t % 5 === 0) this.addFx(f.m.beamFx, x0 + dir * px(20), y0 + [-1, 0, 1][(f.t / 5 | 0) % 3] * px(48), { rate: 2, scale: 0.42 * SC, vx: dir * 16, flip: dir < 0 }, f.char);
     if (f.t % 3 === 0) this.addFx('fx_spark', x0 + dir * Math.random() * len, y0 + (Math.random() * 2 - 1) * px(20), { rate: 2, scale: 0.45 * SC }, f.char);
     if (f.t % 3 === 0) this.cameras.main.shake(60, 0.006);
   }
@@ -1686,6 +1692,7 @@ class Fight extends Phaser.Scene {
     const m = f.m, x = f.x + f.facing * px(125), y = FLOOR - px(m.projY || 145);
     const spr = this.add.sprite(x, y, this.tk(f.char, m.tex || 'projectile'), 0).setDepth(20).setFlipX(f.facing < 0).setScale((m.projScale || 1.35) * SC);
     if (f.tint !== 0xffffff) spr.setTint(f.tint);
+    if (m.projAdd) spr.setBlendMode(Phaser.BlendModes.ADD);
     const sp = m.speed || [5, 8];
     const pr = { owner: f, x, y, dir: f.facing, v: f.projFast ? sp[1] : sp[0], spr, t: 0, payload: m.payload || PROJ, boomerang: !!m.boomerang, box: (m.projBox || [72, 48]).map(v => v * SC / 0.8) };
     if (pr.boomerang) { pr.v0 = pr.v; pr.acc = -pr.v / 150; } // vai longe, freia e volta para a mão
@@ -1782,10 +1789,12 @@ class Fight extends Phaser.Scene {
   spawnDLR(f, op) {
     const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const m = f.m, x = Phaser.Math.Clamp(op.x, 90, W - 90);
-    const spr = this.add.sprite(x, FLOOR - 560, this.tk(f.char, m.tex || 'dlr'), 0).setDepth(22).setFlipX(f.facing < 0).setScale(SC)
+    const fall = m.summonFall || 560;
+    const spr = this.add.sprite(x, FLOOR - fall, this.tk(f.char, m.tex || 'dlr'), 0).setDepth(22).setFlipX(f.facing < 0).setScale(SC)
       .setOrigin((f.facing > 0 ? AX : FW - AX) / FW, AY / FH);
+    if (m.summonAdd) spr.setBlendMode(Phaser.BlendModes.ADD);
     const shadow = this.add.ellipse(x, FLOOR + 2, px(150), px(18), 0x000000, 0.4).setDepth(6).setScale(0.2);
-    this.dlrs.push({ owner: f, x, dy: -560, vy: 3, phase: 'fall', t: 0, spr, shadow, payload: m.payload || DLR, fr: m.summonFrames || [0, 1, 2, 3, 4] });
+    this.dlrs.push({ owner: f, x, dy: -fall, vy: 3, phase: 'fall', t: 0, spr, shadow, payload: m.payload || DLR, fr: m.summonFrames || [0, 1, 2, 3, 4] });
     f.dlr = true;
     const cue = m.summonSay || ['INCOMING...', '#ff4fd8'];
     this.say(cue[0], x, 140, cue[1], 26);
@@ -1824,10 +1833,12 @@ class Fight extends Phaser.Scene {
   spawnSlider(f) {
     const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const m = f.m, dir = f.facing, x = dir > 0 ? -60 : W + 60;
-    const spr = this.add.sprite(x, FLOOR, this.tk(f.char, m.tex || 'axl'), 0).setDepth(22).setFlipX(dir < 0).setScale(SC)
+    const spr = this.add.sprite(x, FLOOR, this.tk(f.char, m.tex || 'axl'), 0).setDepth(22).setFlipX(dir < 0).setScale(m.sliderOwnScale ? scOf(f) : SC) // o ETzinho do Vai acompanha o tamanho dele; o Axl e o trem não mudam
       .setOrigin((dir > 0 ? AX : FW - AX) / FW, AY / FH);
+    if (m.sliderTint) spr.setTint(m.sliderTint);
+    if (m.sliderAdd) spr.setBlendMode(Phaser.BlendModes.ADD);
     const shadow = this.add.ellipse(x, FLOOR + 2, px(150), px(16), 0x000000, 0.35).setDepth(6);
-    this.sliders.push({ owner: f, x, dir, t: 0, phase: 'run', spr, shadow, hit: false, payload: m.payload || AXL, cycle: !!m.sliderCycle, cry: m.cry || ['YEAAAH!', '#ff3d6e'], n: this.nf(this.tk(f.char, m.tex || 'axl')) });
+    this.sliders.push({ owner: f, x, dir, t: 0, phase: 'run', spr, shadow, hit: false, payload: m.payload || AXL, cycle: !!m.sliderCycle, cry: m.cry || ['YEAAAH!', '#ff3d6e'], n: this.nf(this.tk(f.char, m.tex || 'axl')), frames: m.sliderFrames });
     f.dlr = true;
   }
 
@@ -1835,10 +1846,11 @@ class Fight extends Phaser.Scene {
     for (const d of this.sliders) {
       d.t++;
       const def = this.p[1 - d.owner.side];
-      if (d.phase === 'run') { d.x += d.dir * 9; setFr(d.spr, d.cycle ? Math.floor(d.t / 4) % d.n : 0); if (d.t > 14) { d.phase = 'slide'; d.t = 0; this.say(d.cry[0], d.x + d.dir * 80, FLOOR - px(260), d.cry[1], 34); } }
+      const cyc = () => d.frames ? d.frames[Math.floor(d.t / 4) % d.frames.length] : Math.floor(d.t / 4) % d.n;
+      if (d.phase === 'run') { d.x += d.dir * 9; setFr(d.spr, d.cycle ? cyc() : 0); if (d.t > 14) { d.phase = 'slide'; d.t = 0; this.say(d.cry[0], d.x + d.dir * 80, FLOOR - px(260), d.cry[1], 34); } }
       else if (d.phase === 'slide') {
         d.x += d.dir * Math.max(5, 16 - d.t * 0.12);
-        setFr(d.spr, d.cycle ? Math.floor(d.t / 4) % d.n : d.t < 6 ? 1 : 2 + (Math.floor(d.t / 5) % 2));
+        setFr(d.spr, d.cycle ? cyc() : d.t < 6 ? 1 : 2 + (Math.floor(d.t / 5) % 2));
         if (d.t % 4 === 0) this.addFx('fx_dust', d.x - d.dir * px(60), FLOOR, { rate: 3, oy: 0.75, scale: 0.6, flip: d.dir < 0 }, d.owner.char);
         const box = d.dir > 0 ? { x: d.x - px(40), y: FLOOR - px(110), w: px(190), h: px(110) } : { x: d.x - px(150), y: FLOOR - px(110), w: px(190), h: px(110) };
         if (!d.hit && def.state !== 'ko' && !(def.inv > 0) && overlap(box, def.hurtbox())) { d.hit = true; this.applyHit(d.owner, def, d.payload, d.x + d.dir * px(100), FLOOR - px(60), true); }
@@ -1987,8 +1999,9 @@ class Fight extends Phaser.Scene {
   // efeito animado que some sozinho; usa a folha do lutador (ch) se ele tiver uma, senão a comum
   addFx(name, x, y, o = {}, ch) {
     const key = this.tk(ch, name);
-    const spr = this.add.sprite(x, y, key, 0).setDepth(35).setScale(o.scale || 1).setFlipX(!!o.flip);
+    const spr = this.add.sprite(x, y, key, 0).setDepth(o.depth || 35).setScale(o.scale || 1).setFlipX(!!o.flip);
     if (o.oy !== undefined) spr.setOrigin(0.5, o.oy);
+    if (o.add) spr.setBlendMode(Phaser.BlendModes.ADD);
     this.fx.push({ spr, x, y, t: 0, n: this.nf(key), rate: o.rate || 3, vx: o.vx || 0, vy: o.vy || 0 });
   }
 
@@ -2147,6 +2160,9 @@ class Fight extends Phaser.Scene {
       const sz = sw * SC * (f.char.size || 1);
       const lift = f.spin ? -(AY - 0.55 * FH) * sz : 0, jit = f.buzz > 0 ? (Math.random() * 10 - 5) : 0;
       f.spr.setScale(sz);
+      if (f.state === 'attack' && f.m && f.m.aura) f.spr.setTint(f.t % 6 < 3 ? f.m.aura : 0xffffff);
+      else if (f.aura) f.spr.setTint(f.tint);
+      f.aura = f.state === 'attack' && f.m && f.m.aura;
       f.spr.x = Math.round(f.x + jit); f.spr.y = Math.round(FLOOR + f.y + lift);
       f.shadow.x = f.x; f.shadow.setScale(Math.max(0.4, 1 + f.y / 240));
     }
