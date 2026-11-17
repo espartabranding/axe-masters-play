@@ -367,8 +367,8 @@ function zakkCpu(me, op, scene) {
 const VAI_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
   block: 2, hit: 5, ko: 5, jump: 5, crouch: 5, jumpkick: 2,
-  heartshot: 10, fx_eyeshot: 10, aliencall: 5, fx_storylight: 10, levitate: 10, fx_pyramid: 10, crossroads: 10, etcall: 5, fx_et: 5,
-  greenmen: 15, fx_fairy: 10, thirdeye: 10, fx_spiral: 10, tender: 10, fx_love: 5, tripleneck: 15, triplefury: 10, fx_tribeam: 10, fx_tribeam0: 10, fx_tribeam1: 10, fx_tribeam2: 10, fx_bigeye: 10,
+  heartshot: 10, fx_eyeshot: 10, aliencall: 5, fx_storylight: 10, levitate: 10, fx_pyramid: 10, firegarden: 10, fx_firegarden: 10, etcall: 5, fx_et: 5,
+  greenmen: 15, fx_fairy: 10, thirdeye: 10, fx_spiral: 10, feverdream: 10, fx_dream: 10, tripleneck: 15, triplefury: 10, fx_tribeam: 10, fx_tribeam0: 10, fx_tribeam1: 10, fx_tribeam2: 10, fx_bigeye: 10,
   sleep: 5, dance: 5, deaf: 5,
 };
 // o Vai místico: o triângulo com o olho (Olho da Providência) é a marca dele
@@ -376,16 +376,18 @@ const VAI_POWERS = {
   eyeshot:    { name: 'EYE OF PROVIDENCE',  tag: 'All-seeing',        neon: '#ffd23c', edge: 0xffd23c, deep: 0x2a1a04 },
   storylight: { name: 'THE STORY OF LIGHT', tag: 'Divine Light',      neon: '#fff1c4', edge: 0xffe9a8, deep: 0x2a2208 },
   levitate:   { name: 'LEVITATION',         tag: 'Ommmm...',          neon: '#ffd23c', edge: 0xffd23c, deep: 0x2a1a04 },
-  crossroads: { name: 'CROSSROADS',         tag: "Devil's Guitarist", neon: '#ff3d3d', edge: 0xff3d3d, deep: 0x2a0606 },
+  firegarden: { name: 'FIRE GARDEN',        tag: 'Bloom and burn',    neon: '#ff7a1a', edge: 0xff7a1a, deep: 0x3a0d00 },
   etcall:     { name: 'ALIEN LOVE SECRETS', tag: 'Hop on!',           neon: '#7dff6a', edge: 0x7dff6a, deep: 0x0b2a12 },
   tripleneck: { name: 'TRIPLE NECK',        tag: 'Three of a kind',   neon: '#f3ecd0', edge: 0xf3ecd0, deep: 0x1a1a14 },
   fairies:    { name: 'PASSION AND WARFARE', tag: 'The Fairies',      neon: '#9fefff', edge: 0x9fefff, deep: 0x06182a },
   thirdeye:   { name: 'THIRD EYE',          tag: 'Hypnosis',          neon: '#c77dff', edge: 0xc77dff, deep: 0x1d0838 },
-  tender:     { name: 'TENDER SURRENDER',   tag: 'The Ballad',        neon: '#ff8cf5', edge: 0xff8cf5, deep: 0x2a0a26 },
+  feverdream: { name: 'FEVER DREAM',        tag: 'Heart Guitar',      neon: '#ff8cf5', edge: 0xff8cf5, deep: 0x2a0a26 },
   lovegod:    { name: 'FOR THE LOVE OF GOD', tag: 'Super!',           neon: '#ffd23c', edge: 0xffd23c, deep: 0x2a1a04 },
 };
 // triângulo com o olho: projétil reto
 const EYE = { dmg: 75, hitstun: 18, blockstun: 12, push: 8, chip: 9, gag: 'dizzy', word: ['ALL-SEEING!', '#ffd23c'] };
+// jardim que brota do chão sob o oponente e pega fogo
+const GARDEN = { dmg: 105, hitstun: 26, blockstun: 16, push: 6, chip: 10, shake: 0.01, gag: 'burnt', word: ['FIRE GARDEN!', '#ff7a1a'] };
 // coluna de luz divina que desce do olho no céu: não dá para defender agachado
 const LIGHT = { dmg: 100, hitstun: 28, blockstun: 16, push: 4, chip: 10, shake: 0.012, overhead: true, gag: 'burnt', word: ['ENLIGHTENED!', '#fff1c4'] };
 // o ETzinho da arte do Vai cruza o palco na nave, rente ao chão: só se defende agachado
@@ -394,8 +396,8 @@ const ET = { dmg: 100, hitstun: 28, blockstun: 16, push: 10, chip: 10, shake: 0.
 const FAIRY = { dmg: 15, hitstun: 12, blockstun: 6, push: 3, chip: 3, gag: 'swell' };
 // espiral do terceiro olho: lenta e grande; quem leva fica hipnotizado (tonto)
 const SPIRAL = { dmg: 60, hitstun: 20, blockstun: 12, push: 5, chip: 6, gag: 'dizzy', word: ['HYPNOTIZED!', '#c77dff'] };
-// a balada: quem leva cai de joelhos chorando de emoção, sem defesa
-const TENDER = { dmg: 20, hitstun: 10, blockstun: 8, push: 1, chip: 2, gag: 'cry', word: ['SO BEAUTIFUL!', '#ff8cf5'] };
+// ondas de sonho da guitarra coração: quem leva cai no sono e fica sem defesa
+const DREAM = { dmg: 20, hitstun: 10, blockstun: 8, push: 1, chip: 2, gag: 'sleep', word: ['SWEET DREAMS...', '#ff8cf5'] };
 const VAI_MOVES = {
   // Whammy Jab: palhetada rápida puxando a alavanca
   lp: { dur: [1, 1, 1, 2, 2, 2, 1, 1, 2, 1], active: [3, 4, 5], dmg: 28, hit: { x: 40, y: -200, w: 115, h: 60 }, hitstun: 14, blockstun: 8, push: 5, wave: 4 },
@@ -412,9 +414,8 @@ const VAI_MOVES = {
   // LEVITATION: flutua meditando e uma pirâmide de luz sobe em volta dele; quem estiver no ar voa longe (invencível no começo)
   levitate: { dur: [4, 3, 3, 3, 4, 6, 6, 5, 4, 3], active: [3, 4, 5, 6], dmg: 115, hit: { x: -70, y: -380, w: 240, h: 380 }, hitstun: 26, blockstun: 16, push: 12, shake: 0.01, inv: 14,
     prop: { at: 1, tex: 'fx_pyramid', dx: 0, rate: 4, scale: 1.05, add: true }, gag: 'dizzy', word: ['OMMMMM!', '#ffd23c'], ghost: [0, 24] },
-  // CROSSROADS: o guitarrista do diabo do filme; avança numa aura vermelha metralhando shred (vários acertos)
-  crossroads: { dur: [6, 6, 4, 4, 4, 4, 4, 4, 5, 6], active: [3, 4, 5, 6, 7, 8], multi: 5, dmg: 16, hit: { x: 10, y: -240, w: 170, h: 130 }, hitstun: 10, blockstun: 6, push: 2,
-    step: [2, 8, 4.5], sparks: [3, 8], sparksFx: 'fx_notes', gag: 'buzz', word: ['DUEL!', '#ff3d3d'], ghost: [0, 40] },
+  // FIRE GARDEN: senta no chão de pernas cruzadas e um jardim brota sob o oponente e pega fogo
+  firegarden: { dur: [5, 5, 6, 8, 8, 10, 10, 10, 10, 8], erupt: 3, tex: 'fx_firegarden', payload: GARDEN, eruptHit: 6, eruptRate: 7, eruptScale: 1.1 },
   // ALIEN LOVE SECRETS: o Vai chama e o ETzinho (da arte dele) cruza o palco numa nave voando baixo
   etcall: { dur: [6, 10, 12, 20, 10], slider: 2, tex: 'fx_et', payload: ET, sliderCycle: true, sliderOwnScale: true, cry: ['WHEEEE!', '#7dff6a'] },
   // TRIPLE NECK: troca pela Ibanez branca de três braços e acerta 3 vezes, uma com cada braço
@@ -425,8 +426,8 @@ const VAI_MOVES = {
   // THIRD EYE: o terceiro olho se abre na testa e solta uma espiral hipnótica que rola devagar
   thirdeye: { dur: [5, 6, 6, 6, 8, 6, 6, 8, 8, 8], spawn: 8, tex: 'fx_spiral', payload: SPIRAL, speed: [2.8, 3.8], projScale: 0.85, projY: 195, projBox: [120, 120], projAdd: true,
     eyeBeam: 8, eyeAt: [5, -195] }, // feixe da testa até a espiral (desenhado no jogo); eyeAt: testa em px do quadro, a partir dos pés
-  // TENDER SURRENDER (A + D): a balada solta corações e notas; quem leva cai de joelhos chorando
-  tender: { dur: [6, 8, 10, 10, 10, 10, 10, 8, 10, 8], waves: [3, 5, 7], tex: 'fx_love', payload: TENDER },
+  // FEVER DREAM (A + D): toca a guitarra coração vermelha de três braços e solta ondas de sonho; quem leva dorme
+  feverdream: { dur: [6, 8, 8, 10, 10, 10, 10, 10, 10, 8], waves: [4, 6, 8], tex: 'fx_dream', payload: DREAM },
   // SUPER FOR THE LOVE OF GOD (A + S com a barra cheia): tela escura, o triângulo gigante com o olho se acende atrás dele
   // e a guitarra de três braços solta três raios cheios de triângulos
   lovegod: { anim: 'triplefury', dur: [8, 12, 10, 12, 10, 14, 14, 14, 12, 10], active: [5, 6, 7], multi: 3, dmg: 24,
@@ -437,13 +438,13 @@ const VAI_MOVES = {
 };
 const VAI_SPECIALS = [
   { move: 'lovegod',    chord: ['lp', 'hp'], super: true },
-  { move: 'tender',     chord: ['lp', 'lk'], lock: 'hypno' },
-  { move: 'crossroads', chord: ['hp', 'lk'] },
+  { move: 'feverdream', chord: ['lp', 'lk'], lock: 'hypno' },
+  { move: 'firegarden', chord: ['hp', 'lk'] },
   { move: 'etcall',     chord: ['hp', 'hk'], lock: 'dlr' },
   { move: 'levitate',   btn: 'punch', motion: [2, 5, 2] },
   { move: 'fairies',    btn: 'kick',  motion: [2, 5, 2], lock: 'swarm' },
   { move: 'etcall',     btn: 'kick',  motion: [6, 2], lock: 'dlr' },
-  { move: 'crossroads', btn: 'kick',  motion: [2, 6] },
+  { move: 'firegarden', btn: 'kick',  motion: [2, 6] },
   { move: 'tripleneck', btn: 'kick',  motion: [2, 4] },
   { move: 'eyeshot',    btn: 'punch', motion: [2, 6], lock: 'proj' },
   { move: 'storylight', btn: 'punch', motion: [2, 4], lock: 'dlr' },
@@ -455,11 +456,11 @@ function vaiCpu(me, op, scene) {
   const threat = (op.state === 'attack' && d < 260) || projIncoming;
   if (me.meter >= 100 && d < 700 && r < 0.04) { inp.special = 'lovegod'; inp.hp = true; me.cpuCD = 140; }
   else if (op.airborne && d < 240 && r < 0.25) { inp.special = 'levitate'; inp.hp = true; me.cpuCD = 40; }
-  else if (d > 200 && d < 420 && r > 0.93) { inp.special = 'crossroads'; inp.hk = true; me.cpuCD = 45; }
+  else if (d > 200 && d < 420 && r > 0.93) { inp.special = 'firegarden'; inp.hk = true; me.cpuCD = 45; }
   else if (d < 200 && r > 0.9) { inp.special = 'tripleneck'; inp.hk = true; me.cpuCD = 45; }
   else if (d > 300 && !me.swarm && r < 0.05) { inp.special = 'fairies'; inp.hk = true; me.cpuCD = 45; }
   else if (d > 220 && !me.proj && r > 0.95) { inp.special = 'thirdeye'; inp.hp = true; me.cpuCD = 60; }
-  else if (d > 200 && !me.hypno && r > 0.09 && r < 0.11) { inp.special = 'tender'; inp.lp = true; me.cpuCD = 100; }
+  else if (d > 200 && !me.hypno && r > 0.09 && r < 0.11) { inp.special = 'feverdream'; inp.lp = true; me.cpuCD = 100; }
   else if (d > 160 && !me.dlr && r > 0.06 && r < 0.09) { inp.special = 'etcall'; inp.lk = true; me.cpuCD = 70; }
   else if (projIncoming && r < 0.25) { inp.up = true; inp.fwd = true; me.cpuCD = 10; }
   else if (threat && r < 0.6) { inp.back = true; me.cpuCD = 16; }
@@ -522,17 +523,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=0b15eaa' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=0b15eaa' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=0b15eaa' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=0b15eaa' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=0b15eaa' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=0b15eaa' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=0b15eaa' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=7d781cd' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=7d781cd' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=7d781cd' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=7d781cd' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=7d781cd' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=7d781cd' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=7d781cd' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=0b15eaa', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=7d781cd', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -659,10 +660,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=0b15eaa`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=7d781cd`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=0b15eaa`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=0b15eaa`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=7d781cd`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=7d781cd`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -671,7 +672,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=0b15eaa`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=7d781cd`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1218,7 +1219,7 @@ class Fight extends Phaser.Scene {
     // mesma cara dos dois lados (Eddie x Eddie, ou um placeholder): o P2 fica azul
     this.mirror = this.chars[0] === this.chars[1];
     if (this.tk(this.chars[0], 'idle') === this.tk(this.chars[1], 'idle')) this.p[1].tint = P2_TINT;
-    this.projs = []; this.bombList = []; this.booms = []; this.fx = []; this.ghosts = []; this.bees = []; this.words = []; this.dlrs = []; this.hypnos = []; this.sliders = []; this.biras = []; this.bolts = []; this.rainT = 0;
+    this.projs = []; this.bombList = []; this.booms = []; this.fx = []; this.ghosts = []; this.bees = []; this.words = []; this.dlrs = []; this.hypnos = []; this.sliders = []; this.biras = []; this.erupts = []; this.bolts = []; this.rainT = 0;
     this.flash = this.add.rectangle(0, 0, W, H, 0xffffff, 0).setOrigin(0).setDepth(55); this.flashT = 0;
     this.sparks = this.add.graphics().setDepth(30);
     this.beamG = this.add.graphics().setDepth(24).setBlendMode(Phaser.BlendModes.ADD);
@@ -1293,6 +1294,7 @@ class Fight extends Phaser.Scene {
     (this.dlrs || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.dlrs = [];
     (this.sliders || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.sliders = [];
     (this.biras || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.biras = [];
+    (this.erupts || []).forEach(e => e.spr.destroy()); this.erupts = [];
     this.bolts = []; this.rainT = 0; if (this.rainG) this.rainG.clear();
     (this.hypnos || []).forEach(h => h.spr.destroy()); this.hypnos = [];
     if (this.dark) { this.dark.setAlpha(0); this.temple.setAlpha(0); this.templeGlow.setAlpha(0); this.beams.clear(); }
@@ -1374,6 +1376,7 @@ class Fight extends Phaser.Scene {
     this.updateBees();
     this.updateDLR();
     this.updateSliders();
+    this.updateErupts();
     this.updateBira();
     this.updateHypno();
     if (this.rainT > 0) this.rainT--;
@@ -1465,6 +1468,7 @@ class Fight extends Phaser.Scene {
       if (m.step) { if (st >= m.step[0] && st <= m.step[1]) f.vx = f.facing * m.step[2]; else f.vx = 0; }
       if (m.sparks && st >= m.sparks[0] && st <= m.sparks[1] && f.t % 3 === 0) this.addFx(m.sparksFx || 'fx_drill', f.x + f.facing * px(m.sparksFx ? 110 : 70), FLOOR - px(m.sparksFx ? 185 : 150), { rate: 2, scale: 0.8 * SC, flip: f.facing < 0, vx: m.sparksFx ? f.facing * 3 : 0 }, ch);
       if (m.swarm !== undefined && st >= m.swarm && !f.spawned) { f.spawned = true; this.spawnSwarm(f); }
+      if (m.erupt !== undefined && st >= m.erupt && !f.spawned) { f.spawned = true; this.spawnErupt(f, op); }
       if (m.slide !== undefined) f.vx = st === m.slide ? f.facing * 5 : (st > m.slide ? 0 : f.vx);
       if (m.beam) this.updateBeam(f, st >= m.beam[0] && st <= m.beam[1]);
       if (m.dark) this.superDark = Math.min(0.78, (this.superDark || 0) + 0.06);
@@ -1814,6 +1818,28 @@ class Fight extends Phaser.Scene {
       if (h.x < -80 || h.x > W + 80) h.dead = true;
     }
     this.hypnos = this.hypnos.filter(h => { if (h.dead) { h.spr.destroy(); h.owner.hypno--; } return !h.dead; });
+  }
+
+  // BROTA DO CHÃO (Fire Garden): o efeito nasce no chão onde o oponente está e acerta quando chega ao quadro eruptHit
+  spawnErupt(f, op) {
+    const m = f.m, k = scOf(f), x = Phaser.Math.Clamp(op.x, 70, W - 70), key = this.tk(f.char, m.tex);
+    const spr = this.add.sprite(x, FLOOR + 4, key, 0).setDepth(21).setScale((m.eruptScale || 1) * k).setOrigin(AX / FW, AY / FH);
+    this.erupts.push({ owner: f, x, t: 0, spr, rate: m.eruptRate || 6, hitAt: m.eruptHit || 5, n: this.nf(key), payload: m.payload, hit: false });
+    this.say('...', x, FLOOR - px(200), '#7dff6a', 26);
+  }
+  updateErupts() {
+    for (const e of this.erupts) {
+      e.t++;
+      const fr = Math.floor(e.t / e.rate); setFr(e.spr, Math.min(fr, e.n - 1));
+      const def = this.p[1 - e.owner.side];
+      if (!e.hit && fr >= e.hitAt) {
+        e.hit = true; this.cameras.main.shake(160, 0.01);
+        const box = { x: e.x - px(80), y: FLOOR - px(220), w: px(160), h: px(220) };
+        if (def.state !== 'ko' && !(def.inv > 0) && overlap(box, def.hurtbox())) this.applyHit(e.owner, def, e.payload, e.x, FLOOR - px(120), true);
+      }
+      if (fr >= e.n) e.dead = true;
+    }
+    this.erupts = this.erupts.filter(e => { if (e.dead) e.spr.destroy(); return !e.dead; });
   }
 
   // AJUDANTE (Jump!): cai do céu onde o oponente está; sombra no chão avisa. Folha: 0-1 caindo, 2 impacto, 3 pose, 4 saindo.

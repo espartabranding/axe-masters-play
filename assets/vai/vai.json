@@ -80,9 +80,13 @@
       "frames": 10,
       "file": "levitate.png"
     },
-    "crossroads": {
+    "firegarden": {
       "frames": 10,
-      "file": "crossroads.png"
+      "file": "firegarden.png"
+    },
+    "fx_firegarden": {
+      "frames": 10,
+      "file": "fx_firegarden.png"
     },
     "etcall": {
       "frames": 5,
@@ -100,13 +104,9 @@
       "frames": 10,
       "file": "fx_fairy.png"
     },
-    "tender": {
+    "feverdream": {
       "frames": 10,
-      "file": "tender.png"
-    },
-    "fx_love": {
-      "frames": 5,
-      "file": "fx_love.png"
+      "file": "feverdream.png"
     },
     "tripleneck": {
       "frames": 15,
@@ -163,6 +163,10 @@
     "fx_bigeye": {
       "frames": 10,
       "file": "fx_bigeye.png"
+    },
+    "fx_dream": {
+      "frames": 10,
+      "file": "fx_dream.png"
     }
   }
 }
