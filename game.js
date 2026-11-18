@@ -424,15 +424,15 @@ const VAI_MOVES = {
   // PASSION AND WARFARE: as fadas da capa do disco saem voando e perseguem o oponente
   fairies: { anim: 'greenmen', dur: [3, 4, 4, 5, 5, 6, 5, 5, 5, 4], frames: [0, 2, 4, 6, 8, 10, 11, 12, 13, 14], swarm: 4, tex: 'fx_fairy', payload: FAIRY, count: 5, swarmScale: 0.42 },
   // THIRD EYE: o terceiro olho se abre na testa e solta uma espiral hipnótica que rola devagar
-  thirdeye: { dur: [5, 6, 6, 6, 8, 6, 6, 8, 8, 8], spawn: 8, tex: 'fx_spiral', payload: SPIRAL, speed: [2.8, 3.8], projScale: 0.85, projY: 195, projBox: [120, 120], projAdd: true,
-    eyeBeam: 8, eyeAt: [5, -195] }, // feixe da testa até a espiral (desenhado no jogo); eyeAt: testa em px do quadro, a partir dos pés
+  thirdeye: { dur: [5, 6, 6, 6, 8, 6, 6, 8, 8, 8], spawn: 8, tex: 'fx_spiral', payload: SPIRAL, speed: [2.8, 3.8], projScale: 0.85, projY: 166, projBox: [120, 120], projAdd: true,
+    eyeBeam: 8, eyeAt: [4, -166] }, // feixe da testa até a espiral (desenhado no jogo); eyeAt: testa em px do quadro, a partir dos pés
   // FEVER DREAM (A + D): toca a guitarra coração vermelha de três braços e solta ondas de sonho; quem leva dorme
   feverdream: { dur: [6, 8, 8, 10, 10, 10, 10, 10, 10, 8], waves: [4, 6, 8], tex: 'fx_dream', payload: DREAM },
   // SUPER FOR THE LOVE OF GOD (A + S com a barra cheia): tela escura, o triângulo gigante com o olho se acende atrás dele
   // e a guitarra de três braços solta três raios cheios de triângulos
   lovegod: { anim: 'triplefury', dur: [8, 12, 10, 12, 10, 14, 14, 14, 12, 10], active: [5, 6, 7], multi: 3, dmg: 24,
     hit: { x: 60, y: -260, w: 1100, h: 170 }, hitstun: 12, blockstun: 8, push: 1, chip: 4, gag: 'zap', beam: [5, 7], inv: 30, dark: true,
-    super: true, beamTips: [[80, -173], [86, -156], [88, -133]], beamTexs: ['fx_tribeam0', 'fx_tribeam1', 'fx_tribeam2'], beamFx: 'fx_eyeshot', // pontas dos 3 braços (px do quadro, a partir dos pés)
+    super: true, beamTips: [[74, -159], [79, -144], [81, -122]], beamTexs: ['fx_tribeam0', 'fx_tribeam1', 'fx_tribeam2'], beamFx: 'fx_eyeshot', // pontas dos 3 braços (px do quadro, a partir dos pés)
     backdrop: 'fx_bigeye', notes: [2, 4],
     finish: { at: 8, gag: 'burnt', word: ['TOASTED!', '#ff7a1a'] } },
 };
@@ -486,19 +486,19 @@ function vaiCpu(me, op, scene) {
 // ---------------------------------------------------------------------------------------------
 const CHARS = {};
 CHARS.eddie = {
-  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=fb98912', // superStage: cena que toma o fundo no super e na vitória
+  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=813df9a', // superStage: cena que toma o fundo no super e na vitória
   anims: EDDIE_ANIMS, moves: EDDIE_MOVES, powers: EDDIE_POWERS, specials: EDDIE_SPECIALS, cpu: eddieCpu,
   jumpkick: JUMPKICK, bigTitle: '5150', blurb: 'Brown Sound',
   stage: 'eddie', // palco da casa (ver STAGES)
 };
 CHARS.slash = {
-  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=fb98912', // superStage: cena que toma o fundo no super e na vitória
+  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=813df9a', // superStage: cena que toma o fundo no super e na vitória
   anims: SLASH_ANIMS, moves: SLASH_MOVES, powers: SLASH_POWERS, specials: SLASH_SPECIALS, cpu: slashCpu,
   jumpkick: JUMPKICK, bigTitle: 'APPETITE', bigSize: 150, blurb: 'Top Hat',
   stage: 'slash',
 };
 CHARS.zakk = {
-  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=fb98912', // superStage: cena que toma o fundo no super e na vitória
+  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=813df9a', // superStage: cena que toma o fundo no super e na vitória
   anims: ZAKK_ANIMS, moves: ZAKK_MOVES, powers: ZAKK_POWERS, specials: ZAKK_SPECIALS, cpu: zakkCpu,
   jumpkick: JUMPKICK, bigTitle: 'NO MORE TEARS', bigSize: 95, blurb: 'Black Label',
   stage: 'zakk', vicRate: 28, vicFrames: [0, 1, 2, 4, 5, 6, 7, 8], // sem o quadro 3 (pé no amplificador) e o 9 (braços cruzados)
@@ -506,7 +506,7 @@ CHARS.zakk = {
   // a vitória do Zakk é uma sequência de poses (grito, cerveja, chifrinhos): ~0,5 s cada
 };
 CHARS.vai = {
-  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=fb98912', // superStage: cena que toma o fundo no super e na vitória
+  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=813df9a', // superStage: cena que toma o fundo no super e na vitória
   anims: VAI_ANIMS, moves: VAI_MOVES, powers: VAI_POWERS, specials: VAI_SPECIALS, cpu: vaiCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THE LOVE OF GOD', bigSize: 78, blurb: 'Ibanez JEM',
   stage: 'stadium', // palco da casa ainda não existe
@@ -523,17 +523,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=fb98912' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=fb98912' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=fb98912' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=fb98912' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=fb98912' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=fb98912' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=fb98912' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=813df9a' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=813df9a' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=813df9a' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=813df9a' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=813df9a' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=813df9a' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=813df9a' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=fb98912', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=813df9a', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -660,10 +660,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=fb98912`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=813df9a`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=fb98912`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=fb98912`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=813df9a`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=813df9a`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -674,7 +674,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=fb98912`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=813df9a`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
