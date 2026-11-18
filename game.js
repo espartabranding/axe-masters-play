@@ -481,24 +481,138 @@ function vaiCpu(me, op, scene) {
 }
 
 // ---------------------------------------------------------------------------------------------
+// ANGUS YOUNG (ver docs/angus-ficha.md): o colegial endiabrado de 1975; o mais baixo e o mais rápido do elenco
+// ---------------------------------------------------------------------------------------------
+const ANGUS_ANIMS = {
+  idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
+  block: 5, hit: 5, ko: 5, jump: 5, crouch: 5, jumpkick: 5,
+  bagtoss: 10, fx_bag: 10, bellcall: 10, fx_bell: 10, highway: 10, fx_hellfire: 10, stomp: 10, fx_voltage: 10, ridecall: 5, fx_ride: 5,
+  spasm: 15, horns: 10, fx_horns: 10, duckwalk: 10, fx_soundwave: 10, thunder: 10, salute: 10, fx_cannon: 10, fx_ball: 10,
+  sleep: 5, dance: 5, deaf: 5,
+};
+const ANGUS_POWERS = {
+  bagtoss:    { name: 'SCHOOLBAG TOSS',    tag: 'Homework!',        neon: '#ffb347', edge: 0xffb347, deep: 0x2a1404 },
+  hellsbells: { name: 'HELLS BELLS',       tag: 'Ding dong',        neon: '#ffd23c', edge: 0xffd23c, deep: 0x2a1a04 },
+  highway:    { name: 'HIGHWAY TO HELL',   tag: 'Devil Jump',       neon: '#ff3d1a', edge: 0xff3d1a, deep: 0x3a0800 },
+  voltage:    { name: 'HIGH VOLTAGE',      tag: 'Shock!',           neon: '#9fefff', edge: 0x9fefff, deep: 0x06182a },
+  ride:       { name: 'SHOULDER RIDE',     tag: 'Giddy up!',        neon: '#ffd23c', edge: 0xffd23c, deep: 0x2a1a04 },
+  spasm:      { name: 'THE SPASM',         tag: 'Floor spin',       neon: '#ff8c3a', edge: 0xff8c3a, deep: 0x2a1004 },
+  horns:      { name: 'DEVIL HORNS',       tag: 'Little devils',    neon: '#ff3d3d', edge: 0xff3d3d, deep: 0x3a0606 },
+  duckwalk:   { name: 'DUCKWALK',          tag: 'Quack quack',      neon: '#ffb347', edge: 0xffb347, deep: 0x2a1404 },
+  thunder:    { name: 'THUNDERSTRUCK',     tag: 'Thunder!',         neon: '#9fefff', edge: 0x9fefff, deep: 0x06182a },
+  salute:     { name: 'FOR THOSE ABOUT TO ROCK', tag: 'Super!',     neon: '#ff7a1a', edge: 0xff7a1a, deep: 0x3a0d00 },
+};
+// mochila escolar: projétil reto
+const BAG = { dmg: 75, hitstun: 18, blockstun: 12, push: 8, chip: 9, gag: 'dizzy', word: ['DETENTION!', '#ffb347'] };
+// sino de bronze que despenca: não dá para defender agachado
+const BELL = { dmg: 110, hitstun: 28, blockstun: 16, push: 6, chip: 12, shake: 0.014, overhead: true, gag: 'dizzy', word: ['BONNNG!', '#ffd23c'] };
+// descarga elétrica que sobe do chão sob o oponente (substituiu o TNT: o ChatGPT recusou desenhar dinamite e fogos)
+const VOLTAGE = { dmg: 105, hitstun: 26, blockstun: 16, push: 6, chip: 10, shake: 0.012, gag: 'zap', word: ['HIGH VOLTAGE!', '#9fefff'] };
+// o vocalista correndo com o Angus nos ombros: só se defende agachado
+const RIDE = { dmg: 100, hitstun: 28, blockstun: 16, push: 10, chip: 10, shake: 0.012, low: true, gag: 'flat', word: ['RUN OVER!', '#ffd23c'] };
+// tiaras de chifrinhos: perseguem e espetam
+const HORNS = { dmg: 15, hitstun: 12, blockstun: 6, push: 3, chip: 3, gag: 'swell' };
+// onda de som do duckwalk: lenta, rola pelo chão
+const QUACK = { dmg: 60, hitstun: 20, blockstun: 12, push: 5, chip: 6, gag: 'dizzy', word: ['QUACK!', '#ffb347'] };
+// balas de canhão do super
+const CANNONBALL = { dmg: 55, hitstun: 16, blockstun: 10, push: 4, chip: 6, shake: 0.01, gag: 'flat', word: ['FIRE!', '#ff7a1a'] };
+const ANGUS_MOVES = {
+  // SG Jab: empurra a SG para a frente, curto e rápido
+  lp: { dur: [1, 1, 1, 2, 2, 2, 1, 1, 2, 1], active: [3, 4, 5], dmg: 28, hit: { x: 40, y: -190, w: 115, h: 60 }, hitstun: 14, blockstun: 8, push: 5, wave: 4 },
+  // Horn Swing: gira a SG como um taco e acerta com os chifres
+  hp: { dur: [2, 2, 3, 3, 3, 4, 4, 3, 3, 3], active: [4, 5, 6], dmg: 85, hit: { x: 10, y: -240, w: 175, h: 150 }, hitstun: 22, blockstun: 14, push: 10, shake: 0.006 },
+  // Schoolboy Kick: chute rápido de tênis
+  lk: { dur: [1, 2, 2, 2, 3, 3, 2, 2, 1, 1], active: [3, 4, 5], dmg: 33, hit: { x: 30, y: -190, w: 150, h: 70 }, hitstun: 14, blockstun: 8, push: 6 },
+  // Flying Leap: o pulo da foto, pernas dobradas, chute no ar
+  hk: { dur: [2, 3, 3, 3, 3, 4, 4, 4, 4, 3], active: [4, 5, 6], dmg: 90, hit: { x: 20, y: -250, w: 160, h: 130 }, hitstun: 22, blockstun: 14, push: 10, shake: 0.006 },
+  // SCHOOLBAG TOSS: arremessa a mochila escolar girando
+  bagtoss: { dur: [4, 4, 4, 5, 5, 6, 5, 4, 3, 3], spawn: 5, tex: 'fx_bag', payload: BAG, speed: [5.5, 8.5], projScale: 0.7, projY: 160, projBox: [80, 70], ghost: [0, 20] },
+  // HELLS BELLS: aponta para o céu e um sino de bronze gigante despenca no oponente
+  hellsbells: { anim: 'bellcall', dur: [5, 5, 6, 6, 6, 6, 8, 8, 8, 6], bombs: 4, tex: 'fx_bell', payload: BELL, offsets: [0], bombScale: 0.9, landY: 126, crash: 4 }, // landY: a base do sino no chão (folha com a base na linha dos pés)
+  // HIGHWAY TO HELL: ganha chifres e rabo e sobe numa coluna de fogo; quem estiver no ar voa longe (invencível no começo)
+  highway: { dur: [3, 3, 3, 3, 4, 6, 6, 5, 4, 3], active: [3, 4, 5, 6], dmg: 115, hit: { x: -60, y: -360, w: 220, h: 360 }, hitstun: 26, blockstun: 16, push: 12, shake: 0.01, inv: 14,
+    prop: { at: 2, tex: 'fx_hellfire', dx: 0, rate: 4, scale: 1.0, add: true }, gag: 'burnt', word: ['HELL YEAH!', '#ff3d1a'], ghost: [0, 24] },
+  // HIGH VOLTAGE: dá um pisão e uma descarga elétrica sobe do chão sob o oponente
+  voltage: { anim: 'stomp', dur: [5, 5, 6, 6, 8, 8, 10, 10, 10, 8], erupt: 4, tex: 'fx_voltage', payload: VOLTAGE, eruptHit: 4, eruptRate: 6, eruptScale: 1.0, eruptAdd: true },
+  // SHOULDER RIDE: o vocalista entra correndo com o Angus nos ombros e atropela o oponente
+  ride: { anim: 'ridecall', dur: [6, 10, 12, 20, 10], slider: 2, tex: 'fx_ride', payload: RIDE, sliderCycle: true, sliderOwnScale: true, cry: ['GIDDY UP!', '#ffd23c'] },
+  // THE SPASM: cai de costas e gira no chão como um pião, chutando o ar
+  spasm: { dur: [3, 4, 4, 4, 4, 4, 4, 4, 5, 4], frames: [0, 2, 3, 5, 6, 7, 8, 10, 11, 14], active: [3, 4, 5, 6, 7], multi: 6, dmg: 35, hit: { x: -30, y: -130, w: 210, h: 130 }, hitstun: 14, blockstun: 8, push: 4, shake: 0.006,
+    step: [3, 7, 3], word: ['SPAZZ!', '#ff8c3a'], ghost: [0, 24] },
+  // DEVIL HORNS: uma revoada de tiaras de chifrinhos persegue o oponente
+  horns: { dur: [3, 4, 4, 5, 5, 6, 5, 5, 5, 4], swarm: 4, tex: 'fx_horns', payload: HORNS, count: 5, swarmScale: 0.42 },
+  // DUCKWALK: atravessa um pedaço do palco no passo do pato e solta uma onda de som que rola pelo chão
+  duckwalk: { dur: [3, 3, 3, 3, 3, 3, 3, 4, 5, 5], step: [0, 6, 4], spawn: 7, tex: 'fx_soundwave', payload: QUACK, speed: [2.8, 3.8], projScale: 0.85, projY: 70, projBox: [120, 100], projAdd: true },
+  // THUNDERSTRUCK (A + D): o riff a toda velocidade chama raios sobre o oponente
+  thunder: { dur: [5, 5, 6, 8, 8, 8, 8, 8, 8, 6], bolts: [3, 8], payload: BOLT, notes: [3, 8] },
+  // SUPER FOR THOSE ABOUT TO ROCK (A + S com a barra cheia): continência, um canhão surge atrás dele e dispara uma salva
+  salute: { dur: [8, 10, 10, 10, 10, 10, 10, 12, 12, 10], super: true, dark: true, inv: 30, notes: [1, 3],
+    prop: { at: 3, tex: 'fx_cannon', dx: -150, rate: 8, scale: 1.0 }, volley: [4, 5, 6, 7, 8], tex: 'fx_ball', payload: CANNONBALL, projX: -60, projY: 95, speed: [9, 9], projScale: 0.7, projBox: [70, 70],
+    finish: { at: 9, gag: 'burnt', word: ['TOASTED!', '#ff7a1a'] } },
+};
+const ANGUS_SPECIALS = [
+  { move: 'salute',     chord: ['lp', 'hp'], super: true },
+  { move: 'thunder',    chord: ['lp', 'lk'] },
+  { move: 'voltage',    chord: ['hp', 'lk'] },
+  { move: 'ride',       chord: ['hp', 'hk'], lock: 'dlr' },
+  { move: 'highway',    btn: 'punch', motion: [2, 5, 2] },
+  { move: 'horns',      btn: 'kick',  motion: [2, 5, 2], lock: 'swarm' },
+  { move: 'ride',       btn: 'kick',  motion: [6, 2], lock: 'dlr' },
+  { move: 'voltage',    btn: 'kick',  motion: [2, 6] },
+  { move: 'spasm',      btn: 'kick',  motion: [2, 4] },
+  { move: 'bagtoss',    btn: 'punch', motion: [2, 6], lock: 'proj' },
+  { move: 'hellsbells', btn: 'punch', motion: [2, 4], lock: 'bombs' },
+  { move: 'duckwalk',   btn: 'punch', motion: [6, 5, 6], lock: 'proj' },
+];
+function angusCpu(me, op, scene) {
+  const d = Math.abs(op.x - me.x), r = Math.random(), inp = {};
+  const projIncoming = scene.projs.some(pr => pr.owner !== me && Math.abs(pr.x - me.x) < 280);
+  const threat = (op.state === 'attack' && d < 260) || projIncoming;
+  if (me.meter >= 100 && d < 700 && r < 0.04) { inp.special = 'salute'; inp.hp = true; me.cpuCD = 140; }
+  else if (op.airborne && d < 240 && r < 0.25) { inp.special = 'highway'; inp.hp = true; me.cpuCD = 40; }
+  else if (d > 200 && d < 420 && r > 0.93) { inp.special = 'voltage'; inp.hk = true; me.cpuCD = 45; }
+  else if (d < 200 && r > 0.9) { inp.special = 'spasm'; inp.hk = true; me.cpuCD = 45; }
+  else if (d > 300 && !me.swarm && r < 0.05) { inp.special = 'horns'; inp.hk = true; me.cpuCD = 45; }
+  else if (d > 220 && !me.proj && r > 0.95) { inp.special = 'duckwalk'; inp.hp = true; me.cpuCD = 60; }
+  else if (d > 200 && r > 0.09 && r < 0.11) { inp.special = 'thunder'; inp.lp = true; me.cpuCD = 100; }
+  else if (d > 160 && !me.dlr && r > 0.06 && r < 0.09) { inp.special = 'ride'; inp.lk = true; me.cpuCD = 70; }
+  else if (projIncoming && r < 0.25) { inp.up = true; inp.fwd = true; me.cpuCD = 10; }
+  else if (threat && r < 0.6) { inp.back = true; me.cpuCD = 16; }
+  else if (d > 330) {
+    if (!me.proj && r < 0.25) { inp.special = 'bagtoss'; inp[r < 0.12 ? 'lp' : 'hp'] = true; me.cpuCD = 30; }
+    else if (!me.bombs && r < 0.33) { inp.special = 'hellsbells'; inp.hp = true; me.cpuCD = 60; }
+    else { inp.fwd = true; me.cpuCD = 12; }
+  } else if (d > 175) {
+    if (r < 0.12) { inp.up = true; inp.fwd = true; me.cpuCD = 14; }
+    else if (r < 0.75) inp.fwd = true;
+    me.cpuCD = me.cpuCD || 8;
+  }
+  else if (r < 0.5) { inp[['lp', 'lk', 'hp', 'hk'][(Math.random() * 4) | 0]] = true; me.cpuCD = 22; }
+  else if (r < 0.65) { inp.down = true; inp.back = true; me.cpuCD = 14; }
+  else if (r < 0.85) { inp.back = true; me.cpuCD = 12; }
+  else me.cpuCD = 8;
+  return inp;
+}
+
+// ---------------------------------------------------------------------------------------------
 // LUTADORES. Texturas: chave `${dir}_${folha}` (ex.: eddie_idle, slash_lp), arquivo assets/<dir>/<folha>.png.
 // Folha que o lutador não tem cai na do placeholder e depois na do Eddie (efeitos comuns); nada disso trava o jogo.
 // ---------------------------------------------------------------------------------------------
 const CHARS = {};
 CHARS.eddie = {
-  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=813df9a', // superStage: cena que toma o fundo no super e na vitória
+  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=96c9455', // superStage: cena que toma o fundo no super e na vitória
   anims: EDDIE_ANIMS, moves: EDDIE_MOVES, powers: EDDIE_POWERS, specials: EDDIE_SPECIALS, cpu: eddieCpu,
   jumpkick: JUMPKICK, bigTitle: '5150', blurb: 'Brown Sound',
   stage: 'eddie', // palco da casa (ver STAGES)
 };
 CHARS.slash = {
-  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=813df9a', // superStage: cena que toma o fundo no super e na vitória
+  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=96c9455', // superStage: cena que toma o fundo no super e na vitória
   anims: SLASH_ANIMS, moves: SLASH_MOVES, powers: SLASH_POWERS, specials: SLASH_SPECIALS, cpu: slashCpu,
   jumpkick: JUMPKICK, bigTitle: 'APPETITE', bigSize: 150, blurb: 'Top Hat',
   stage: 'slash',
 };
 CHARS.zakk = {
-  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=813df9a', // superStage: cena que toma o fundo no super e na vitória
+  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=96c9455', // superStage: cena que toma o fundo no super e na vitória
   anims: ZAKK_ANIMS, moves: ZAKK_MOVES, powers: ZAKK_POWERS, specials: ZAKK_SPECIALS, cpu: zakkCpu,
   jumpkick: JUMPKICK, bigTitle: 'NO MORE TEARS', bigSize: 95, blurb: 'Black Label',
   stage: 'zakk', vicRate: 28, vicFrames: [0, 1, 2, 4, 5, 6, 7, 8], // sem o quadro 3 (pé no amplificador) e o 9 (braços cruzados)
@@ -506,11 +620,20 @@ CHARS.zakk = {
   // a vitória do Zakk é uma sequência de poses (grito, cerveja, chifrinhos): ~0,5 s cada
 };
 CHARS.vai = {
-  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=813df9a', // superStage: cena que toma o fundo no super e na vitória
+  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=96c9455', // superStage: cena que toma o fundo no super e na vitória
   anims: VAI_ANIMS, moves: VAI_MOVES, powers: VAI_POWERS, specials: VAI_SPECIALS, cpu: vaiCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THE LOVE OF GOD', bigSize: 78, blurb: 'Ibanez JEM',
   stage: 'stadium', // palco da casa ainda não existe
   size: 1.2, // o Vai é o mais alto do elenco (o usuário pediu mais alto em 16/11/2026; antes 1.12, rosto do tamanho do do Eddie)
+};
+// o Angus está em stand by (folhas incompletas, nada recortado em assets/angus): só entra no elenco quando ANGUS_READY for true
+const ANGUS_READY = true;
+if (ANGUS_READY) CHARS.angus = {
+  name: 'ANGUS', dir: 'angus', hp: 950, walkF: 3.7, walkB: 3.0,
+  anims: ANGUS_ANIMS, moves: ANGUS_MOVES, powers: ANGUS_POWERS, specials: ANGUS_SPECIALS, cpu: angusCpu,
+  jumpkick: JUMPKICK, bigTitle: 'FOR THOSE ABOUT TO ROCK', bigSize: 70, blurb: 'Gibson SG',
+  stage: 'stadium', // palco da casa ainda não existe
+  size: 1.0, // o mais baixo do elenco; a cabeça do tamanho da do Eddie
 };
 for (const [id, c] of Object.entries(CHARS)) c.id = id;
 
@@ -523,17 +646,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=813df9a' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=813df9a' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=813df9a' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=813df9a' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=813df9a' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=813df9a' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=813df9a' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=96c9455' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=96c9455' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=96c9455' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=96c9455' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=96c9455' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=96c9455' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=96c9455' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=813df9a', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=96c9455', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -617,7 +740,7 @@ class Fighter {
     return d.length - 1;
   }
   startMove(name) {
-    this.state = 'attack'; this.move = name; this.t = 0; this.hasHit = false; this.vx = 0; this.spawned = false; this.evWave = false; this.evDust = false; this.evRise = false; this.evSmoke = false; this.evRev = false; this.evFinish = false; this.evProp = false; this.lastHitT = -99;
+    this.state = 'attack'; this.move = name; this.t = 0; this.hasHit = false; this.vx = 0; this.spawned = false; this.evWave = false; this.evDust = false; this.evRise = false; this.evSmoke = false; this.evRev = false; this.evFinish = false; this.evProp = false; this.evVolley = -1; this.lastHitT = -99;
   }
 }
 
@@ -660,10 +783,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=813df9a`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=96c9455`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=813df9a`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=813df9a`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=96c9455`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=96c9455`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -674,7 +797,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=813df9a`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=96c9455`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1462,6 +1585,7 @@ class Fight extends Phaser.Scene {
     } else if (f.state === 'attack') {
       const m = f.m, SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem golpeia
       if (m.spawn !== undefined && !f.spawned && f.moveStep() >= m.spawn) { f.spawned = true; this.spawnProjectile(f); }
+      if (m.volley && m.volley.includes(f.moveStep()) && f.evVolley !== f.moveStep()) { f.evVolley = f.moveStep(); this.spawnProjectile(f); } // salva: um projétil por quadro listado (super do Angus)
       if (m.bombs !== undefined && !f.spawned && f.moveStep() >= m.bombs) { f.spawned = true; this.spawnBombs(f, op); }
       const st = f.moveStep();
       if (m.wave !== undefined && st === m.wave && !f.evWave) { f.evWave = true; this.addFx('fx_wave', f.x + f.facing * px(135), FLOOR - px(195), { vx: f.facing * 3, flip: f.facing < 0, rate: 3, scale: 0.8 * SC }, ch); }
@@ -1728,7 +1852,7 @@ class Fight extends Phaser.Scene {
   // PROJÉTIL (Eruption): anda reto; dois projéteis se anulam
   spawnProjectile(f) {
     const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
-    const m = f.m, x = f.x + f.facing * px(125), y = FLOOR - px(m.projY || 145);
+    const m = f.m, x = f.x + f.facing * px(m.projX !== undefined ? m.projX : 125), y = FLOOR - px(m.projY || 145);
     const spr = this.add.sprite(x, y, this.tk(f.char, m.tex || 'projectile'), 0).setDepth(20).setFlipX(f.facing < 0).setScale((m.projScale || 1.35) * SC);
     if (f.tint !== 0xffffff) spr.setTint(f.tint);
     if (m.projAdd) spr.setBlendMode(Phaser.BlendModes.ADD);
@@ -1828,6 +1952,7 @@ class Fight extends Phaser.Scene {
   spawnErupt(f, op) {
     const m = f.m, k = scOf(f), x = Phaser.Math.Clamp(op.x, 70, W - 70), key = this.tk(f.char, m.tex);
     const spr = this.add.sprite(x, FLOOR + 4, key, 0).setDepth(21).setScale((m.eruptScale || 1) * k).setOrigin(AX / FW, AY / FH);
+    if (m.eruptAdd) spr.setBlendMode(Phaser.BlendModes.ADD); // efeito de fundo preto (brilho somado)
     this.erupts.push({ owner: f, x, t: 0, spr, rate: m.eruptRate || 6, hitAt: m.eruptHit || 5, n: this.nf(key), payload: m.payload, hit: false });
     this.say('...', x, FLOOR - px(200), '#7dff6a', 26);
   }
