@@ -84,14 +84,6 @@
       "frames": 10,
       "file": "stomp.png"
     },
-    "ridecall": {
-      "frames": 5,
-      "file": "ridecall.png"
-    },
-    "fx_ride": {
-      "frames": 5,
-      "file": "fx_ride.png"
-    },
     "spasm": {
       "frames": 15,
       "file": "spasm.png"
@@ -151,6 +143,18 @@
     "fx_voltage": {
       "frames": 10,
       "file": "fx_voltage.png"
+    },
+    "cry": {
+      "frames": 10,
+      "file": "cry.png"
+    },
+    "jailcall": {
+      "frames": 5,
+      "file": "jailcall.png"
+    },
+    "fx_jail": {
+      "frames": 5,
+      "file": "fx_jail.png"
     }
   }
 }
