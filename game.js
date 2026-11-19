@@ -608,19 +608,19 @@ function angusCpu(me, op, scene) {
 // ---------------------------------------------------------------------------------------------
 const CHARS = {};
 CHARS.eddie = {
-  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=cef7006', // superStage: cena que toma o fundo no super e na vitória
+  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=a73e031', // superStage: cena que toma o fundo no super e na vitória
   anims: EDDIE_ANIMS, moves: EDDIE_MOVES, powers: EDDIE_POWERS, specials: EDDIE_SPECIALS, cpu: eddieCpu,
   jumpkick: JUMPKICK, bigTitle: '5150', blurb: 'Brown Sound',
   stage: 'eddie', // palco da casa (ver STAGES)
 };
 CHARS.slash = {
-  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=cef7006', // superStage: cena que toma o fundo no super e na vitória
+  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=a73e031', // superStage: cena que toma o fundo no super e na vitória
   anims: SLASH_ANIMS, moves: SLASH_MOVES, powers: SLASH_POWERS, specials: SLASH_SPECIALS, cpu: slashCpu,
   jumpkick: JUMPKICK, bigTitle: 'APPETITE', bigSize: 150, blurb: 'Top Hat',
   stage: 'slash',
 };
 CHARS.zakk = {
-  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=cef7006', // superStage: cena que toma o fundo no super e na vitória
+  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=a73e031', // superStage: cena que toma o fundo no super e na vitória
   anims: ZAKK_ANIMS, moves: ZAKK_MOVES, powers: ZAKK_POWERS, specials: ZAKK_SPECIALS, cpu: zakkCpu,
   jumpkick: JUMPKICK, bigTitle: 'NO MORE TEARS', bigSize: 95, blurb: 'Black Label',
   stage: 'zakk', vicRate: 28, vicFrames: [0, 1, 2, 4, 5, 6, 7, 8], // sem o quadro 3 (pé no amplificador) e o 9 (braços cruzados)
@@ -628,7 +628,7 @@ CHARS.zakk = {
   // a vitória do Zakk é uma sequência de poses (grito, cerveja, chifrinhos): ~0,5 s cada
 };
 CHARS.vai = {
-  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=cef7006', // superStage: cena que toma o fundo no super e na vitória
+  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=a73e031', // superStage: cena que toma o fundo no super e na vitória
   anims: VAI_ANIMS, moves: VAI_MOVES, powers: VAI_POWERS, specials: VAI_SPECIALS, cpu: vaiCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THE LOVE OF GOD', bigSize: 78, blurb: 'Ibanez JEM',
   stage: 'stadium', // palco da casa ainda não existe
@@ -637,7 +637,7 @@ CHARS.vai = {
 // o Angus está em stand by (folhas incompletas, nada recortado em assets/angus): só entra no elenco quando ANGUS_READY for true
 const ANGUS_READY = true;
 if (ANGUS_READY) CHARS.angus = {
-  name: 'ANGUS', dir: 'angus', hp: 950, walkF: 3.7, walkB: 3.0, superStage: 'assets/stages/super-angus.jpg?v=cef7006', // o cenário HIGH VOLTAGE cercado pela bateria de canhões (cena do super e da vitória)
+  name: 'ANGUS', dir: 'angus', hp: 950, walkF: 3.7, walkB: 3.0, superStage: 'assets/stages/super-angus.jpg?v=a73e031', // o cenário HIGH VOLTAGE cercado pela bateria de canhões (cena do super e da vitória)
   anims: ANGUS_ANIMS, moves: ANGUS_MOVES, powers: ANGUS_POWERS, specials: ANGUS_SPECIALS, cpu: angusCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THOSE ABOUT TO ROCK', bigSize: 70, blurb: 'Gibson SG',
   stage: 'stadium', // palco da casa ainda não existe
@@ -648,36 +648,51 @@ for (const [id, c] of Object.entries(CHARS)) c.id = id;
 // EASTER EGG (A + S + D, qualquer lutador): o Ricardinho entra correndo com a bandeira do Rock n' Bira nas costas
 // e empurra o adversário para o outro lado do palco. Folha bira (pasta do Eddie): 0-1 correndo, 2 freando,
 // 3-5 empurrando, 6-8 comemorando, 9 indo embora.
+// PICK OF DESTINY (pedido do usuário em 19/11/2026, homenagem ao filme do Tenacious D): a palheta feita do dente do diabo cai
+// no palco uma vez por round; quem pega primeiro fica invencível e com dano em dobro por um tempo, e no fim a mão do diabo
+// sai do chão e toma a palheta de volta
+const POD = { dur: 360, mul: 2, life: 540, pickFW: 120, handFW: 220, handFH: 300 };
+const POD_BANNER = { name: 'PICK OF DESTINY!', tag: "The devil's tooth", neon: '#9dff2a', edge: 0x9dff2a, deep: 0x1a2a02 };
+// EVENTOS DA VIDA DE GUITARRISTA (19/11/2026): em cada round cai um item de sorte (Pick of Destiny ou Guitarra do Poder) e
+// acontece um azar com um dos dois (corda arrebenta ou groupies agarram), de preferência com quem está ganhando
+const PG = { dur: 480, mul: 1.5, fw: 160 };            // Guitarra do Poder: 8 s, dano x1,5 e cada golpe dá choque
+const SNAP = { dur: 330, fw: 160 };                     // corda arrebentada: 5,5 s sem especiais (agachado troca a corda 3x mais rápido)
+const GROUPIE = { fw: 160, fh: 220, speed: 8 };
+const PG_BANNER = { name: 'POWER GUITAR!', tag: 'Lightning in six strings', neon: '#3cf0ff', edge: 0x3cf0ff, deep: 0x041a2e };
+const SNAP_BANNER = { name: 'SNAP!', tag: 'Broken string', neon: '#c0c8d8', edge: 0xc0c8d8, deep: 0x15151c };
+const GROUPIE_BANNER = { name: 'GROUPIES!', tag: 'We love you!', neon: '#ff5ec8', edge: 0xff5ec8, deep: 0x2e0420 };
 const BIRA = { name: 'RICARDINHO', tag: "Rock n' Bira", neon: '#4aa8ff', edge: 0x4aa8ff, deep: 0x04182e };
 const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word: ['MOSH!', '#4aa8ff'] };
 
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=cef7006' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=cef7006' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=cef7006' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=cef7006' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=cef7006' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=cef7006' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=cef7006' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=a73e031' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=a73e031' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=a73e031' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=a73e031' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=a73e031' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=a73e031' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=a73e031' },
   // 18/11/2026 (pedido do usuário: Rock in Rio, um presídio e outros engraçados e temáticos); só clima, sem nome de festival ou marca
-  { id: 'rio',      name: 'CITY OF ROCK',   tag: 'Rio festival',       file: 'assets/stages/cenario-rio.jpg?v=cef7006' },
-  { id: 'prison',   name: 'PRISON YARD',    tag: 'Jailhouse gig',      file: 'assets/stages/cenario-prison.jpg?v=cef7006' },
-  { id: 'bira',     name: 'OPEN BAR',       tag: "Rock n' Bira",       file: 'assets/stages/cenario-bira.jpg?v=cef7006' },
-  { id: 'school',   name: 'SCHOOL GYM',     tag: 'Talent show',        file: 'assets/stages/cenario-school.jpg?v=cef7006' },
-  { id: 'party',    name: 'BIRTHDAY BASH',  tag: 'Kids party',         file: 'assets/stages/cenario-party.jpg?v=cef7006' },
+  { id: 'rio',      name: 'CITY OF ROCK',   tag: 'Rio festival',       file: 'assets/stages/cenario-rio.jpg?v=a73e031' },
+  { id: 'prison',   name: 'PRISON YARD',    tag: 'Jailhouse gig',      file: 'assets/stages/cenario-prison.jpg?v=a73e031' },
+  { id: 'bira',     name: 'OPEN BAR',       tag: "Rock n' Bira",       file: 'assets/stages/cenario-bira.jpg?v=a73e031' },
+  { id: 'school',   name: 'SCHOOL GYM',     tag: 'Talent show',        file: 'assets/stages/cenario-school.jpg?v=a73e031' },
+  { id: 'party',    name: 'BIRTHDAY BASH',  tag: 'Kids party',         file: 'assets/stages/cenario-party.jpg?v=a73e031' },
   // famosos no fundo (caricaturas, pedido do usuário em 18/11/2026); os palcos com bandas tocando saíram (o usuário achou horríveis e desproporcionais)
-  { id: 'summit',   name: 'THE SUMMIT',     tag: 'World leaders',      file: 'assets/stages/cenario-summit.jpg?v=cef7006' },
-  { id: 'keynote',  name: 'GPU KEYNOTE',    tag: 'Tech launch',        file: 'assets/stages/cenario-keynote.jpg?v=cef7006' },
-  { id: 'crossroads', name: 'CROSSROADS',   tag: 'Sign here',          file: 'assets/stages/cenario-crossroads.jpg?v=cef7006' },
+  { id: 'summit',   name: 'THE SUMMIT',     tag: 'World leaders',      file: 'assets/stages/cenario-summit.jpg?v=a73e031' },
+  { id: 'keynote',  name: 'GPU KEYNOTE',    tag: 'Tech launch',        file: 'assets/stages/cenario-keynote.jpg?v=a73e031' },
+  { id: 'crossroads', name: 'CROSSROADS',   tag: 'Sign here',          file: 'assets/stages/cenario-crossroads.jpg?v=a73e031' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=cef7006', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=a73e031', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
+  // groupies agarradas: o guitarrista se debate (quadros de apanhando); sem defesa; apertar botões solta mais rápido
+  grab: { dur: 200, tex: 'hit', vuln: true, frame: t => Math.floor(t / 7) % 2 },
   burnt: { dur: 80, frame: t => t < 62 ? (Math.floor(t / 8) % 2) : 2 },
   swell: { dur: 72, frame: t => t < 18 ? 3 : (Math.floor(t / 7) % 2 ? 4 : 3) },
   dizzy: { dur: 72, frame: t => 5 + (Math.floor(t / 12) % 2) },
@@ -737,6 +752,7 @@ class Fighter {
     this.holdBack = false; this.holdDown = false; this.cpuCD = 0; this.cpuHold = {};
     this.last = { lp: -99, hp: -99, lk: -99, hk: -99 }; this.hypno = 0; this.dlr = false; this.meter = 0;
     this.gag = null; this.pendGag = null; this.stings = 0; this.spin = false; this.rot = 0; this.buzz = 0; this.inv = 0;
+    this.pod = 0; this.pg = 0; this.snap = 0; // quadros que faltam com a Pick of Destiny, a Guitarra do Poder e a corda arrebentada
   }
   get free() { return ['idle', 'walk_fwd', 'walk_back', 'crouch'].includes(this.state); }
   get airborne() { return this.y < 0; }
@@ -801,10 +817,16 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=cef7006`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=a73e031`);
+    this.load.spritesheet('pod_pick', 'assets/ui/pod-pick.png', { frameWidth: POD.pickFW, frameHeight: POD.pickFW });
+    this.load.spritesheet('pod_hand', 'assets/ui/pod-hand.png', { frameWidth: POD.handFW, frameHeight: POD.handFH });
+    this.load.spritesheet('ev_guitar', 'assets/ui/power-guitar.png', { frameWidth: PG.fw, frameHeight: PG.fw });
+    this.load.spritesheet('ev_snap', 'assets/ui/string-snap.png', { frameWidth: SNAP.fw, frameHeight: SNAP.fw });
+    this.load.spritesheet('ev_groupie_a', 'assets/ui/groupie-a.png', { frameWidth: GROUPIE.fw, frameHeight: GROUPIE.fh });
+    this.load.spritesheet('ev_groupie_b', 'assets/ui/groupie-b.png', { frameWidth: GROUPIE.fw, frameHeight: GROUPIE.fh });
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=cef7006`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=cef7006`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=a73e031`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=a73e031`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -815,7 +837,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=cef7006`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=a73e031`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1517,6 +1539,7 @@ class Fight extends Phaser.Scene {
     (this.dlrs || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.dlrs = [];
     (this.sliders || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.sliders = [];
     (this.biras || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.biras = [];
+    this.clearPod();
     (this.erupts || []).forEach(e => e.spr.destroy()); this.erupts = [];
     (this.shots || []).forEach(o => o.spr.destroy()); this.shots = [];
     this.bolts = []; this.rainT = 0; if (this.rainG) this.rainG.clear();
@@ -1550,6 +1573,11 @@ class Fight extends Phaser.Scene {
 
   // a CPU de cada lutador decide a cada "respiro"; entre um e outro segura as direções
   cpuThink(me, op) {
+    const it = this.podItem;
+    if (it && it.landed && me.free && !me.snap && Math.abs(it.x - me.x) > 20 && (me.side + this.tick) % 3) {
+      const toward = it.x > me.x ? 1 : -1;
+      return { fwd: toward === me.facing, back: toward !== me.facing };
+    }
     if (me.cpuCD > 0) { me.cpuCD--; return { ...me.cpuHold }; }
     const inp = (me.char.cpu || eddieCpu)(me, op, this);
     me.cpuHold = { fwd: inp.fwd, back: inp.back, down: inp.down };
@@ -1603,6 +1631,7 @@ class Fight extends Phaser.Scene {
     this.updateSliders();
     this.updateErupts();
     this.updateBira();
+    this.updatePod();
     this.updateHypno();
     if (this.rainT > 0) this.rainT--;
     this.updateFx();
@@ -1620,6 +1649,11 @@ class Fight extends Phaser.Scene {
   }
   // primeiro especial da lista do lutador que a entrada deste quadro dispara
   pickSpecial(f, inp) {
+    if (f.snap > 0) { // corda arrebentada: nada de especial
+      if ((inp.lp || inp.hp || inp.lk || inp.hk) && (f.char.specials || []).some(s => s.chord && this.chordOn(f, inp, s)))
+        this.say('NO STRING!', f.x, FLOOR - px(280), '#c0c8d8', 30);
+      return null;
+    }
     for (const s of f.char.specials || []) {
       if (s.lock && f[s.lock]) continue;
       if (s.super && f.meter < 100) continue;
@@ -1722,6 +1756,10 @@ class Fight extends Phaser.Scene {
       f.vx *= 0.8;
       if (f.gag.k === 'sleep' && f.t >= 55 && f.t < 125 && f.t % 22 === 0) this.say(['z', 'Zz', 'Zzz'][(f.t / 22 | 0) % 3], f.x + f.facing * -px(40), FLOOR - px(90) - (f.t % 44), '#c77dff', 30);
       if (f.gag.k === 'dance' && f.t % 14 === 0) this.addFx('fx_sweet', f.x, FLOOR - px(280), { vy: -1.2, rate: 5, scale: 0.35 * SC }, this.p[1 - f.side].char);
+      if (f.gag.k === 'grab') {
+        if (inp.lp || inp.hp || inp.lk || inp.hk) { f.t += 16; if (Math.random() < 0.35) this.say(['LET GO!', 'NOT NOW!', 'HEY!'][Math.random() * 3 | 0], f.x, FLOOR - px(290), '#ffffff', 28); }
+        if (f.t % 26 === 5) this.say(['SMOOCH!', 'MWAH!', 'I LOVE YOU!'][(f.t / 26 | 0) % 3], f.x + (Math.random() * 80 - 40), FLOOR - px(250), '#ff5ec8', 28);
+      }
       if (f.gag.k === 'cry' && f.t % 28 === 14) this.say(['SNIFF...', 'SOB!', 'WAAAH!'][(f.t / 28 | 0) % 3], f.x, FLOOR - px(270), '#9fd8ff', 30);
       if (f.gag.k === 'deaf' && f.t % 30 === 10) this.say(['WHAT?!', 'HUH?', 'EEEEE!'][(f.t / 30 | 0) % 3], f.x, FLOOR - px(290), '#ff3d3d', 30);
       if (f.gag.k === 'burnt' && f.t % 9 === 0 && f.t < 50) this.addFx('fx_smoke', f.x + (Math.random() * 30 - 15), FLOOR - px(250), { rate: 5, scale: 0.35 * SC, vy: -1 }, ch);
@@ -1786,6 +1824,22 @@ class Fight extends Phaser.Scene {
   }
 
   applyHit(att, def, m, sx, sy, isProj) {
+    if (def.pod > 0) { // com a Pick of Destiny não toma dano nem cai em gag
+      this.spark(sx, sy, 0xffd23d, att.char); this.hitstop = 3;
+      if (!this.words.some(w => w.t.text === 'NO DAMAGE!' && w.age < 40)) this.say('NO DAMAGE!', def.x, FLOOR + def.y - px(250), '#ffd23d', 30);
+      return;
+    }
+    if (att.pod > 0) m = { ...m, dmg: m.dmg * POD.mul, shake: Math.max(m.shake || 0, 0.008) };
+    if (att.pg > 0) {
+      m = { ...m, dmg: Math.round(m.dmg * PG.mul) };
+      def.buzz = 24; this.say('ZAP!', sx, sy - 30, '#3cf0ff', 34);
+      this.spark(sx + 10, sy - 10, 0x3cf0ff, att.char);
+    }
+    if (def.state === 'gag' && def.gag && def.gag.k === 'grab' && def.hp - m.dmg > 0) { // as groupies seguram: apanha sem se soltar
+      def.hp -= m.dmg; att.meter = Math.min(100, att.meter + m.dmg * 0.3);
+      this.spark(sx, sy, 0xffe14a, att.char); this.hitstop = 5;
+      return;
+    }
     // golpe no pulo não pode ser defendido agachado
     const blocking = !m.unblockable && def.canBlock() && def.holdBack && !def.airborne && !(m.overhead && def.holdDown) && !(m.low && !def.holdDown);
     const away = def.x >= att.x ? 1 : -1;
@@ -2187,6 +2241,200 @@ class Fight extends Phaser.Scene {
   }
 
   // EASTER EGG: entra correndo pela borda de trás de quem chamou, empurra o adversário até a parede e comemora
+  // ---- PICK OF DESTINY ----
+  clearPod() {
+    if (this.podItem) { this.podItem.spr.destroy(); this.podItem.shadow.destroy(); }
+    (this.podHands || []).forEach(h => h.spr.destroy());
+    if (this.podAura) this.podAura.clear();
+    if (this.podEmb) this.podEmb.forEach(e => e.stop());
+    (this.groupies || []).forEach(g => g.spr.destroy()); this.groupies = [];
+    (this.snaps || []).forEach(g => g.spr.destroy()); this.snaps = [];
+    if (this.pgEmb) this.pgEmb.forEach(e => e.stop());
+    this.podItem = null; this.podHands = []; this.podDone = false;
+    // sorte: de 5 a 15 s depois do FIGHT!; azar: de 15 a 30 s (rounds curtos também têm os dois)
+    this.podAt = 110 + 300 + Math.floor(Math.random() * 600);
+    this.podKind = Math.random() < 0.5 ? 'pick' : 'guitar';
+    this.badAt = 110 + 900 + Math.floor(Math.random() * 900); this.badDone = false;
+  }
+  eventBanner(b) {
+    this.bannerPow = b; this.bannerT = 70; this.flashT = 8;
+    this.bnName.setText(b.name); chrome(this.bnName, 'gold'); this.bnName.setShadow(0, 0, b.neon, 14, true, false);
+    this.bnTag.setText(b.tag).setStroke(b.neon, 2).setShadow(0, 0, b.neon, 10, true, true);
+    this.bnTag.x = this.bnName.width * 0.18;
+  }
+  // azar da vez: corda arrebentada ou groupies, com quem está na frente (empate: sorteio)
+  updateBad() {
+    if (this.phase !== 'fight' || this.badDone || this.phaseT < this.badAt) return;
+    const [a, b] = this.p, f = a.hp === b.hp ? this.p[Math.random() * 2 | 0] : a.hp > b.hp ? a : b;
+    if (!f.free || f.airborne || f.pod > 0) return; // espera ele ficar livre (e não mexe com quem está com a palheta)
+    this.badDone = true;
+    const kind = !this.textures.exists('ev_groupie_a') ? 'snap' : !this.textures.exists('ev_snap') ? 'groupies' : (Math.random() < 0.5 ? 'snap' : 'groupies');
+    if (kind === 'snap') this.snapString(f); else this.callGroupies(f);
+  }
+  snapString(f) {
+    f.snap = SNAP.dur;
+    const k = scOf(f);
+    if (this.textures.exists('ev_snap')) this.snaps.push({ f, t: 0, spr: this.add.sprite(f.x, FLOOR - 120 * k, 'ev_snap', 0).setScale(1.5 * k).setDepth(13) });
+    this.eventBanner(SNAP_BANNER); this.cameras.main.shake(120, 0.006);
+    this.say('TWANG!', f.x, FLOOR - px(300), '#ffffff', 40);
+  }
+  callGroupies(f) {
+    // uma vem de cada lado da tela correndo
+    for (const [side, key] of [[-1, 'ev_groupie_a'], [1, 'ev_groupie_b']]) {
+      if (!this.textures.exists(key)) continue;
+      const x = side < 0 ? -60 : W + 60;
+      this.groupies.push({ f, side, key, x, phase: 'run', t: 0, spr: this.add.sprite(x, FLOOR, key, 0).setOrigin(0.5, 213 / GROUPIE.fh).setScale(SC * 1.1).setDepth(11).setFlipX(side > 0) });
+    }
+    this.eventBanner(GROUPIE_BANNER);
+    this.say('KYAAA!', W / 2, FLOOR - 300, '#ff5ec8', 40);
+  }
+  updateGroupies() {
+    for (const g of this.groupies) {
+      g.t++;
+      const f = g.f, k = scOf(f), spot = f.x + g.side * 52 * k;
+      if (g.phase === 'run') {
+        const d = spot - g.x;
+        g.x += Math.sign(d) * Math.min(Math.abs(d), GROUPIE.speed);
+        g.spr.setFlipX(d < 0);
+        setFr(g.spr, Math.floor(g.t / 4) % 5);
+        if (Math.abs(d) < 2) {
+          if (f.state === 'ko' || this.phase !== 'fight') { g.phase = 'leave'; continue; }
+          g.phase = 'cling'; g.t = 0;
+          if (!(f.state === 'gag' && f.gag.k === 'grab')) { this.startGag(f, 'grab'); f.inv = 0; this.cameras.main.shake(100, 0.005); }
+        }
+      } else if (g.phase === 'cling') {
+        g.x = spot; g.spr.setFlipX(g.side > 0);
+        setFr(g.spr, 5 + Math.floor(g.t / 6) % 5);
+        if (!(f.state === 'gag' && f.gag.k === 'grab')) { g.phase = 'leave'; g.t = 0; }
+      } else {
+        g.x += g.side * GROUPIE.speed * 1.2; g.spr.setFlipX(g.side < 0);
+        setFr(g.spr, Math.floor(g.t / 4) % 5);
+      }
+      g.spr.setPosition(g.x, FLOOR + (g.phase === 'cling' ? f.y : 0));
+    }
+    this.groupies = this.groupies.filter(g => { if (g.phase === 'leave' && (g.x < -100 || g.x > W + 100)) { g.spr.destroy(); return false; } return true; });
+  }
+  updatePod() {
+    if (!this.textures.exists('pod_pick')) return;
+    if (!this.podAura) {
+      this.podAura = this.add.graphics().setDepth(9).setBlendMode(Phaser.BlendModes.ADD);
+      if (!this.textures.exists('spark_px')) {
+        const g = this.make.graphics({ x: 0, y: 0, add: false });
+        g.fillStyle(0xffffff, 1).fillRect(0, 0, 4, 4); g.generateTexture('spark_px', 4, 4); g.destroy();
+      }
+      // faíscas azuis de quem está com a Guitarra do Poder
+      this.pgEmb = this.p.map(() => this.add.particles(0, 0, 'spark_px', {
+        x: { min: -50, max: 50 }, y: { min: -180, max: -20 }, lifespan: { min: 150, max: 350 }, speedX: { min: -160, max: 160 }, speedY: { min: -160, max: 160 },
+        scale: { start: 1.2, end: 0 }, alpha: { start: 1, end: 0 }, tint: [0x3cf0ff, 0xffffff, 0x7d9bff], blendMode: 'ADD', frequency: 18, emitting: false,
+      }).setDepth(11));
+      // brasas subindo de quem está com a palheta
+      this.podEmb = this.p.map(() => this.add.particles(0, 0, 'spark_px', {
+        x: { min: -40, max: 40 }, y: { min: -170, max: 0 }, lifespan: { min: 400, max: 800 }, speedY: { min: -120, max: -50 },
+        scale: { start: 1.3, end: 0 }, alpha: { start: 1, end: 0 }, tint: [0xff3d1e, 0x9dff2a, 0xffffff], blendMode: 'ADD', frequency: 22, emitting: false,
+      }).setDepth(11));
+    }
+    // a palheta cai uma vez por round
+    this.updateBad(); this.updateGroupies(); this.updateSnaps();
+    if (this.phase === 'fight' && !this.podItem && !this.podDone && this.phaseT >= this.podAt && !this.p.some(f => f.pod > 0 || f.pg > 0)) {
+      const x = 160 + Math.random() * (W - 320), kind = this.podKind === 'guitar' && this.textures.exists('ev_guitar') ? 'guitar' : 'pick';
+      const key = kind === 'guitar' ? 'ev_guitar' : 'pod_pick';
+      this.podItem = {
+        x, y: -80, landed: false, t: 0, kind, key,
+        spr: this.add.sprite(x, -80, key, 0).setScale(kind === 'guitar' ? 0.75 : 0.7).setDepth(12),
+        shadow: this.add.ellipse(x, FLOOR + 2, 70, 12, kind === 'guitar' ? 0x3cf0ff : 0x9dff2a, 0.35).setDepth(5).setBlendMode(Phaser.BlendModes.ADD),
+      };
+      this.say('?!', x, FLOOR - 200, '#ffd23d', 40);
+    }
+    const it = this.podItem;
+    if (it) {
+      it.t++;
+      const rest = it.kind === 'guitar' ? FLOOR - 62 : FLOOR - 46;
+      if (!it.landed) { it.y = Math.min(rest, it.y + 6); if (it.y >= rest) { it.landed = true; it.t = 0; this.cameras.main.shake(80, 0.003); } }
+      const bob = it.landed ? Math.sin(it.t / 9) * 6 : 0;
+      it.spr.setPosition(it.x, it.y + bob);
+      setFr(it.spr, Math.floor(this.tick / 4) % this.nf(it.key));
+      const near = Math.max(0.3, Math.min(1, (it.y + 80) / (rest + 80)));
+      it.shadow.setScale(near).setAlpha(0.25 + 0.2 * Math.sin(this.tick / 6));
+      // pisca antes de sumir
+      if (it.landed && it.t > POD.life - 90) it.spr.setVisible(it.t % 8 < 5);
+      if (it.landed && it.t > POD.life) { it.spr.destroy(); it.shadow.destroy(); this.podItem = null; this.podDone = true; }
+      else if (it.landed && this.phase === 'fight') {
+        const f = this.p.find(f => f.state !== 'ko' && Math.abs(f.x - it.x) < 55 && f.y > -170);
+        if (f) {
+          it.spr.destroy(); it.shadow.destroy(); this.podItem = null; this.podDone = true;
+          f.snap = 0; // pegar um item também conserta a corda
+          if (it.kind === 'guitar') {
+            f.pg = PG.dur; this.eventBanner(PG_BANNER);
+            this.cameras.main.shake(200, 0.01); this.cameras.main.flash(160, 60, 240, 255);
+            this.say('ELECTRIFIED!', f.x, FLOOR - px(300), '#3cf0ff', 40);
+          } else {
+            f.pod = POD.dur; this.eventBanner(POD_BANNER);
+            this.cameras.main.shake(260, 0.012); this.cameras.main.flash(160, 157, 255, 42);
+            this.say('GODLIKE!', f.x, FLOOR - px(300), '#9dff2a', 40);
+          }
+        }
+      }
+    }
+    // quem está com a palheta: aura vermelha e dourada pulsando e brasas subindo
+    const g = this.podAura; g.clear();
+    this.p.forEach((f, i) => {
+      const em = this.podEmb[i];
+      if (f.pod > 0) {
+        if (this.phase === 'fight') f.pod--;
+        const k = scOf(f), cy = FLOOR + f.y - 95 * k, pulse = 1 + Math.sin(this.tick / 4) * 0.08;
+        const fade = f.pod < 60 ? (f.pod % 10 < 5 ? 0.4 : 1) : 1;
+        for (const [rw, rh, col, a] of [[150, 230, 0xff3d1e, 0.10], [115, 190, 0x9dff2a, 0.12], [80, 150, 0xd8ff6a, 0.12]]) // vermelho-sangue e o verde-limão da palheta
+          g.fillStyle(col, a * fade).fillEllipse(f.x, cy, rw * k * pulse, rh * k * pulse);
+        em.setPosition(f.x, FLOOR + f.y); em.emitting = true;
+        f.spr.setTint(this.tick % 8 < 4 ? 0xc8ff7a : 0xff8a6a); // pisca verde-limão e vermelho
+        if (f.pod === 0 || f.state === 'ko') { f.pod = 0; em.emitting = false; f.spr.setTint(f.tint); this.spawnHand(f); }
+      } else em.emitting = false;
+      const pe = this.pgEmb[i];
+      if (f.pg > 0) {
+        if (this.phase === 'fight') f.pg--;
+        const k = scOf(f), cy = FLOOR + f.y - 95 * k;
+        const fade = f.pg < 60 ? (f.pg % 10 < 5 ? 0.4 : 1) : 1;
+        g.fillStyle(0x3cf0ff, 0.12 * fade).fillEllipse(f.x, cy, 150 * k, 230 * k);
+        g.fillStyle(0xffffff, (this.tick % 6 < 2 ? 0.12 : 0.04) * fade).fillEllipse(f.x, cy, 100 * k, 170 * k);
+        pe.setPosition(f.x, FLOOR + f.y); pe.emitting = true;
+        if (f.pod <= 0) f.spr.setTint(this.tick % 6 < 3 ? 0x9ff0ff : 0xffffff);
+        if (f.pg === 0 || f.state === 'ko') { f.pg = 0; pe.emitting = false; f.spr.setTint(f.tint); this.say('POOF!', f.x, FLOOR - px(260), '#3cf0ff', 30); this.spark(f.x, FLOOR - px(150), 0x3cf0ff, f.char); }
+      } else pe.emitting = false;
+      // corda arrebentada: agachado troca a corda mais rápido
+      if (f.snap > 0 && this.phase === 'fight') {
+        f.snap -= f.state === 'crouch' ? 3 : 1;
+        if (f.state === 'crouch' && this.tick % 40 === 0) this.say('RESTRINGING...', f.x, FLOOR - px(260), '#c0c8d8', 24);
+        else if (f.state !== 'crouch' && f.snap % 75 === 30) this.say('↓ TO RESTRING', f.x, FLOOR - px(300), '#c0c8d8', 22);
+        if (f.snap <= 0) { f.snap = 0; this.say('STRING FIXED!', f.x, FLOOR - px(280), '#7dff6a', 30); }
+      }
+    });
+    // a mão do diabo vem buscar a palheta de volta
+    for (const h of this.podHands) {
+      h.t++;
+      const fr = Math.floor(h.t / 5);
+      setFr(h.spr, Math.min(fr, this.nf('pod_hand') - 1));
+      if (fr === 5 && h.t % 5 === 0) { this.say('GIVE IT BACK!', Phaser.Math.Clamp(h.x, 170, W - 170), FLOOR - px(330), '#ff3d1e', 34); this.cameras.main.shake(120, 0.006); }
+    }
+    this.podHands = this.podHands.filter(h => { if (Math.floor(h.t / 5) >= this.nf('pod_hand') + 2) { h.spr.destroy(); return false; } return true; });
+  }
+  updateSnaps() {
+    for (const sn of this.snaps) {
+      sn.t++; const k = scOf(sn.f);
+      sn.spr.setPosition(sn.f.x + sn.f.facing * 30 * k, FLOOR + sn.f.y - 120 * k).setFlipX(sn.f.facing < 0);
+      setFr(sn.spr, Math.min(Math.floor(sn.t / 4), this.nf('ev_snap') - 1));
+    }
+    this.snaps = this.snaps.filter(sn => { if (sn.t >= this.nf('ev_snap') * 4 + 6) { sn.spr.destroy(); return false; } return true; });
+  }
+  spawnHand(f) {
+    if (!this.textures.exists('pod_hand')) return;
+    const x = Phaser.Math.Clamp(f.x - f.facing * 85, 70, W - 70); // sai pelas costas dele, onde o outro não tapa
+    this.podHands.push({ x, t: 0, spr: this.add.sprite(x, FLOOR + 8, 'pod_hand', 0).setOrigin(0.5, 1).setScale(SC).setDepth(11) });
+    // a palheta sai do peito do guitarrista e voa para a palma da mão, que se fecha nela (quadro 6)
+    const pk = this.add.sprite(f.x, FLOOR + f.y - px(150), 'pod_pick', 8).setScale(0.45).setDepth(12);
+    this.tweens.add({ targets: pk, x, y: FLOOR - 150, angle: 360, duration: 380, delay: 60, ease: 'Sine.easeInOut',
+      onComplete: () => this.time.delayedCall(70, () => pk.destroy()) });
+  }
+
   spawnBira(f) {
     const dir = f.facing, x = dir > 0 ? -80 : W + 80, key = this.tk(f.char, 'bira');
     const spr = this.add.sprite(x, FLOOR, key, 0).setDepth(22).setFlipX(dir < 0).setScale(SC)
