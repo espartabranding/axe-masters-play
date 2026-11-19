@@ -487,7 +487,7 @@ const ANGUS_ANIMS = {
   idle: 10, walk_fwd: 10, walk_back: 10, lp: 10, hp: 10, lk: 10, hk: 10, react: 10, victory: 10,
   block: 5, hit: 5, ko: 5, jump: 5, crouch: 5, jumpkick: 5,
   bagtoss: 10, fx_bag: 10, bellcall: 10, fx_bell: 10, highway: 10, fx_hellfire: 10, stomp: 10, fx_voltage: 10, jailcall: 5, fx_jail: 5,
-  spasm: 15, horns: 10, fx_horns: 10, duckwalk: 10, fx_soundwave: 10, thunder: 10, salute: 10, fx_cannon: 10, fx_ball: 10,
+  spasm: 15, horns: 10, fx_horns: 10, duckwalk: 10, fx_soundwave: 10, thunder: 10, salute: 10, fx_cannon: 10, fx_ball: 10, fx_muzzle: 10, fx_bigboom: 10,
   sleep: 5, dance: 5, deaf: 5, cry: 10,
 };
 const ANGUS_POWERS = {
@@ -514,8 +514,15 @@ const JAIL = { dmg: 100, hitstun: 28, blockstun: 16, push: 10, chip: 10, shake: 
 const HORNS = { dmg: 15, hitstun: 12, blockstun: 6, push: 3, chip: 3, gag: 'swell' };
 // onda de som do duckwalk: lenta, rola pelo chão
 const QUACK = { dmg: 60, hitstun: 20, blockstun: 12, push: 5, chip: 6, gag: 'dizzy', word: ['QUACK!', '#ffb347'] };
-// balas de canhão do super
-const CANNONBALL = { dmg: 55, hitstun: 16, blockstun: 10, push: 4, chip: 6, shake: 0.01, gag: 'flat', word: ['FIRE!', '#ff7a1a'] };
+// super: a bateria de canhões do cenário dispara e a bala gigante do canhão da frente acerta em cheio (não dá para defender)
+const BIGSHOT = { dmg: 270, hitstun: 40, blockstun: 20, push: 14, chip: 0, shake: 0.03, unblockable: true, gag: 'flat', word: ['FIRE!', '#ff7a1a'] };
+// bocas dos canhões em super-angus.jpg (fração da tela: x, y, tamanho do clarão); os dois primeiros são os gigantes da frente
+const ANGUS_CANNONS = [
+  [0.186, 0.526, 1.25], [0.846, 0.521, 1.25],
+  [0.299, 0.574, 0.8], [0.751, 0.574, 0.8], [0.347, 0.606, 0.55], [0.688, 0.596, 0.55], [0.395, 0.622, 0.4], [0.646, 0.611, 0.4],
+  [0.093, 0.298, 0.6], [0.876, 0.335, 0.6], [0.185, 0.335, 0.55], [0.804, 0.383, 0.55], [0.245, 0.388, 0.45], [0.751, 0.425, 0.45],
+  [0.299, 0.425, 0.38], [0.718, 0.468, 0.38], [0.335, 0.468, 0.3], [0.682, 0.510, 0.3], [0.365, 0.494, 0.25], [0.993, 0.303, 0.5],
+];
 const ANGUS_MOVES = {
   // SG Jab: empurra a SG para a frente, curto e rápido
   lp: { dur: [1, 1, 1, 2, 2, 2, 1, 1, 2, 1], active: [3, 4, 5], dmg: 28, hit: { x: 40, y: -190, w: 115, h: 60 }, hitstun: 14, blockstun: 8, push: 5, wave: 4 },
@@ -542,12 +549,13 @@ const ANGUS_MOVES = {
   // DEVIL HORNS: uma revoada de tiaras de chifrinhos persegue o oponente
   horns: { dur: [3, 4, 4, 5, 5, 6, 5, 5, 5, 4], swarm: 4, tex: 'fx_horns', payload: HORNS, count: 5, swarmScale: 0.42 },
   // DUCKWALK: atravessa um pedaço do palco no passo do pato e solta uma onda de som que rola pelo chão
-  duckwalk: { dur: [3, 3, 3, 3, 3, 3, 3, 4, 5, 5], step: [0, 6, 4], spawn: 7, tex: 'fx_soundwave', payload: QUACK, speed: [2.8, 3.8], projScale: 0.85, projY: 70, projBox: [120, 100], projAdd: true },
+  duckwalk: { dur: [3, 3, 3, 3, 3, 3, 3, 4, 5, 5], step: [0, 6, 4], spawn: 7, tex: 'fx_soundwave', payload: QUACK, speed: [2.8, 3.8], projScale: 2.1, projY: 145, projBox: [250, 230], projAdd: true }, // o fogo maior (pedido do usuário em 18/11/2026)
   // THUNDERSTRUCK (A + D): o riff a toda velocidade chama raios sobre o oponente
   thunder: { dur: [5, 5, 6, 8, 8, 8, 8, 8, 8, 6], bolts: [3, 8], payload: BOLT, notes: [3, 8] },
-  // SUPER FOR THOSE ABOUT TO ROCK (A + S com a barra cheia): continência, um canhão surge atrás dele e dispara uma salva
-  salute: { dur: [8, 10, 10, 10, 10, 10, 10, 12, 12, 10], super: true, dark: true, inv: 30, notes: [1, 3],
-    prop: { at: 3, tex: 'fx_cannon', dx: -150, rate: 8, scale: 1.0 }, volley: [4, 5, 6, 7, 8], tex: 'fx_ball', payload: CANNONBALL, projX: -60, projY: 95, speed: [9, 9], projScale: 0.7, projBox: [70, 70],
+  // SUPER FOR THOSE ABOUT TO ROCK (A + S com a barra cheia): o palco vira a estrada cercada de canhões (super-angus.jpg); ele ergue
+  // a SG e grita fogo, a bateria inteira dispara em ondas e a bala gigante do canhão da frente acerta o oponente em cheio
+  salute: { dur: [10, 14, 14, 14, 14, 14, 16, 22, 30, 30], super: true, inv: 60, notes: [1, 3],
+    battery: [2, 3, 4, 5, 6], bigShot: { at: 7, tex: 'fx_ball', payload: BIGSHOT, frames: 20, scale: 1.8 },
     finish: { at: 9, gag: 'burnt', word: ['TOASTED!', '#ff7a1a'] } },
 };
 const ANGUS_SPECIALS = [
@@ -600,19 +608,19 @@ function angusCpu(me, op, scene) {
 // ---------------------------------------------------------------------------------------------
 const CHARS = {};
 CHARS.eddie = {
-  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=7da3d06', // superStage: cena que toma o fundo no super e na vitória
+  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=7e7a79f', // superStage: cena que toma o fundo no super e na vitória
   anims: EDDIE_ANIMS, moves: EDDIE_MOVES, powers: EDDIE_POWERS, specials: EDDIE_SPECIALS, cpu: eddieCpu,
   jumpkick: JUMPKICK, bigTitle: '5150', blurb: 'Brown Sound',
   stage: 'eddie', // palco da casa (ver STAGES)
 };
 CHARS.slash = {
-  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=7da3d06', // superStage: cena que toma o fundo no super e na vitória
+  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=7e7a79f', // superStage: cena que toma o fundo no super e na vitória
   anims: SLASH_ANIMS, moves: SLASH_MOVES, powers: SLASH_POWERS, specials: SLASH_SPECIALS, cpu: slashCpu,
   jumpkick: JUMPKICK, bigTitle: 'APPETITE', bigSize: 150, blurb: 'Top Hat',
   stage: 'slash',
 };
 CHARS.zakk = {
-  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=7da3d06', // superStage: cena que toma o fundo no super e na vitória
+  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=7e7a79f', // superStage: cena que toma o fundo no super e na vitória
   anims: ZAKK_ANIMS, moves: ZAKK_MOVES, powers: ZAKK_POWERS, specials: ZAKK_SPECIALS, cpu: zakkCpu,
   jumpkick: JUMPKICK, bigTitle: 'NO MORE TEARS', bigSize: 95, blurb: 'Black Label',
   stage: 'zakk', vicRate: 28, vicFrames: [0, 1, 2, 4, 5, 6, 7, 8], // sem o quadro 3 (pé no amplificador) e o 9 (braços cruzados)
@@ -620,7 +628,7 @@ CHARS.zakk = {
   // a vitória do Zakk é uma sequência de poses (grito, cerveja, chifrinhos): ~0,5 s cada
 };
 CHARS.vai = {
-  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=7da3d06', // superStage: cena que toma o fundo no super e na vitória
+  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=7e7a79f', // superStage: cena que toma o fundo no super e na vitória
   anims: VAI_ANIMS, moves: VAI_MOVES, powers: VAI_POWERS, specials: VAI_SPECIALS, cpu: vaiCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THE LOVE OF GOD', bigSize: 78, blurb: 'Ibanez JEM',
   stage: 'stadium', // palco da casa ainda não existe
@@ -629,7 +637,7 @@ CHARS.vai = {
 // o Angus está em stand by (folhas incompletas, nada recortado em assets/angus): só entra no elenco quando ANGUS_READY for true
 const ANGUS_READY = true;
 if (ANGUS_READY) CHARS.angus = {
-  name: 'ANGUS', dir: 'angus', hp: 950, walkF: 3.7, walkB: 3.0, superStage: 'assets/stages/cenario-alta-voltagem.jpg?v=7da3d06', // o cenário HIGH VOLTAGE (sino, raios e canhões) vira a cena do super e da vitória
+  name: 'ANGUS', dir: 'angus', hp: 950, walkF: 3.7, walkB: 3.0, superStage: 'assets/stages/super-angus.jpg?v=7e7a79f', // o cenário HIGH VOLTAGE cercado pela bateria de canhões (cena do super e da vitória)
   anims: ANGUS_ANIMS, moves: ANGUS_MOVES, powers: ANGUS_POWERS, specials: ANGUS_SPECIALS, cpu: angusCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THOSE ABOUT TO ROCK', bigSize: 70, blurb: 'Gibson SG',
   stage: 'stadium', // palco da casa ainda não existe
@@ -646,17 +654,17 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=7da3d06' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=7da3d06' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=7da3d06' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=7da3d06' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=7da3d06' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=7da3d06' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=7da3d06' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=7e7a79f' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=7e7a79f' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=7e7a79f' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=7e7a79f' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=7e7a79f' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=7e7a79f' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=7e7a79f' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=7da3d06', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=7e7a79f', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -740,7 +748,7 @@ class Fighter {
     return d.length - 1;
   }
   startMove(name) {
-    this.state = 'attack'; this.move = name; this.t = 0; this.hasHit = false; this.vx = 0; this.spawned = false; this.evWave = false; this.evDust = false; this.evRise = false; this.evSmoke = false; this.evRev = false; this.evFinish = false; this.evProp = false; this.evVolley = -1; this.lastHitT = -99;
+    this.state = 'attack'; this.move = name; this.t = 0; this.hasHit = false; this.vx = 0; this.spawned = false; this.evWave = false; this.evDust = false; this.evRise = false; this.evSmoke = false; this.evRev = false; this.evFinish = false; this.evProp = false; this.evVolley = -1; this.evBattery = -1; this.lastHitT = -99;
   }
 }
 
@@ -783,10 +791,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=7da3d06`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=7e7a79f`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=7da3d06`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=7da3d06`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=7e7a79f`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=7e7a79f`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -797,7 +805,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=7da3d06`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=7e7a79f`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1344,7 +1352,7 @@ class Fight extends Phaser.Scene {
     // mesma cara dos dois lados (Eddie x Eddie, ou um placeholder): o P2 fica azul
     this.mirror = this.chars[0] === this.chars[1];
     if (this.tk(this.chars[0], 'idle') === this.tk(this.chars[1], 'idle')) this.p[1].tint = P2_TINT;
-    this.projs = []; this.bombList = []; this.booms = []; this.fx = []; this.ghosts = []; this.bees = []; this.words = []; this.dlrs = []; this.hypnos = []; this.sliders = []; this.biras = []; this.erupts = []; this.bolts = []; this.rainT = 0;
+    this.projs = []; this.bombList = []; this.booms = []; this.fx = []; this.ghosts = []; this.bees = []; this.words = []; this.dlrs = []; this.hypnos = []; this.sliders = []; this.biras = []; this.erupts = []; this.bolts = []; this.shots = []; this.rainT = 0;
     this.flash = this.add.rectangle(0, 0, W, H, 0xffffff, 0).setOrigin(0).setDepth(55); this.flashT = 0;
     this.sparks = this.add.graphics().setDepth(30);
     this.beamG = this.add.graphics().setDepth(24).setBlendMode(Phaser.BlendModes.ADD);
@@ -1422,6 +1430,7 @@ class Fight extends Phaser.Scene {
     (this.sliders || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.sliders = [];
     (this.biras || []).forEach(d => { d.spr.destroy(); d.shadow.destroy(); }); this.biras = [];
     (this.erupts || []).forEach(e => e.spr.destroy()); this.erupts = [];
+    (this.shots || []).forEach(o => o.spr.destroy()); this.shots = [];
     this.bolts = []; this.rainT = 0; if (this.rainG) this.rainG.clear();
     (this.hypnos || []).forEach(h => h.spr.destroy()); this.hypnos = [];
     if (this.dark) { this.dark.setAlpha(0); this.temple.setAlpha(0); this.templeGlow.setAlpha(0); this.beams.clear(); }
@@ -1499,6 +1508,7 @@ class Fight extends Phaser.Scene {
     this.separate(a, b);
     for (const f of this.p) this.checkHit(f, this.p[1 - f.side]);
     this.updateProjectiles();
+    this.updateBigShots();
     this.updateBombs();
     this.updateBees();
     this.updateDLR();
@@ -1585,7 +1595,9 @@ class Fight extends Phaser.Scene {
     } else if (f.state === 'attack') {
       const m = f.m, SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem golpeia
       if (m.spawn !== undefined && !f.spawned && f.moveStep() >= m.spawn) { f.spawned = true; this.spawnProjectile(f); }
-      if (m.volley && m.volley.includes(f.moveStep()) && f.evVolley !== f.moveStep()) { f.evVolley = f.moveStep(); this.spawnProjectile(f); } // salva: um projétil por quadro listado (super do Angus)
+      if (m.volley && m.volley.includes(f.moveStep()) && f.evVolley !== f.moveStep()) { f.evVolley = f.moveStep(); this.spawnProjectile(f); } // salva: um projétil por quadro listado
+      if (m.battery && m.battery.includes(f.moveStep()) && f.evBattery !== f.moveStep()) { f.evBattery = f.moveStep(); this.fireBattery(f, m.battery.indexOf(f.moveStep()), m.battery.length); }
+      if (m.bigShot && f.moveStep() >= m.bigShot.at && !f.spawned) { f.spawned = true; this.spawnBigShot(f, op); }
       if (m.bombs !== undefined && !f.spawned && f.moveStep() >= m.bombs) { f.spawned = true; this.spawnBombs(f, op); }
       const st = f.moveStep();
       if (m.wave !== undefined && st === m.wave && !f.evWave) { f.evWave = true; this.addFx('fx_wave', f.x + f.facing * px(135), FLOOR - px(195), { vx: f.facing * 3, flip: f.facing < 0, rate: 3, scale: 0.8 * SC }, ch); }
@@ -1687,7 +1699,7 @@ class Fight extends Phaser.Scene {
 
   applyHit(att, def, m, sx, sy, isProj) {
     // golpe no pulo não pode ser defendido agachado
-    const blocking = def.canBlock() && def.holdBack && !def.airborne && !(m.overhead && def.holdDown) && !(m.low && !def.holdDown);
+    const blocking = !m.unblockable && def.canBlock() && def.holdBack && !def.airborne && !(m.overhead && def.holdDown) && !(m.low && !def.holdDown);
     const away = def.x >= att.x ? 1 : -1;
     if (blocking) {
       def.state = 'block'; def.stun = m.blockstun; def.vx = away * m.push * 0.8; def.t = 0;
@@ -1850,6 +1862,41 @@ class Fight extends Phaser.Scene {
   }
 
   // PROJÉTIL (Eruption): anda reto; dois projéteis se anulam
+  // SUPER DO ANGUS: os canhões do cenário disparam em ondas (wave de n); cada boca solta um clarão com fumaça, atrás dos lutadores
+  fireBattery(f, wave, n) {
+    ANGUS_CANNONS.forEach(([x, y, s], i) => {
+      if (i < 2 || (i + wave) % 2) return; // metade dispara em cada onda; os dois gigantes da frente ficam para o tiro final
+      this.time.delayedCall(Math.random() * 120, () => this.addFx('fx_muzzle', x * W, y * H, { rate: 3, scale: s * 0.9, add: true, depth: 9.5 }, f.char));
+    });
+    this.cameras.main.shake(140, 0.006 + wave * 0.002);
+  }
+
+  // o tiro certeiro: a bala gigante sai do canhão da frente do lado do Angus e vai direto no oponente, onde ele estiver
+  spawnBigShot(f, op) {
+    const b = f.m.bigShot, [cx, cy, s] = ANGUS_CANNONS[f.facing > 0 ? 0 : 1], x = cx * W, y = cy * H;
+    this.addFx('fx_muzzle', x, y, { rate: 3, scale: s * 1.3, add: true, depth: 9.5 }, f.char);
+    this.flashT = 6; this.cameras.main.shake(220, 0.016);
+    const spr = this.add.sprite(x, y, this.tk(f.char, b.tex), 0).setDepth(25).setScale(b.scale * 0.4).setFlipX(f.facing < 0);
+    this.shots.push({ owner: f, x0: x, y0: y, t: 0, n: b.frames, spr, b });
+  }
+
+  updateBigShots() {
+    for (const o of this.shots) {
+      o.t++;
+      const def = this.p[1 - o.owner.side], k = Math.min(1, o.t / o.n);
+      const tx = def.x, ty = FLOOR + def.y - px(150), e = k * k; // acelera: sai devagar da boca e chega com tudo
+      o.spr.setPosition(o.x0 + (tx - o.x0) * e, o.y0 + (ty - o.y0) * e - Math.sin(k * Math.PI) * 40).setScale(o.b.scale * (0.4 + 0.6 * k));
+      o.spr.setFrame(Math.floor(o.t / 2) % this.nf(o.spr.texture.key));
+      if (k >= 1) {
+        o.dead = true;
+        if (def.state !== 'ko') this.applyHit(o.owner, def, o.b.payload, tx, ty, true);
+        this.addFx('fx_bigboom', tx, FLOOR + 30, { rate: 7, scale: 1.7, add: true, oy: AY / FH, depth: 27 }, o.owner.char);
+        this.flashT = 10; this.cameras.main.shake(420, 0.03);
+      }
+    }
+    this.shots = this.shots.filter(o => { if (o.dead) o.spr.destroy(); return !o.dead; });
+  }
+
   spawnProjectile(f) {
     const SC = scOf(f), px = v => Math.round(v * SC); // efeitos na escala de quem soltou (o Zakk é maior)
     const m = f.m, x = f.x + f.facing * px(m.projX !== undefined ? m.projX : 125), y = FLOOR - px(m.projY || 145);

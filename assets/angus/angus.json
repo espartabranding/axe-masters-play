@@ -155,6 +155,14 @@
     "fx_jail": {
       "frames": 5,
       "file": "fx_jail.png"
+    },
+    "fx_muzzle": {
+      "frames": 10,
+      "file": "fx_muzzle.png"
+    },
+    "fx_bigboom": {
+      "frames": 10,
+      "file": "fx_bigboom.png"
     }
   }
 }
