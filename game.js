@@ -608,19 +608,19 @@ function angusCpu(me, op, scene) {
 // ---------------------------------------------------------------------------------------------
 const CHARS = {};
 CHARS.eddie = {
-  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=9658bb2', // superStage: cena que toma o fundo no super e na vitória
+  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=cef7006', // superStage: cena que toma o fundo no super e na vitória
   anims: EDDIE_ANIMS, moves: EDDIE_MOVES, powers: EDDIE_POWERS, specials: EDDIE_SPECIALS, cpu: eddieCpu,
   jumpkick: JUMPKICK, bigTitle: '5150', blurb: 'Brown Sound',
   stage: 'eddie', // palco da casa (ver STAGES)
 };
 CHARS.slash = {
-  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=9658bb2', // superStage: cena que toma o fundo no super e na vitória
+  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=cef7006', // superStage: cena que toma o fundo no super e na vitória
   anims: SLASH_ANIMS, moves: SLASH_MOVES, powers: SLASH_POWERS, specials: SLASH_SPECIALS, cpu: slashCpu,
   jumpkick: JUMPKICK, bigTitle: 'APPETITE', bigSize: 150, blurb: 'Top Hat',
   stage: 'slash',
 };
 CHARS.zakk = {
-  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=9658bb2', // superStage: cena que toma o fundo no super e na vitória
+  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=cef7006', // superStage: cena que toma o fundo no super e na vitória
   anims: ZAKK_ANIMS, moves: ZAKK_MOVES, powers: ZAKK_POWERS, specials: ZAKK_SPECIALS, cpu: zakkCpu,
   jumpkick: JUMPKICK, bigTitle: 'NO MORE TEARS', bigSize: 95, blurb: 'Black Label',
   stage: 'zakk', vicRate: 28, vicFrames: [0, 1, 2, 4, 5, 6, 7, 8], // sem o quadro 3 (pé no amplificador) e o 9 (braços cruzados)
@@ -628,7 +628,7 @@ CHARS.zakk = {
   // a vitória do Zakk é uma sequência de poses (grito, cerveja, chifrinhos): ~0,5 s cada
 };
 CHARS.vai = {
-  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=9658bb2', // superStage: cena que toma o fundo no super e na vitória
+  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=cef7006', // superStage: cena que toma o fundo no super e na vitória
   anims: VAI_ANIMS, moves: VAI_MOVES, powers: VAI_POWERS, specials: VAI_SPECIALS, cpu: vaiCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THE LOVE OF GOD', bigSize: 78, blurb: 'Ibanez JEM',
   stage: 'stadium', // palco da casa ainda não existe
@@ -637,7 +637,7 @@ CHARS.vai = {
 // o Angus está em stand by (folhas incompletas, nada recortado em assets/angus): só entra no elenco quando ANGUS_READY for true
 const ANGUS_READY = true;
 if (ANGUS_READY) CHARS.angus = {
-  name: 'ANGUS', dir: 'angus', hp: 950, walkF: 3.7, walkB: 3.0, superStage: 'assets/stages/super-angus.jpg?v=9658bb2', // o cenário HIGH VOLTAGE cercado pela bateria de canhões (cena do super e da vitória)
+  name: 'ANGUS', dir: 'angus', hp: 950, walkF: 3.7, walkB: 3.0, superStage: 'assets/stages/super-angus.jpg?v=cef7006', // o cenário HIGH VOLTAGE cercado pela bateria de canhões (cena do super e da vitória)
   anims: ANGUS_ANIMS, moves: ANGUS_MOVES, powers: ANGUS_POWERS, specials: ANGUS_SPECIALS, cpu: angusCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THOSE ABOUT TO ROCK', bigSize: 70, blurb: 'Gibson SG',
   stage: 'stadium', // palco da casa ainda não existe
@@ -654,27 +654,27 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=9658bb2' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=9658bb2' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=9658bb2' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=9658bb2' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=9658bb2' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=9658bb2' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=9658bb2' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=cef7006' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=cef7006' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=cef7006' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=cef7006' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=cef7006' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=cef7006' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=cef7006' },
   // 18/11/2026 (pedido do usuário: Rock in Rio, um presídio e outros engraçados e temáticos); só clima, sem nome de festival ou marca
-  { id: 'rio',      name: 'CITY OF ROCK',   tag: 'Rio festival',       file: 'assets/stages/cenario-rio.jpg?v=9658bb2' },
-  { id: 'prison',   name: 'PRISON YARD',    tag: 'Jailhouse gig',      file: 'assets/stages/cenario-prison.jpg?v=9658bb2' },
-  { id: 'bira',     name: 'OPEN BAR',       tag: "Rock n' Bira",       file: 'assets/stages/cenario-bira.jpg?v=9658bb2' },
-  { id: 'school',   name: 'SCHOOL GYM',     tag: 'Talent show',        file: 'assets/stages/cenario-school.jpg?v=9658bb2' },
-  { id: 'party',    name: 'BIRTHDAY BASH',  tag: 'Kids party',         file: 'assets/stages/cenario-party.jpg?v=9658bb2' },
+  { id: 'rio',      name: 'CITY OF ROCK',   tag: 'Rio festival',       file: 'assets/stages/cenario-rio.jpg?v=cef7006' },
+  { id: 'prison',   name: 'PRISON YARD',    tag: 'Jailhouse gig',      file: 'assets/stages/cenario-prison.jpg?v=cef7006' },
+  { id: 'bira',     name: 'OPEN BAR',       tag: "Rock n' Bira",       file: 'assets/stages/cenario-bira.jpg?v=cef7006' },
+  { id: 'school',   name: 'SCHOOL GYM',     tag: 'Talent show',        file: 'assets/stages/cenario-school.jpg?v=cef7006' },
+  { id: 'party',    name: 'BIRTHDAY BASH',  tag: 'Kids party',         file: 'assets/stages/cenario-party.jpg?v=cef7006' },
   // famosos no fundo (caricaturas, pedido do usuário em 18/11/2026); os palcos com bandas tocando saíram (o usuário achou horríveis e desproporcionais)
-  { id: 'summit',   name: 'THE SUMMIT',     tag: 'World leaders',      file: 'assets/stages/cenario-summit.jpg?v=9658bb2' },
-  { id: 'keynote',  name: 'GPU KEYNOTE',    tag: 'Tech launch',        file: 'assets/stages/cenario-keynote.jpg?v=9658bb2' },
-  { id: 'crossroads', name: 'CROSSROADS',   tag: 'Sign here',          file: 'assets/stages/cenario-crossroads.jpg?v=9658bb2' },
+  { id: 'summit',   name: 'THE SUMMIT',     tag: 'World leaders',      file: 'assets/stages/cenario-summit.jpg?v=cef7006' },
+  { id: 'keynote',  name: 'GPU KEYNOTE',    tag: 'Tech launch',        file: 'assets/stages/cenario-keynote.jpg?v=cef7006' },
+  { id: 'crossroads', name: 'CROSSROADS',   tag: 'Sign here',          file: 'assets/stages/cenario-crossroads.jpg?v=cef7006' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=9658bb2', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=cef7006', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -801,10 +801,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=9658bb2`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=cef7006`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=9658bb2`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=9658bb2`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=cef7006`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=cef7006`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -815,7 +815,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=9658bb2`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=cef7006`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1098,49 +1098,69 @@ class Select extends Phaser.Scene {
     this.lock = [false, false];
     this.t = 0;
 
-    // fundo: palco apagado, grade neon em perspectiva
-    if (this.textures.exists('stage')) this.add.image(0, 0, 'stage').setOrigin(0).setDisplaySize(W, H).setAlpha(0.28);
-    this.add.rectangle(0, 0, W, H, 0x0b0710, 0.55).setOrigin(0);
-    const g = this.add.graphics();
-    const hz = 300;
-    for (let i = 0; i <= 8; i++) { g.lineStyle(1, 0xff3df0, 0.12 + i * 0.04); const y = hz + Math.pow(i / 8, 2) * (H - hz); g.lineBetween(0, y, W, y); }
-    for (let i = -10; i <= 10; i++) { g.lineStyle(1, 0x3cf0ff, 0.22); g.lineBetween(W / 2 + i * 22, hz, W / 2 + i * 150, H); }
+    // fundo: o estádio à noite (pedido do usuário em 19/11/2026: guitarristas num palco, sem caixas, algo apoteótico)
+    const bgKey = this.textures.exists('stage_stadium') ? 'stage_stadium' : 'stage';
+    if (this.textures.exists(bgKey)) this.add.image(W / 2, H / 2, bgKey).setDisplaySize(W * 1.04, H * 1.04).setTint(0x6a5c90);
+    this.add.rectangle(0, 0, W, H, 0x070312, 0.42).setOrigin(0);
+    const vg = this.add.graphics(); // céu mais escuro em cima, para o título e os nomes
+    for (let i = 0; i < 10; i++) vg.fillStyle(0x070312, 0.07).fillRect(0, 0, W, 210 - i * 18);
+    this.flashes = this.add.graphics().setBlendMode(Phaser.BlendModes.ADD); // flashes de câmera na plateia
+    this.beams = this.add.graphics().setBlendMode(Phaser.BlendModes.ADD);   // holofotes varrendo o estádio
+    this.spots = this.add.graphics().setBlendMode(Phaser.BlendModes.ADD).setDepth(1); // canhões de luz nos escolhidos
+
+    if (!this.textures.exists('spark_px')) {
+      const pg = this.make.graphics({ x: 0, y: 0, add: false });
+      pg.fillStyle(0xffffff, 1).fillRect(0, 0, 4, 4); pg.generateTexture('spark_px', 4, 4); pg.destroy();
+    }
+    // faíscas subindo da frente do palco
+    this.add.particles(0, H + 6, 'spark_px', {
+      x: { min: 0, max: W }, lifespan: { min: 2000, max: 3800 }, speedY: { min: -90, max: -30 }, speedX: { min: -15, max: 15 },
+      scale: { start: 1, end: 0 }, alpha: { start: 0.8, end: 0 }, tint: [0xffb347, 0xffffff, 0xff3d6e], frequency: 110, blendMode: 'ADD',
+    }).setDepth(1);
+    // pirotecnia quando alguém confirma e confete quando os dois estão prontos
+    this.pyro = this.add.particles(0, 0, 'spark_px', {
+      lifespan: { min: 600, max: 1300 }, speedY: { min: -520, max: -260 }, speedX: { min: -70, max: 70 }, gravityY: 520,
+      scale: { start: 1.6, end: 0.2 }, alpha: { start: 1, end: 0 }, tint: [0xffd23d, 0xff8a1e, 0xffffff, 0xff3d1e], blendMode: 'ADD', emitting: false,
+    }).setDepth(6);
+    this.confetti = this.add.particles(0, -10, 'spark_px', {
+      x: { min: 0, max: W }, lifespan: 4200, speedY: { min: 60, max: 140 }, speedX: { min: -40, max: 40 }, rotate: { min: 0, max: 360 },
+      scaleX: { min: 1.2, max: 2.2 }, scaleY: { min: 0.6, max: 1.2 }, tint: [0xff3d6e, 0x3cf0ff, 0xffd23d, 0x7dff6a, 0xffffff],
+      frequency: 25, emitting: false,
+    }).setDepth(7);
 
     const cr = { fontFamily: FONT_CHROME, fontStyle: 'italic 900', padding: { x: 24, y: 6 } };
-    const title = this.add.text(W / 2, 18, 'SELECT YOUR AXE', { ...cr, fontSize: '54px', color: '#fff', stroke: '#14061f', strokeThickness: 8 }).setOrigin(0.5, 0);
+    const title = this.add.text(W / 2, 6, 'SELECT YOUR AXE', { ...cr, fontSize: '40px', color: '#fff', stroke: '#14061f', strokeThickness: 7 }).setOrigin(0.5, 0).setDepth(8);
     chrome(title); title.setShadow(0, 0, '#ff3d6e', 18, true, false);
-    this.add.text(W / 2 + 170, 78, 'Choose your fighter', { fontFamily: FONT_NEON, fontSize: '30px', color: '#fff', padding: { x: 14, y: 8 } })
-      .setOrigin(0.5).setAngle(-5).setStroke('#ff3df0', 2).setShadow(0, 0, '#ff3df0', 10, true, true);
+    // nomes dos escolhidos em cima, um de cada lado, e o VS no meio
+    this.names = [0, 1].map(s => this.add.text(s === 0 ? 24 : W - 24, 58, '', { ...cr, fontSize: '50px', color: '#fff', stroke: '#14061f', strokeThickness: 8 })
+      .setOrigin(s === 0 ? 0 : 1, 0).setDepth(8));
+    this.tags = [0, 1].map(s => this.add.text(s === 0 ? 34 : W - 34, 124, '', { fontFamily: FONT_PIXEL, fontSize: '12px', color: s === 0 ? '#ff3d6e' : '#3cf0ff' })
+      .setOrigin(s === 0 ? 0 : 1, 0).setDepth(8));
+    this.vs = this.add.text(W / 2, 92, 'VS', { ...cr, fontSize: '46px', color: '#fff', stroke: '#14061f', strokeThickness: 8 }).setOrigin(0.5).setDepth(8);
+    chrome(this.vs, 'gold'); this.vs.setShadow(0, 0, '#ffb020', 16, true, false);
 
-    // os dois lutadores grandes, um de cada lado
-    this.big = [0, 1].map(s => this.add.sprite(s === 0 ? 190 : W - 190, FLOOR - 10, '__MISSING').setScale(SC * 1.05)
-      .setOrigin((s === 0 ? AX : FW - AX) / FW, AY / FH).setFlipX(s === 1).setDepth(2));
-    this.names = [0, 1].map(s => this.add.text(s === 0 ? 40 : W - 40, 120, '', { ...cr, fontSize: '64px', color: '#fff', stroke: '#14061f', strokeThickness: 8 })
-      .setOrigin(s === 0 ? 0 : 1, 0).setDepth(3));
-    this.tags = [0, 1].map(s => this.add.text(s === 0 ? 46 : W - 46, 196, '', { fontFamily: FONT_PIXEL, fontSize: '12px', color: s === 0 ? '#ff3d6e' : '#3cf0ff' })
-      .setOrigin(s === 0 ? 0 : 1, 0).setDepth(3));
-
-    // retratos: quadro 0 do idle recortado no rosto/corpo
-    const cw = 118, ch = 132, gap = 18, x0 = W / 2 - ((this.ids.length - 1) * (cw + gap)) / 2, cy = 300;
+    // a fila de guitarristas no palco, virados para o meio; o escolhido acende e cresce, os outros ficam na penumbra
+    const n = this.ids.length, feet = 452, left = 110, right = W - 110;
+    this.feet = feet;
     this.cards = this.ids.map((id, i) => {
-      const x = x0 + i * (cw + gap);
-      const bg = this.add.rectangle(x, cy, cw, ch, 0x150d1f, 0.92).setStrokeStyle(2, 0x2c1f3d).setDepth(4);
-      const key = texKey(this, CHARS[id], 'idle');
-      const img = this.add.sprite(x, cy + ch / 2 - 4, key, 0).setOrigin(AX / FW, AY / FH).setDepth(5);
-      if (key !== '__MISSING') img.setCrop(AX - 105, 50, 210, 240);
-      img.setScale(Math.min((cw - 8) / 210, (ch - 8) / 240));
-      const lbl = this.add.text(x, cy + ch / 2 + 14, CHARS[id].name, { fontFamily: FONT_PIXEL, fontSize: '11px', color: '#f3ecff' }).setOrigin(0.5).setDepth(5);
-      bg.setInteractive({ useHandCursor: true }).on('pointerdown', () => this.tapCard(i));
-      return { x, y: cy, bg, img, lbl };
+      const x = n === 1 ? W / 2 : left + (i * (right - left)) / (n - 1), flip = x > W / 2 + 1;
+      const c = CHARS[id], key = texKey(this, c, 'idle'), base = SC * 0.95 * (c.size || 1);
+      const spr = this.add.sprite(x, feet, key, 0).setOrigin((flip ? FW - AX : AX) / FW, AY / FH).setFlipX(flip).setScale(base).setDepth(3);
+      const shadow = this.add.ellipse(x, feet + 2, 120, 18, 0x000000, 0.45).setDepth(2);
+      const lbl = this.add.text(x, feet + 22, c.name, { fontFamily: FONT_PIXEL, fontSize: '11px', color: '#f3ecff', stroke: '#0b0710', strokeThickness: 4 }).setOrigin(0.5).setDepth(5);
+      const zone = this.add.zone(x, feet - 95, 150, 210).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.tapCard(i));
+      return { x, id, spr, shadow, lbl, zone, base, grow: 1, anim: 'idle', t0: 0, p2tint: 0xffffff, top: feet - 205 * base };
     });
-    this.cursorG = this.add.graphics().setDepth(6);
-    this.badge = [0, 1].map(s => this.add.text(0, 0, '', { fontFamily: FONT_PIXEL, fontSize: '10px', color: '#0b0710', backgroundColor: s === 0 ? '#ff3d6e' : '#3cf0ff', padding: { x: 4, y: 3 } }).setOrigin(0.5, 1).setDepth(7));
+    this.badge = [0, 1].map(s => this.add.text(0, 0, '', { fontFamily: FONT_PIXEL, fontSize: '12px', color: '#0b0710', backgroundColor: s === 0 ? '#ff3d6e' : '#3cf0ff', padding: { x: 5, y: 4 } })
+      .setOrigin(0.5, 1).setDepth(9));
 
-    // botão FIGHT (toque/clique) e dica
-    this.fightBtn = this.add.text(W / 2, 430, 'FIGHT!', { ...cr, fontSize: '46px', color: '#fff', stroke: '#14061f', strokeThickness: 7, backgroundColor: '#2a0630' })
-      .setOrigin(0.5).setDepth(8).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.tryStart(true));
-    chrome(this.fightBtn, 'gold');
-    this.hint = this.add.text(W / 2, H - 22, '', { fontFamily: FONT_PIXEL, fontSize: '10px', color: '#9a8bb3', align: 'center' }).setOrigin(0.5).setDepth(8);
+    // botão FIGHT (toque/clique), voltar (toque) e dica
+    this.fightBtn = this.add.text(W / 2, 500, 'FIGHT!', { ...cr, fontSize: '38px', color: '#fff', stroke: '#14061f', strokeThickness: 7 })
+      .setOrigin(0.5).setDepth(9).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.tryStart(true));
+    chrome(this.fightBtn, 'gold'); this.fightBtn.setShadow(0, 0, '#ffb020', 14, true, false);
+    this.backBtn = this.add.text(18, H - 30, '< BACK', { fontFamily: FONT_PIXEL, fontSize: '11px', color: '#f3ecff', backgroundColor: '#2a0630', padding: { x: 6, y: 5 } })
+      .setOrigin(0, 0.5).setDepth(9).setVisible(isTouch()).setInteractive({ useHandCursor: true }).on('pointerdown', () => this.back());
+    this.hint = this.add.text(W / 2, H - 6, '', { fontFamily: FONT_PIXEL, fontSize: '9px', color: '#cbbbe6', align: 'center', stroke: '#0b0710', strokeThickness: 3 }).setOrigin(0.5, 1).setDepth(9);
 
     // teclado: ouvintes do plugin, removidos ao sair da cena
     this.onKey = e => this.key(e);
@@ -1148,9 +1168,8 @@ class Select extends Phaser.Scene {
     this.events.once('shutdown', () => this.input.keyboard.off('keydown', this.onKey));
     this.input.keyboard.addCapture([37, 38, 39, 40, 32]);
     this.stickX = 0;
+    this.wasLock = [...this.lock];
     this.refresh();
-    // toque no seu lutador grande: volta a escolher (o teclado usa Esc); depois do refresh, para a área de toque ter o tamanho do quadro
-    this.big[0].setInteractive({ useHandCursor: true }).on('pointerdown', () => { this.lock = [false, false]; this.refresh(); });
   }
 
   key(e) {
@@ -1177,6 +1196,14 @@ class Select extends Phaser.Scene {
   pick(s) {
     this.lock[s] = true;
     this.refresh();
+  }
+  // pirotecnia nos pés do escolhido, tremida e clarão na cor do jogador
+  boom(s) {
+    const cd = this.cards[this.cur[s]];
+    for (const dx of [-55, 55]) this.pyro.explode(40, cd.x + dx, this.feet);
+    this.pyro.explode(30, cd.x, this.feet - 10);
+    this.cameras.main.shake(180, 0.006);
+    if (s === 0) this.cameras.main.flash(120, 255, 70, 120); else this.cameras.main.flash(120, 60, 240, 255);
   }
   // Esc volta um passo: desfaz a escolha da CPU e depois a do 1P
   back() {
@@ -1212,19 +1239,26 @@ class Select extends Phaser.Scene {
     const sameLook = texKey(this, CHARS[this.ids[this.cur[0]]], 'idle') === texKey(this, CHARS[this.ids[this.cur[1]]], 'idle');
     [0, 1].forEach(s => {
       const c = CHARS[this.ids[this.cur[s]]];
-      const key = texKey(this, c, 'idle');
-      if (this.big[s].texture.key !== key) this.big[s].setTexture(key).setScale(SC * 1.05 * (c.size || 1));
-      this.big[s].setTint(s === 1 && sameLook ? P2_TINT : 0xffffff).setAlpha(this.lock[s] ? 1 : 0.75);
       this.names[s].setText(c.name); chrome(this.names[s]);
       this.names[s].setShadow(0, 0, s === 0 ? '#ff3d6e' : '#3cf0ff', 16, true, false);
       const who = s === 0 ? '1P' : (this.cpu ? 'CPU' : '2P');
-      this.tags[s].setText(`${who} ${this.lock[s] ? 'READY' : '...'}${c.placeholder ? '\n(ART COMING SOON)' : ''}`);
+      this.tags[s].setText(`${who} ${this.lock[s] ? 'READY!' : '...'}${c.placeholder ? '\n(ART COMING SOON)' : ''}`);
       this.badge[s].setText(who);
+      if (this.lock[s] && !this.wasLock[s]) this.boom(s);
+    });
+    this.wasLock = [...this.lock];
+    // quem foi escolhido faz a pose de vitória; o P2 com a mesma cara fica azulado
+    this.cards.forEach((cd, i) => {
+      const locked = [0, 1].some(s => this.lock[s] && this.cur[s] === i);
+      const anim = locked ? 'victory' : 'idle';
+      if (cd.anim !== anim) { cd.anim = anim; cd.spr.setTexture(texKey(this, CHARS[cd.id], anim), 0); cd.t0 = this.t; }
+      cd.p2tint = sameLook && this.cur[1] === i && this.cur[0] !== i ? P2_TINT : 0xffffff;
     });
     const ready = this.lock[0] && this.lock[1];
-    this.fightBtn.setAlpha(this.lock[0] ? 1 : 0.45);
+    this.confetti.emitting = ready;
+    this.fightBtn.setAlpha(this.lock[0] ? 1 : 0.4);
     const cpuTurn = this.active() === 1;
-    this.hint.setText(isTouch() ? (ready ? 'TAP FIGHT! (OR THE CPU PORTRAIT AGAIN)   TAP YOUR FIGHTER TO CHANGE' : cpuTurn ? 'NOW TAP THE CPU FIGHTER' : 'TAP A PORTRAIT TO PICK')
+    this.hint.setText(isTouch() ? (ready ? 'TAP FIGHT! (OR THE CPU FIGHTER AGAIN)   BACK: CHANGE' : cpuTurn ? 'NOW TAP THE CPU FIGHTER' : 'TAP A GUITARIST TO PICK')
       : ready ? 'A / ENTER: FIGHT   ESC: CHANGE'
         : cpuTurn ? '< > CHOOSE THE CPU FIGHTER   A/ENTER: PICK   ESC: BACK'
           : `1P: < > + A/ENTER   ${this.cpu ? 'P: 2P HUMAN' : '2P: J L + 7   P: 2P CPU'}`);
@@ -1232,6 +1266,7 @@ class Select extends Phaser.Scene {
 
   update() {
     this.t++;
+    const t = this.t;
     // controles de toque do index.html: analógico escolhe, botão A confirma
     const T = window.TOUCH;
     if (T && T.on) {
@@ -1240,17 +1275,51 @@ class Select extends Phaser.Scene {
       this.stickX = sx;
       if (T.take('lp')) { if (this.lock[0] && this.lock[1]) this.tryStart(true); else this.pick(this.active()); }
     }
-    // moldura piscando em volta do retrato de cada jogador
-    const g = this.cursorG; g.clear();
-    [0, 1].forEach(s => {
-      const cd = this.cards[this.cur[s]], same = this.cur[0] === this.cur[1], off = same ? (s === 0 ? -4 : 4) : 0;
-      const col = s === 0 ? 0xff3d6e : 0x3cf0ff, a = this.lock[s] ? 1 : (this.t % 30 < 18 ? 1 : 0.35);
-      g.lineStyle(this.lock[s] ? 5 : 3, col, a);
-      g.strokeRect(cd.x - 59 + off, cd.y - 66 + off, 118, 132);
-      this.badge[s].setPosition(cd.x + (same ? (s === 0 ? -30 : 30) : 0), cd.y - 68);
+    // holofotes do estádio varrendo
+    const b = this.beams; b.clear();
+    [[150, 0xffffff, 0], [330, 0xff3df0, 1.7], [630, 0x3cf0ff, 3.1], [810, 0xffd23d, 4.4]].forEach(([x, col, ph]) => {
+      const ang = Math.sin(t / 70 + ph) * 0.45, len = 620, w = 70;
+      const ex = x + Math.sin(ang) * len, ey = 30 + Math.cos(ang) * len;
+      const nx = Math.cos(ang) * w, ny = -Math.sin(ang) * w;
+      b.fillStyle(col, 0.07).fillTriangle(x, 30, ex + nx, ey + ny, ex - nx, ey - ny);
+      b.fillStyle(col, 0.06).fillTriangle(x, 30, ex + nx * 0.4, ey + ny * 0.4, ex - nx * 0.4, ey - ny * 0.4);
     });
-    for (let s = 0; s < 2; s++) setFr(this.big[s], Math.floor(this.t / 6) % texFrames(this, this.big[s].texture.key));
-    this.fightBtn.setScale(this.lock[0] && this.lock[1] ? 1 + Math.sin(this.t / 6) * 0.04 : 1);
+    // flashes de câmera na plateia
+    const f = this.flashes; f.clear();
+    for (let k = 0; k < 7; k++) {
+      const seed = Math.floor(t / 9) * 7 + k;
+      const rx = (Math.abs(Math.sin(seed * 12.9898) * 43758.5453)) % 1, ry = (Math.abs(Math.sin(seed * 78.233) * 12543.21)) % 1;
+      if (rx < 0.5) continue;
+      f.fillStyle(0xffffff, 0.75).fillCircle(140 + ((rx * 7.3) % 1) * 680, 200 + ry * 160, t % 9 < 3 ? 4 : 2);
+    }
+    // canhão de luz de cada jogador, saindo do alto do seu lado, sobre o lutador escolhido
+    const sp = this.spots; sp.clear();
+    const same = this.cur[0] === this.cur[1];
+    [0, 1].forEach(s => {
+      const cd = this.cards[this.cur[s]], col = s === 0 ? 0xff3d6e : 0x3cf0ff;
+      const x = cd.x + (same ? (s === 0 ? -26 : 26) : 0);
+      const a = this.lock[s] ? 0.15 : 0.08 + 0.04 * Math.sin(t / 5);
+      const top = s === 0 ? 120 : W - 120;
+      for (const [k, wf] of [[1, 1], [0.8, 0.6], [0.6, 0.3]]) {
+        if (this.lock[s]) sp.fillStyle(0xffffff, a * k * 0.5).fillTriangle(top, -20, x - 85 * wf, this.feet + 6, x + 85 * wf, this.feet + 6);
+        sp.fillStyle(col, a * k).fillTriangle(top, -20, x - 85 * wf, this.feet + 6, x + 85 * wf, this.feet + 6);
+      }
+      sp.fillStyle(col, this.lock[s] ? 0.5 : 0.3).fillEllipse(x, this.feet + 2, 190, 30);
+      this.badge[s].setPosition(x, cd.top - 10 - Math.abs(Math.sin(t / 9)) * 8);
+    });
+    // escolhido cresce e acende; o resto fica na penumbra
+    this.cards.forEach((cd, i) => {
+      const hot = this.cur[0] === i || this.cur[1] === i;
+      const locked = (this.lock[0] && this.cur[0] === i) || (this.lock[1] && this.cur[1] === i);
+      cd.grow += ((locked ? 1.16 : hot ? 1.08 : 0.94) - cd.grow) * 0.2;
+      cd.spr.setScale(cd.base * cd.grow).setTint(hot ? cd.p2tint : 0x3a3052);
+      cd.lbl.setColor(hot ? '#ffffff' : '#8a7aa8');
+      const fr = Math.floor((t - cd.t0) / 6), nf = texFrames(this, cd.spr.texture.key);
+      // vitória: toca uma vez e fica alternando os dois últimos quadros; parado: em loop
+      setFr(cd.spr, cd.anim === 'victory' ? (fr < nf ? fr : nf - 1 - (Math.floor(fr / 3) % 2)) : fr % nf);
+    });
+    this.fightBtn.setScale(this.lock[0] && this.lock[1] ? 1 + Math.sin(t / 6) * 0.06 : 1);
+    this.vs.setScale(1 + Math.sin(t / 10) * 0.04);
   }
 }
 
