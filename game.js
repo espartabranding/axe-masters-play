@@ -608,19 +608,19 @@ function angusCpu(me, op, scene) {
 // ---------------------------------------------------------------------------------------------
 const CHARS = {};
 CHARS.eddie = {
-  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=7e7a79f', // superStage: cena que toma o fundo no super e na vitória
+  name: 'EDDIE', dir: 'eddie', hp: 950, walkF: 3.2, walkB: 2.6, superStage: 'assets/stages/super-eddie.jpg?v=0b25612', // superStage: cena que toma o fundo no super e na vitória
   anims: EDDIE_ANIMS, moves: EDDIE_MOVES, powers: EDDIE_POWERS, specials: EDDIE_SPECIALS, cpu: eddieCpu,
   jumpkick: JUMPKICK, bigTitle: '5150', blurb: 'Brown Sound',
   stage: 'eddie', // palco da casa (ver STAGES)
 };
 CHARS.slash = {
-  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=7e7a79f', // superStage: cena que toma o fundo no super e na vitória
+  name: 'SLASH', dir: 'slash', hp: 1000, walkF: 3.0, walkB: 2.5, superStage: 'assets/stages/super-slash.jpg?v=0b25612', // superStage: cena que toma o fundo no super e na vitória
   anims: SLASH_ANIMS, moves: SLASH_MOVES, powers: SLASH_POWERS, specials: SLASH_SPECIALS, cpu: slashCpu,
   jumpkick: JUMPKICK, bigTitle: 'APPETITE', bigSize: 150, blurb: 'Top Hat',
   stage: 'slash',
 };
 CHARS.zakk = {
-  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=7e7a79f', // superStage: cena que toma o fundo no super e na vitória
+  name: 'ZAKK', dir: 'zakk', hp: 1100, walkF: 2.7, walkB: 2.25, superStage: 'assets/stages/super-zakk.jpg?v=0b25612', // superStage: cena que toma o fundo no super e na vitória
   anims: ZAKK_ANIMS, moves: ZAKK_MOVES, powers: ZAKK_POWERS, specials: ZAKK_SPECIALS, cpu: zakkCpu,
   jumpkick: JUMPKICK, bigTitle: 'NO MORE TEARS', bigSize: 95, blurb: 'Black Label',
   stage: 'zakk', vicRate: 28, vicFrames: [0, 1, 2, 4, 5, 6, 7, 8], // sem o quadro 3 (pé no amplificador) e o 9 (braços cruzados)
@@ -628,7 +628,7 @@ CHARS.zakk = {
   // a vitória do Zakk é uma sequência de poses (grito, cerveja, chifrinhos): ~0,5 s cada
 };
 CHARS.vai = {
-  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=7e7a79f', // superStage: cena que toma o fundo no super e na vitória
+  name: 'VAI', dir: 'vai', hp: 900, walkF: 3.5, walkB: 2.9, superStage: 'assets/stages/super-vai.jpg?v=0b25612', // superStage: cena que toma o fundo no super e na vitória
   anims: VAI_ANIMS, moves: VAI_MOVES, powers: VAI_POWERS, specials: VAI_SPECIALS, cpu: vaiCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THE LOVE OF GOD', bigSize: 78, blurb: 'Ibanez JEM',
   stage: 'stadium', // palco da casa ainda não existe
@@ -637,7 +637,7 @@ CHARS.vai = {
 // o Angus está em stand by (folhas incompletas, nada recortado em assets/angus): só entra no elenco quando ANGUS_READY for true
 const ANGUS_READY = true;
 if (ANGUS_READY) CHARS.angus = {
-  name: 'ANGUS', dir: 'angus', hp: 950, walkF: 3.7, walkB: 3.0, superStage: 'assets/stages/super-angus.jpg?v=7e7a79f', // o cenário HIGH VOLTAGE cercado pela bateria de canhões (cena do super e da vitória)
+  name: 'ANGUS', dir: 'angus', hp: 950, walkF: 3.7, walkB: 3.0, superStage: 'assets/stages/super-angus.jpg?v=0b25612', // o cenário HIGH VOLTAGE cercado pela bateria de canhões (cena do super e da vitória)
   anims: ANGUS_ANIMS, moves: ANGUS_MOVES, powers: ANGUS_POWERS, specials: ANGUS_SPECIALS, cpu: angusCpu,
   jumpkick: JUMPKICK, bigTitle: 'FOR THOSE ABOUT TO ROCK', bigSize: 70, blurb: 'Gibson SG',
   stage: 'stadium', // palco da casa ainda não existe
@@ -654,17 +654,33 @@ const BIRA_HIT = { dmg: 30, hitstun: 50, blockstun: 50, push: 0, chip: 30, word:
 // PALCOS (escolhidos depois dos lutadores). Palco sem imagem não aparece na escolha.
 // Na vitória, qualquer palco dá lugar ao Templo dos Deuses da Guitarra (TEMPLE), com os holofotes no vencedor.
 const STAGES = [
-  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=7e7a79f' },
-  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=7e7a79f' },
-  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=7e7a79f' },
-  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=7e7a79f' },
-  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=7e7a79f' },
-  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=7e7a79f' },
-  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=7e7a79f' },
+  { id: 'eddie',    name: "EDDIE'S STAGE",  tag: 'Arena rock',         file: 'assets/stages/palco-eddie.jpg?v=0b25612' },
+  { id: 'slash',    name: 'SUNSET STRIP',   tag: 'Rock bar',           file: 'assets/stages/palco-slash.jpg?v=0b25612' },
+  { id: 'stairway', name: 'STAIRWAY HILL',  tag: 'Airship at dusk',    file: 'assets/stages/cenario-dirigivel.jpg?v=0b25612' },
+  { id: 'pig',      name: 'POWER STATION',  tag: 'Flying pig',         file: 'assets/stages/cenario-usina-porco.jpg?v=0b25612' },
+  { id: 'rooftop',  name: 'LONDON ROOFTOP', tag: 'The last gig',       file: 'assets/stages/cenario-telhado-londres.jpg?v=0b25612' },
+  { id: 'voltage',  name: 'HIGH VOLTAGE',   tag: 'Thunder road',       file: 'assets/stages/cenario-alta-voltagem.jpg?v=0b25612' },
+  { id: 'stadium',  name: "STADIUM '85",    tag: 'Live for the world', file: 'assets/stages/cenario-estadio.jpg?v=0b25612' },
+  // 18/11/2026 (pedido do usuário: Rock in Rio, um presídio e outros engraçados e temáticos); só clima, sem nome de festival ou marca
+  { id: 'rio',      name: 'CITY OF ROCK',   tag: 'Rio festival',       file: 'assets/stages/cenario-rio.jpg?v=0b25612' },
+  { id: 'prison',   name: 'PRISON YARD',    tag: 'Jailhouse gig',      file: 'assets/stages/cenario-prison.jpg?v=0b25612' },
+  { id: 'bira',     name: 'OPEN BAR',       tag: "Rock n' Bira",       file: 'assets/stages/cenario-bira.jpg?v=0b25612' },
+  { id: 'school',   name: 'SCHOOL GYM',     tag: 'Talent show',        file: 'assets/stages/cenario-school.jpg?v=0b25612' },
+  { id: 'party',    name: 'BIRTHDAY BASH',  tag: 'Kids party',         file: 'assets/stages/cenario-party.jpg?v=0b25612' },
+  // famosos e bandas no fundo (caricaturas, pedido do usuário em 18/11/2026)
+  { id: 'summit',   name: 'THE SUMMIT',     tag: 'World leaders',      file: 'assets/stages/cenario-summit.jpg?v=0b25612' },
+  { id: 'keynote',  name: 'GPU KEYNOTE',    tag: 'Tech launch',        file: 'assets/stages/cenario-keynote.jpg?v=0b25612' },
+  { id: 'pop',      name: 'POP PRINCESS',   tag: 'Oops!',              file: 'assets/stages/cenario-pop.jpg?v=0b25612' },
+  { id: 'kpop',     name: 'SEOUL ARENA',    tag: 'K-pop night',        file: 'assets/stages/cenario-kpop.jpg?v=0b25612' },
+  { id: 'funk',     name: 'VENICE BEACH',   tag: 'Funk rock',          file: 'assets/stages/cenario-funk.jpg?v=0b25612' },
+  { id: 'punk',     name: 'PUNK GARAGE',    tag: 'Suburbia',           file: 'assets/stages/cenario-punk.jpg?v=0b25612' },
+  { id: 'metal',    name: 'METAL STADIUM',  tag: 'Thrash',             file: 'assets/stages/cenario-metal.jpg?v=0b25612' },
+  { id: 'crossroads', name: 'CROSSROADS',   tag: 'Sign here',          file: 'assets/stages/cenario-crossroads.jpg?v=0b25612' },
+  { id: 'heaven',   name: 'ROCK HEAVEN',    tag: 'Legends jam',        file: 'assets/stages/cenario-heaven.jpg?v=0b25612' },
 ];
 const stageById = id => STAGES.find(st => st.id === id);
 // templo da vitória: imagem e posição (em 960x540) e cor dos holofotes do teto
-const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=7e7a79f', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
+const TEMPLE = { file: 'assets/stages/templo-vitoria.jpg?v=0b25612', lamps: [[106, 30, 0xffd27a], [184, 36, 0xffe9a8], [781, 36, 0xffe9a8], [845, 32, 0xffd27a]] };
 
 // reações cômicas (folha react do lutador que apanhou): quadros e duração em quadros de jogo; quem está na piada fica invencível
 const GAGS = {
@@ -791,10 +807,10 @@ class Boot extends Phaser.Scene {
     this.load.image('stage', STAGES[0].file); // fundo da tela de escolha
     this.load.image('temple', TEMPLE.file);
     // capa: logo dourado do Rock n' Bira e as canecas de chopp do brinde
-    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=7e7a79f`);
+    this.load.image('logo_bira', `assets/ui/logo-rocknbira-gold.png?v=0b25612`);
     this.load.image('title_bg', `assets/ui/festa.jpg`); // festa no bar, fundo da capa
-    this.load.spritesheet('mug', `assets/ui/mug.png?v=7e7a79f`, { frameWidth: 300, frameHeight: 300 });
-    this.load.spritesheet('splash', `assets/ui/splash.png?v=7e7a79f`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('mug', `assets/ui/mug.png?v=0b25612`, { frameWidth: 300, frameHeight: 300 });
+    this.load.spritesheet('splash', `assets/ui/splash.png?v=0b25612`, { frameWidth: 300, frameHeight: 300 });
     for (const st of STAGES) {
       this.load.image(`stage_${st.id}`, st.file);
     }
@@ -805,7 +821,7 @@ class Boot extends Phaser.Scene {
       for (const [n, count] of Object.entries(c.anims)) {
         const key = `${c.dir}_${n}`;
         FRAMES[key] = count;
-        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=7e7a79f`, { frameWidth: FW, frameHeight: FH });
+        this.load.spritesheet(key, `assets/${c.dir}/${n}.png?v=0b25612`, { frameWidth: FW, frameHeight: FH });
       }
     }
   }
@@ -1190,7 +1206,12 @@ class Select extends Phaser.Scene {
     const chars = [this.ids[this.cur[0]], this.ids[this.cur[1]]];
     this.registry.set('pick', { cur: [...this.cur], cpu: this.cpu });
     this.cameras.main.flash(150, 255, 80, 240);
-    this.scene.start('stagesel', { chars, cpu: this.cpu });
+    // palco sorteado entre todos os que têm imagem (pedido do usuário em 18/11/2026: sem tela de escolha de palco);
+    // não repete o da luta anterior. A cena 'stagesel' continua no código, sem uso.
+    const pool = STAGES.filter(st => this.textures.exists(`stage_${st.id}`)), last = this.registry.get('lastStage');
+    const opts = pool.length > 1 ? pool.filter(st => st.id !== last) : pool, stage = opts[Math.floor(Math.random() * opts.length)];
+    this.registry.set('lastStage', stage && stage.id);
+    this.scene.start('fight', { chars, cpu: this.cpu, stage: stage && stage.id });
   }
 
   refresh() {
@@ -1265,10 +1286,14 @@ class StageSelect extends Phaser.Scene {
       .setOrigin(0.5).setAngle(-5).setStroke('#ff3df0', 2).setShadow(0, 0, '#ff3df0', 10, true, true);
 
     // miniaturas numa fileira
-    const n = this.list.length, tw = Math.min(104, Math.floor((W - 40) / n) - 10), th = Math.round(tw * 0.5625), gap = 10, y = H - 92;
+    // muitos palcos: duas fileiras de miniaturas, à esquerda do botão FIGHT
+    const n = this.list.length, rows = n > 9 ? 2 : 1, per = Math.ceil(n / rows), gap = rows > 1 ? 8 : 10;
+    const tw = rows > 1 ? Math.min(84, Math.floor((W - 200) / per) - gap) : Math.min(104, Math.floor((W - 40) / n) - 10), th = Math.round(tw * 0.5625);
+    const cx = rows > 1 ? (W - 180) / 2 : W / 2, y0 = rows > 1 ? H - 114 : H - 92;
     this.tw = tw; this.th = th;
     this.cards = this.list.map((st, i) => {
-      const x = W / 2 - ((n - 1) * (tw + gap)) / 2 + i * (tw + gap);
+      const r = Math.floor(i / per), k = i % per, y = y0 + r * (th + 6);
+      const x = cx - ((per - 1) * (tw + gap)) / 2 + k * (tw + gap);
       const bg = this.add.rectangle(x, y, tw, th, 0x150d1f, 1).setStrokeStyle(2, 0x2c1f3d);
       if (st.id !== 'random') this.add.image(x, y, `stage_${st.id}`).setDisplaySize(tw - 4, th - 4);
       else this.add.text(x, y, '?', { ...cr, fontSize: '34px', color: '#ffe14a' }).setOrigin(0.5);
