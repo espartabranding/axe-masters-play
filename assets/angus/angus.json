@@ -84,6 +84,14 @@
       "frames": 10,
       "file": "stomp.png"
     },
+    "jailcall": {
+      "frames": 5,
+      "file": "jailcall.png"
+    },
+    "fx_jail": {
+      "frames": 5,
+      "file": "fx_jail.png"
+    },
     "spasm": {
       "frames": 15,
       "file": "spasm.png"
@@ -132,6 +140,10 @@
       "frames": 5,
       "file": "deaf.png"
     },
+    "cry": {
+      "frames": 10,
+      "file": "cry.png"
+    },
     "fx_hellfire": {
       "frames": 10,
       "file": "fx_hellfire.png"
@@ -143,18 +155,6 @@
     "fx_voltage": {
       "frames": 10,
       "file": "fx_voltage.png"
-    },
-    "cry": {
-      "frames": 10,
-      "file": "cry.png"
-    },
-    "jailcall": {
-      "frames": 5,
-      "file": "jailcall.png"
-    },
-    "fx_jail": {
-      "frames": 5,
-      "file": "fx_jail.png"
     },
     "fx_muzzle": {
       "frames": 10,
